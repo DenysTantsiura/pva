@@ -26,7 +26,7 @@ class Adress(Field):
             self._value = new_value
         
         else:
-            print('Wrong adress. Enter "Type street. Name street')
+            print('Wrong adress. Enter "Type street. Name street"')
             
 
 class Birthday(Field):
