@@ -85,3 +85,24 @@ class Record:
         self.emails.append(email_new1)
 
         return True
+
+    def change_address(self, new_address: str) -> tuple:
+        """Modify an existing user's address entry in the address book."""
+        if new_address:
+            self.address = Address(new_address)
+            return True,
+
+        else:
+            return False, f'Address is missing!\"{new_address}\"'
+
+    def change_birthday(self, birthday: str) -> tuple:
+        """Modify an existing user's birthday entry in the address book."""
+        if not self.birthday:
+            return False, f'Birthday not specified for \"{self.name.value}\". You can add it.'
+
+        else:
+            self.birthday = Birthday(birthday)
+            return True,
+
+    # def change_phone(self, ....):
+    
