@@ -61,7 +61,3 @@ class Email(Field):
 
         else:
             print('Email incorect. Try again.')
-
-birthday = Birthday("2022.02.28")
-
-print(birthday)
