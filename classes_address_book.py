@@ -58,7 +58,8 @@ class Birthday(Field):
             birthday_data = datetime.strptime(new_value, "%Y-%m-%d")
 
         except ValueError:
-            raise ValueError('Data in not value. Enter numbers in format yyyy-mm-dd.')
+            # raise ValueError('Data in not value. Enter numbers in format yyyy-mm-dd.')
+            print('Data in not value. Enter numbers in format yyyy-mm-dd.')
 
         if birthday_data <= datetime.now():
             self._value = birthday_data 
@@ -69,8 +70,8 @@ class Birthday(Field):
             return f'{self.value.date()}'
 
         except AttributeError:
-            raise AttributeError('Date in not value. Date in a future.')
-
+            # raise AttributeError('Date in not value. Date in a future.')
+            print('Date in not value. Date in a future.')
 
 class Email(Field):
     """Class of contact Email."""
@@ -85,6 +86,6 @@ class Email(Field):
         else:
             print('Email incorect. Try again.')
 
-email = Birthday("1999-02-28")
+email = Birthday("1999-02-29")
 
 print(email)
