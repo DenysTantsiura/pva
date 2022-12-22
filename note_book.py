@@ -7,16 +7,15 @@ class NoteBook(UserDict):
         """Add new record in the notebook."""
         self.data[record.name] = record
 
-    def iterrator(self):
+
+    def iterrator(self, count: int) -> list:
         pass
+        
 
     def remove_record(self, name: str) -> None:
         """Remove record from notebook."""
         self.data.pop(name)
 
     def sort_by_tags(self) -> list:
-        pass
+        tags = []
 
-note = NoteBook()
-
-print(note.add_record("illia", "illia work"))
