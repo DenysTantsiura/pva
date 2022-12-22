@@ -41,10 +41,10 @@ class Birthday(Field):
     #         birthday_date = date(*new_value)
 
     #     except ValueError:
-    #         raise ValueError("Data in not value. Enter numbers in format yyyy.mm.dd.")
+    #         raise ValueError('Data in not value. Enter numbers in format yyyy.mm.dd.')
 
     #     except TypeError:
-    #         raise ValueError("Data in not value. Enter numbers in format yyyy.mm.dd.")
+    #         raise ValueError('Data in not value. Enter numbers in format yyyy.mm.dd.')
 
     #     if birthday_date <= date.today():
     #         self._value = birthday_date
