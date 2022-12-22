@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, date
 import re
 
 
@@ -32,28 +32,25 @@ class Adress(Field):
 class Birthday(Field):
     """Class of Birthday data."""
 
-    """
-    варіант у якому 100% працює і не пририває
-    def value(self, new_value: str):
-
-        try:
-            new_value = [int(i) for i in new_value.split(".")]
-            birthday_date = date(*new_value)
-
-        except ValueError:
-            raise ValueError("Data in not value. Enter numbers in format yyyy.mm.dd.")
-
-        except TypeError:
-            raise ValueError("Data in not value. Enter numbers in format yyyy.mm.dd.")
-
-        if birthday_date <= date.today():
-            self._value = birthday_date
-
-        else:
-            raise ValueError("Date in a future")
-    """
 
     @Field.value.setter
+    # def value(self, new_value: str):
+
+    #     try:
+    #         new_value = [int(i) for i in new_value.split(".")]
+    #         birthday_date = date(*new_value)
+
+    #     except ValueError:
+    #         raise ValueError("Data in not value. Enter numbers in format yyyy.mm.dd.")
+
+    #     except TypeError:
+    #         raise ValueError("Data in not value. Enter numbers in format yyyy.mm.dd.")
+
+    #     if birthday_date <= date.today():
+    #         self._value = birthday_date
+
+    #     else:
+    #         raise ValueError("Date in a future")
 
     def value(self, new_value: str) -> None:
 
@@ -88,6 +85,6 @@ class Email(Field):
         else:
             print('Email incorect. Try again.')
 
-email = Birthday("1999-02-29")
+email = Birthday("1999-02-28")
 
 print(email)
