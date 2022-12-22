@@ -33,7 +33,7 @@ class Birthday(Field):
     """Class of Birthday data."""
 
     """
-    варіант у якому 100% працює
+    варіант у якому 100% працює і не пририває
     def value(self, new_value: str):
 
         try:
@@ -50,7 +50,7 @@ class Birthday(Field):
             self._value = birthday_date
 
         else:
-            raise ValueError("Date is not value. Date in a future")
+            raise ValueError("Date in a future")
     """
 
     @Field.value.setter
