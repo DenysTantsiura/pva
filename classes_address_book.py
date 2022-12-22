@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime
 import re
 
 
@@ -61,6 +61,6 @@ class Email(Field):
         if re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+\.[a-zA-z]{2,}$', new_value) or\
             re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
             self._value = new_value
-            
+
         else:
             print('Email incorect. Try again.')
