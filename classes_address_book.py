@@ -63,7 +63,3 @@ class Email(Field):
         else:
             print("Email incorect. Try again.")
 
-
-adress = Adress("str. Gagarina")
-
-print(adress.value)
