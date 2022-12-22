@@ -23,7 +23,7 @@ class Phone:
 
 class Email:
     ...
-
+# will be conflict with classes above...
 
 class Record:
     """Record class of person information."""
@@ -150,5 +150,37 @@ class Record:
                 self.emails.insert(index, email_new_to)
 
                 return True,
+
+    def remove_address(self) -> Union[bool, None]:
+        """Deleting an address entry from a user entry in the address book."""
+        if self.address:
+            self.address = None
+            return True
+
+    def remove_birthday(self) -> Union[bool, None]:
+        """Deleting a birthday entry from a user entry in the address book."""
+        if self.birthday:
+            self.birthday = None
+            return True
     
-    # def remove...
+    def remove_phone(self, phone_to_remove: str) -> Union[bool, None]:
+        """Deleting a phone entry from a user entry in the address book."""
+        phone_to_remove = Phone.preformatting(phone_to_remove)
+
+        for phone in self.phones:
+            if phone.value == phone_to_remove:
+                self.phones.remove(phone)
+
+                return True
+
+        print(f'\"{phone_to_remove}\" not specified in the contact \"{self.name.value}\"')
+
+    def remove_email(self, email_to_remove: str) -> Union[bool, None]:
+        """Deleting an email entry from a user entry in the address book."""
+        for email in self.emails:
+            if email.value == email_to_remove:
+                self.emails.remove(email)
+
+                return True
+
+        print(f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\"')
