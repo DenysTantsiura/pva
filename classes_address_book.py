@@ -49,16 +49,14 @@ class Birthday(Field):
 
         if birthday_data <= datetime.now():
             self._value = birthday_data 
-        
-        else:
-            print('Person not born')
+
         
     def __str__(self) -> str:
 
         try:
             return f'{self.value.date()}'
         except AttributeError:
-            AttributeError('Person not born')
+            AttributeError('Date in not value. Date in a future')
 
 
 class Email(Field):
@@ -70,7 +68,8 @@ class Email(Field):
     @Field.value.setter
     def value(self, new_value: str):
         
-        if re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+\.[a-zA-z]{2,}$', new_value): 
+        if re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+\.[a-zA-z]{2,}$', new_value) or\
+            re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
             self._value = new_value
         else:
             print('Email incorect. Try again.')
