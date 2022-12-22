@@ -9,8 +9,23 @@ class NoteBook(UserDict):
 
 
     def iterrator(self, count: int) -> list:
-        pass
+        tags = []
         
+        for record in self.data.values():
+
+            tags.append(record)
+            i += 1
+
+            if i == count:
+
+                yield tags
+                tags = []
+                i = 0
+
+        if tags:
+            yield tags
+
+
 
     def remove_record(self, name: str) -> None:
         """Remove record from notebook."""
@@ -18,4 +33,9 @@ class NoteBook(UserDict):
 
     def sort_by_tags(self) -> list:
         tags = []
+        
+        for tag in self.data.value():
+            tags.
+
+
 
