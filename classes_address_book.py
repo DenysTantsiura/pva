@@ -44,7 +44,6 @@ class Birthday(Field):
         if birthday_data <= datetime.now():
             self._value = birthday_data 
 
-        
     def __str__(self) -> str:
 
         try:
@@ -62,5 +61,6 @@ class Email(Field):
         if re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+\.[a-zA-z]{2,}$', new_value) or\
             re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
             self._value = new_value
+            
         else:
             print('Email incorect. Try again.')
