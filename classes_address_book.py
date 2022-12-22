@@ -104,5 +104,51 @@ class Record:
             self.birthday = Birthday(birthday)
             return True,
 
-    # def change_phone(self, ....):
+    def change_phone(self, phone_to_change: str, phone_new: str) -> tuple:
+        """Modify an existing user's phone entry in the address book."""
+        phone_to_change = Phone.preformatting(phone_to_change)
+        phone_new = Phone.preformatting(phone_new)
+        verdict = False
+
+        for phone in self.phones:
+            if phone.value == phone_new:  # new number already in record
+ 
+                return False, f'\"{phone_new}\" already recorded for \"{self.name.value}\"'
+
+            if phone.value == phone_to_change:  # old number not exist in record
+                verdict = True
+
+        if not verdict:
+            return verdict, f'\"{phone_to_change}\" already recorded for \"{self.name.value}\"'
+
+        for index, phone in enumerate(self.phones):
+            if phone.value == phone_to_change:
+                phone_new_to = Phone(phone_new)
+                self.phones.remove(phone)
+                self.phones.insert(index, phone_new_to)
+
+                return True,
+
+    def change_email(self, email_to_change: str, email_new: str) -> tuple:
+        """Modify an existing user's email entry in the address book."""
+        verdict = False
+
+        for email in self.emails:
+            if email.value == email_new:  # new email already in record
+                return False, f'\"{email_new}\" already recorded for \"{self.name.value}\"'
+
+            if email.value == email_to_change:  # old email not exist in record
+                verdict = True
+
+        if not verdict:
+            return verdict, f'\"{email_to_change}\" not specified in the contact \"{self.name.value}\"'
+
+        for index, email in enumerate(self.emails):
+            if email.value == email_to_change:
+                email_new_to = Email(email_new)
+                self.emails.remove(email)
+                self.emails.insert(index, email_new_to)
+
+                return True,
     
+    # def remove...
