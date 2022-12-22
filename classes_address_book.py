@@ -48,6 +48,7 @@ class Birthday(Field):
 
         try:
             return f'{self.value.date()}'
+
         except AttributeError:
             raise AttributeError('Date in not value. Date in a future.')
 
@@ -64,3 +65,7 @@ class Email(Field):
 
         else:
             print('Email incorect. Try again.')
+
+email = Birthday("1999-02-29")
+
+print(email)
