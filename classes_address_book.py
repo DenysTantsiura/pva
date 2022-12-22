@@ -19,13 +19,13 @@ class Field:
 class Adress(Field):
     """Class of contact Adress."""
 
-    def __init__(self, value) -> None:
+    def __init__(self, value):
         super().__init__(value)
 
     @Field.value.setter
-    def value(self, new_value: str):
+    def value(self, new_value: str) -> None:
         
-        if re.search(r"ave", new_value) or re.search(r"str", new_value):
+        if re.search(r'ave', new_value) or re.search(r'str', new_value):
             self._value = new_value
         
         else:
@@ -35,11 +35,11 @@ class Adress(Field):
 class Birthday(Field):
     """Class of Birthday data."""
 
-    def __init__(self, value) -> None:
+    def __init__(self, value):
         super().__init__(value)
 
     @Field.value.setter
-    def value(self, new_value: str):
+    def value(self, new_value: str) -> None:
 
         try:
             birthday_data = datetime.strptime(new_value, "%Y-%m-%d")
@@ -62,11 +62,11 @@ class Birthday(Field):
 class Email(Field):
     """Class of contact Email."""
 
-    def __init__(self, value) -> None:
+    def __init__(self, value):
         super().__init__(value)
 
     @Field.value.setter
-    def value(self, new_value: str):
+    def value(self, new_value: str) -> None:
         
         if re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+\.[a-zA-z]{2,}$', new_value) or\
             re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
