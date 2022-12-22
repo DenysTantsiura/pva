@@ -32,7 +32,6 @@ class Adress(Field):
 class Birthday(Field):
     """Class of Birthday data."""
 
-
     @Field.value.setter
     # def value(self, new_value: str):
 
@@ -73,6 +72,7 @@ class Birthday(Field):
             # raise AttributeError('Date in not value. Date in a future.')
             print('Date in not value. Date in a future.')
 
+
 class Email(Field):
     """Class of contact Email."""
 
@@ -86,6 +86,3 @@ class Email(Field):
         else:
             print('Email incorect. Try again.')
 
-email = Birthday("1999-02-29")
-
-print(email)
