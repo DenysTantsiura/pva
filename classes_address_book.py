@@ -39,7 +39,7 @@ class Birthday(Field):
             birthday_data = datetime.strptime(new_value, "%Y.%m.%d")
 
         except ValueError:
-            raise ValueError("Data in not value. Enter numbers in format yyyy.mm.dd.")
+            raise ValueError('Data in not value. Enter numbers in format yyyy.mm.dd.')
 
         if birthday_data <= datetime.now():
             self._value = birthday_data 
@@ -49,7 +49,7 @@ class Birthday(Field):
         try:
             return f'{self.value.date()}'
         except AttributeError:
-            AttributeError("Person not born")
+            AttributeError('Person not born')
 
 
 class Email(Field):
@@ -61,5 +61,4 @@ class Email(Field):
         if re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+\.[a-zA-z]{2,}$', new_value): 
             self._value = new_value
         else:
-            print("Email incorect. Try again.")
-
+            print('Email incorect. Try again.')
