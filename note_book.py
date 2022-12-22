@@ -9,7 +9,6 @@ class NoteBook(UserDict):
 
     def iterrator(self, count: int) -> list:
         """Return records of all notebook"""
-        
         tags = []
         
         for record in self.data.values():
@@ -32,7 +31,6 @@ class NoteBook(UserDict):
 
     def sort_by_tags(self) -> list:
         """Return list of note-names sorted by tags."""
-
         tags = []
 
         for note in self.data.values():
