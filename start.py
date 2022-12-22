@@ -1,11 +1,80 @@
 # pva main function for start
 import sys
-from typing import NoReturn
+from typing import NoReturn, Union
 
 
 from .address_book import AddressBook
+from .handlers import (
+    main_handler,
+    ALL_COMMAND,
+    ALL_COMMAND_ADDRESSBOOK,
+    ALL_COMMAND_NOTEBOOK,
+    ALL_COMMAND_FILESORTER,
+)
 from .note_book import NoteBook
 from .serialization import LoadBook, OpenBook
+
+
+class InputToParser:
+
+    def listen(self, request='Can I help you?\n'):
+        """Get a user string - separate the command and parameters - 
+        return it to the list, where the first element is the command, 
+        the others are parameters.
+
+            Parameters:
+                request (str): String line for user request.
+
+            Returns:
+                list command of user input (list): list of commands (list of strings).
+        """
+        user_input = input(request)
+        # Example: aDd BirthDay 2000-11-12   ->   add~birthday~2000-11-12
+        command_line = user_input.strip().replace('   ', '~').replace('  ', ' ').replace(' ', '~').lower()
+        # Example: ['remove~birthday', 'change~birthday' ... ]
+        all_commands = sorted([el.replace('_', '~') for el in ALL_COMMAND], key=len)[::-1]
+
+        for command in all_commands:
+            command = str(command)  # Example: 'remove~birthday' ... 'add~birthday'
+            if (command_line.startswith(command) and len(command_line) == len(command)) or \
+                    command_line.startswith(f'{command}~'):   # if command_line.startswith(command):  # Example: 'add~phone'
+                # # Example: ['add_birthday'] + ['2000-11-12']
+                return [command.replace('~', '_')] + [word for word in user_input[len(command):].split(' ') if word]
+        # Example: ['unknown', 'command', 'abracadabra']
+        return user_input.strip().split(' ')
+
+
+class OutputAnswer:
+
+    def show_out(self, user_request: list, book_instance: Union[AddressBook, NoteBook], new_path_file: str) -> bool:
+        """Show answer for the user.
+            
+            Parameters:
+                user_request (list): List of command with parameters (user request).
+                book_instance (AddressBook|NoteBook): Instance of book.
+                new_path_file (str): Path of file for book save/load.
+
+            Returns:
+                Result for new loop (bool): Answer - Do you want to continue working?.
+        """
+        bot_answer = main_handler(user_request, book_instance, new_path_file)
+
+        if isinstance(bot_answer, str):
+            print(bot_answer)
+
+        elif isinstance(bot_answer, list):
+            for volume in bot_answer:
+                if volume:
+                    print(volume)
+                    input('Press Enter for next Volume... ')
+
+        else:
+            print('Something happened. Will you try again?')
+
+        if bot_answer == 'Good bye!':
+            return False 
+
+        return True
 
 
 class PVA():
