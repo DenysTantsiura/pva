@@ -56,7 +56,7 @@ class Birthday(Field):
         try:
             return f'{self.value.date()}'
         except AttributeError:
-            AttributeError('Date in not value. Date in a future')
+            raise AttributeError('Date in not value. Date in a future.')
 
 
 class Email(Field):
