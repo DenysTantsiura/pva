@@ -19,9 +19,6 @@ class Field:
 class Adress(Field):
     """Class of contact Adress."""
 
-    def __init__(self, value):
-        super().__init__(value)
-
     @Field.value.setter
     def value(self, new_value: str) -> None:
         
@@ -34,9 +31,6 @@ class Adress(Field):
 
 class Birthday(Field):
     """Class of Birthday data."""
-
-    def __init__(self, value):
-        super().__init__(value)
 
     @Field.value.setter
     def value(self, new_value: str) -> None:
@@ -61,9 +55,6 @@ class Birthday(Field):
 
 class Email(Field):
     """Class of contact Email."""
-
-    def __init__(self, value):
-        super().__init__(value)
 
     @Field.value.setter
     def value(self, new_value: str) -> None:
