@@ -39,5 +39,7 @@ class NoteBook(UserDict):
         tags = list(set(tags))
         tags.sort()
 
+        return list(dict.fromkeys([note.name for tag in tags for note in self.data.values() if tag in note.tags]))
+
 
 
