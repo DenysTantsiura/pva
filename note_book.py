@@ -8,7 +8,7 @@ class NoteBook(UserDict):
         self.data[record.name] = record
 
     def iterrator(self, count: int) -> list:
-        """Return records of all notebook"""
+        """Return (count) records of all notebook"""
         tags = []
         
         for record in self.data.values():
