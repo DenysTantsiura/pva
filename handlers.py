@@ -1,4 +1,5 @@
-from .address_book import AddressBook
+from address_book import AddressBook
+from classes_address_book import Record
 
 #@input_error
 def handler_add_phone(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
@@ -8,7 +9,11 @@ def handler_add_phone(user_command: List[str], contact_dictionary: AddressBook, 
     if not name or not phones:
         raise SyntaxError ("You entered an incorrect phone number or name")
     else:
-        pass
+        record = Record(name)
+        for phone in phones:
+            record.add_phone(phone)
+        contact_dictionary.aadd_record(record)
+        return f"{name}'s phone added to the phone book."
 
 
 #@input_error
