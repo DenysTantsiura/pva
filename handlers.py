@@ -1,7 +1,13 @@
 # hendlers...
-
-
 from typing import Union
+
+
+from .address_book import AddressBook
+
+
+# @input_error
+def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    ...
 
 
 ALL_COMMAND_ADDRESSBOOK = {
@@ -55,8 +61,17 @@ ALL_COMMAND.update(ALL_COMMAND_FILESORTER)
 
 
 def main_handler(user_command: list, contact_dictionary: Union[AddressBook, NoteBook], path_file: str) -> Union[str, list]:
-    """Description..."""
-    ...
+    """Get a list of command and options, a dictionary of contacts, 
+    and the path to an book file (AddressBook or NoteBook). 
+    Call a certain function and return a response to a command request.
 
+        Parameters:
+            user_command (list): List of user command (list of command and options).
+            contact_dictionary (AddressBook|NoteBook): Instance of AddressBook or NoteBook.
+            path_file (str): Is there path and filename of address book (in str).
 
-
+        Returns:
+            The result of the corresponding function (list): 
+            The result of the certain function is a string or a list of strings.
+    """
+    return ALL_COMMAND.get(user_command[0], lambda *args: None)(user_command, contact_dictionary, path_file) or 'Unknown command!'
