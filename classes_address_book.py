@@ -62,6 +62,48 @@ class Email(Field):
 
         else:
             print('Email incorect. Try again.')
+            
+
+class Name(Field):
+    """Class of name contact."""   
+    
+    @Field.value.setter
+    def value(self, value):
+        if not value.isalpha():
+            print ('The contact name must consist of letters only.')
+            # raise ValueError ('Wrong name. The contact name must consist of letters only.')
+        else: 
+            self._value = value
+
+
+class Phone(Field):
+    """Class of number phone contact."""
+    
+    @Field.value.setter
+    def value(self, value):
+        if re.search(r'^\+[0-9)(-+]{10-17}$', value):
+            self._value = self.preformatting(value)
+
+    @staticmethod
+    def preformatting(value: str) -> str:
+        new_value = (
+        value.strip()
+        .replace('+', '')
+        .replace('(', '')
+        .replace(')', '')
+        .replace('-', '')
+        .replace(' ', '')
+        )
+        if new_value.startswith('38'):
+            new_value = '+' + new_value[:2] + '(' + new_value[2:5] + ')-' + new_value[5:8] + '-' + new_value[8:10] + '-' + new_value[10:]
+        elif new_value.startswith('8'):
+            new_value = '+3' + new_value[:1] + '(' + new_value[1:4] + ')-' + new_value[4:7] + '-' + new_value[7:9] + '-' + new_value[9:]
+        elif new_value.startswith("0"):
+            new_value = '+38' +  '(' + new_value[:3] + ')-' + new_value[3:6] + '-' + new_value[6:8] + '-' + new_value[8:]
+        else:
+            return 'Please, write right phone.'
+            #raise ValueError('Wrong phone number.')
+        return new_value
 
 
 class Record:
@@ -80,7 +122,7 @@ class Record:
     def add_address(self, address: str) -> tuple:
         """Adds a new entry for the user's name - address."""
         if address:
-            self.address = Address(address)
+            self.address = Adress(address)
 
             return True,
 
@@ -128,7 +170,7 @@ class Record:
     def change_address(self, new_address: str) -> tuple:
         """Modify an existing user's address entry in the address book."""
         if new_address:
-            self.address = Address(new_address)
+            self.address = Adress(new_address)
             return True,
 
         else:
