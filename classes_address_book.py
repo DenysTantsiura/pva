@@ -17,7 +17,7 @@ class Field:
         self._value = value
 
 
-class Adress(Field):
+class Address(Field):
     """Class of contact Adress."""
 
     @Field.value.setter
@@ -62,8 +62,39 @@ class Email(Field):
 
         else:
             print('Email incorect. Try again.')
+            
+
+class Name(Field):
+    """Class of name contact."""   
+    
+    @Field.value.setter
+    def value(self, value):
+        if re.search(r"[\w'-]{2,}"):
+            self._value = value.title()
+        else: 
+            print ('Wrong name. Please input correct name.')
+            # raise ValueError ('Wrong name. Please input correct name')
 
 
+class Phone(Field):
+    """Class of number phone contact."""
+    
+    @Field.value.setter
+    def value(self, value):
+        new_value = (
+        value.strip()
+        .replace('+', '')
+        .replace('(', '')
+        .replace(')', '')
+        .replace('-', '')
+        )
+        if re.search(r'[0-9]{10,12}', new_value):
+            self._value = new_value
+        else:
+            print('Wrong phone. Please enter correct phone number.')
+            #raise ValueError ('Wrong phone. Please enter correct phone number.')
+
+    
 class Record:
     """Record class of person information."""
 
