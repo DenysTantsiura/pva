@@ -4,13 +4,11 @@ from datetime import datetime, timedelta
 
 class AddressBook(UserDict):
     """Class of Address Book """
-    def __str__(self) -> str:
-        # Не зовсім розумію що сюди потрібно дoдавати
-        pass
 
 
     def add_record(self, record) -> None:
-        """Adds a new record to the address book"""
+        """Adds a new record to the address book."""
+        
         self.data[record.name.value] = record
 
 
