@@ -48,6 +48,8 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
         return f'Contact don`t found'
 
 
+
+
 ALL_COMMAND_ADDRESSBOOK = {
     '?': handler_help,
     'add_address': handler_add_address,
