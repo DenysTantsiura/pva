@@ -1,3 +1,4 @@
+from difflib import get_close_matches
 from typing import Union
 
 from .address_book import AddressBook
@@ -7,31 +8,19 @@ def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
     """In the case of an unrecognized command, 
         the bot offers the closest similar known command.
     """
-    candidates = user_command[1:]
+    candidates = user_command[1:]  # list of words inputed by user
     commands = []
+
     for word in candidates:
-        for part in ALL_COMMAND:
-            if part.startswith(word):
-                commands.append(part.replace('_', ' '))
-    if not commands:
-        for word in candidates:
-            for part in ALL_COMMAND:
-                if word in part:
-                    commands.append(part.replace('_', ' '))
-    if not commands:
-        for word in candidates:
-            for part in ALL_COMMAND:
-                if word[:3] in part:
-                    commands.append(part.replace('_', ' '))
+        commands.extend(get_close_matches(word, ALL_COMMAND))
+
+    commands = list(dict.fromkeys(commands))
+
     if commands:
         return f'Command with error? Maybe something from these knowns commands?:\n{commands}\n'
 
     candidates = ' '.join(candidates)
     return f'...\"{candidates}\"Unknown command... Nothing even to offer for you.'
-
-inp = input('Enter command: ').split()
-print(inp)
-print(handler_command_guesser(['guess_command']+ inp, 6, 4, 1, 5))
 
 
 # @input_error
