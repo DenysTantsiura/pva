@@ -17,7 +17,7 @@ class Field:
         self._value = value
 
 
-class Adress(Field):
+class Address(Field):
     """Class of contact Adress."""
 
     @Field.value.setter
@@ -69,11 +69,11 @@ class Name(Field):
     
     @Field.value.setter
     def value(self, value):
-        if not value.isalpha():
-            print ('The contact name must consist of letters only.')
-            # raise ValueError ('Wrong name. The contact name must consist of letters only.')
+        if re.search(r"[\w'-]{2,}"):
+            self._value = value.title()
         else: 
-            self._value = value
+            print ('Wrong name. Please input correct name.')
+            # raise ValueError ('Wrong name. Please input correct name')
 
 
 class Phone(Field):
@@ -81,31 +81,20 @@ class Phone(Field):
     
     @Field.value.setter
     def value(self, value):
-        if re.search(r'^\+[0-9)(-+]{10-17}$', value):
-            self._value = self.preformatting(value)
-
-    @staticmethod
-    def preformatting(value: str) -> str:
         new_value = (
         value.strip()
         .replace('+', '')
         .replace('(', '')
         .replace(')', '')
         .replace('-', '')
-        .replace(' ', '')
         )
-        if new_value.startswith('38'):
-            new_value = '+' + new_value[:2] + '(' + new_value[2:5] + ')-' + new_value[5:8] + '-' + new_value[8:10] + '-' + new_value[10:]
-        elif new_value.startswith('8'):
-            new_value = '+3' + new_value[:1] + '(' + new_value[1:4] + ')-' + new_value[4:7] + '-' + new_value[7:9] + '-' + new_value[9:]
-        elif new_value.startswith("0"):
-            new_value = '+38' +  '(' + new_value[:3] + ')-' + new_value[3:6] + '-' + new_value[6:8] + '-' + new_value[8:]
+        if re.search(r'[0-9]{10,12}', new_value):
+            self._value = new_value
         else:
-            return 'Please, write right phone.'
-            #raise ValueError('Wrong phone number.')
-        return new_value
+            print('Wrong phone. Please enter correct phone number.')
+            #raise ValueError ('Wrong phone. Please enter correct phone number.')
 
-
+    
 class Record:
     """Record class of person information."""
 
@@ -122,7 +111,7 @@ class Record:
     def add_address(self, address: str) -> tuple:
         """Adds a new entry for the user's name - address."""
         if address:
-            self.address = Adress(address)
+            self.address = Address(address)
 
             return True,
 
@@ -170,7 +159,7 @@ class Record:
     def change_address(self, new_address: str) -> tuple:
         """Modify an existing user's address entry in the address book."""
         if new_address:
-            self.address = Adress(new_address)
+            self.address = Address(new_address)
             return True,
 
         else:
