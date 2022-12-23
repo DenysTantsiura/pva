@@ -16,11 +16,11 @@ def handler_change_birthday(user_command: List[str], contact_dictionary: Address
     birthday = user_command[2]
     return contact_dictionary[name].change_birthday(birthday)
 
+
 # @input_error
 def handler_happy_birthday(user_command: List[str], contact_dictionary: AddressBook, _=None) -> list:
 
     return contact_dictionary.show_happy_birthday(user_command[1])
-
 
 
 # @input_error
