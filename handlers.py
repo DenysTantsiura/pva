@@ -32,4 +32,4 @@ def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
 
 inp = input('Enter command: ').split()
 print(inp)
-print(handler_command_guesser(['guess_command']+ inp))
+print(handler_command_guesser(['guess_command']+ inp, 6, 4, 1, 5))
