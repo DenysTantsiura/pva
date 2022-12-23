@@ -1,3 +1,9 @@
+# hendlers...
+from typing import Union
+
+
+from .address_book import AddressBook
+
 # @input_error
 def handler_add_birthday(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot add birthday to contact"""
@@ -34,18 +40,6 @@ def handler_remove_birthday(user_command: List[str], contact_dictionary: Address
 
     else:
         return f'Contact don`t found'
-    
-
-# hendlers...
-from typing import Union
-
-
-from .address_book import AddressBook
-
-
-# @input_error
-def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    ...
 
 
 ALL_COMMAND_ADDRESSBOOK = {
