@@ -133,3 +133,5 @@ def main_handler(user_command: list, contact_dictionary: Union[AddressBook, Note
             The result of the certain function is a string or a list of strings.
     """
     return ALL_COMMAND.get(user_command[0], lambda *args: None)(user_command, contact_dictionary, path_file) or 'Unknown command!'
+
+
