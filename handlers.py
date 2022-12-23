@@ -14,14 +14,21 @@ def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_
     """Bot add email to contact"""
 
     name = user_command[1]
-    return contact_dictionary[name].add_email(user_command[2])
+    email = user_command[2]
+    contact_dictionary[name].add_email(email)
+
+    return f'Email {email} for contact {name} added'
 
 # @input_error
 def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot change email for contact"""
 
     name = user_command[1]
-    return contact_dictionary[name].change_email(user_command[2], user_command[3])
+    old_email = user_command[2]
+    new_email = user_command[3]
+    contact_dictionary[name].change_email(old_email, new_email)
+
+    return f'Email {old_email} for contact {name} has changed on {new_email}'
 
 # @input_error
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
@@ -50,7 +57,7 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
         for email in emails:
 
             if contact_dictionary[name].remove_email() == True:
-                massage = 'Email {email} for  contact {name} removed'
+                massage = 'Email {email} for  contact {name} has delited'
             
             else:
                 massage = 'Email {email} not find in contact {name}'
