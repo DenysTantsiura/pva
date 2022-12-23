@@ -9,6 +9,57 @@ from .address_book import AddressBook
 def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     ...
 
+# @input_error
+def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Bot add email to contact"""
+
+    name = user_command[1]
+    return contact_dictionary[name].add_email(user_command[2])
+
+# @input_error
+def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Bot change email for contact"""
+
+    name = user_command[1]
+    return contact_dictionary[name].change_email(user_command[2], user_command[3])
+
+# @input_error
+def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
+    """Bot showed email for contact"""
+
+    name = user_command[1]
+    return f"{name} have email are: {[mail.value for mail in contact_dictionary.email]}"
+
+
+# @input_error
+def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Bot removed email for contact"""
+
+    name = user_command[1]
+    email = user_command[2]
+
+    # if name in contact_dictionary: 
+    #     contact_dictionary[name].remove_email(email)
+    #     return f'Email {email} for  contact {name} removed'
+
+    # else:
+    #     return f'Contact don`t found'
+
+    if name in contact_dictionary:
+
+        for email in emails:
+
+            if contact_dictionary[name].remove_email() == True:
+                massage = 'Email {email} for  contact {name} removed'
+            
+            else:
+                massage = 'Email {email} not find in contact {name}'
+
+        return massage
+
+    else:
+        return f'Contact don`t find'
+
 
 ALL_COMMAND_ADDRESSBOOK = {
     '?': handler_help,
