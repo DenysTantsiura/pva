@@ -34,44 +34,20 @@ class Birthday(Field):
     """Class of Birthday data."""
 
     @Field.value.setter
-    # def value(self, new_value: str):
-
-    #     try:
-    #         new_value = [int(i) for i in new_value.split(".")]
-    #         birthday_date = date(*new_value)
-
-    #     except ValueError:
-    #         raise ValueError('Data in not value. Enter numbers in format yyyy.mm.dd.')
-
-    #     except TypeError:
-    #         raise ValueError('Data in not value. Enter numbers in format yyyy.mm.dd.')
-
-    #     if birthday_date <= date.today():
-    #         self._value = birthday_date
-
-    #     else:
-    #         raise ValueError("Date in a future")
-
     def value(self, new_value: str) -> None:
-
+        
         try:
             birthday_data = datetime.strptime(new_value, "%Y-%m-%d")
 
         except ValueError:
             # raise ValueError('Data in not value. Enter numbers in format yyyy-mm-dd.')
-            print('Data in not value. Enter numbers in format yyyy-mm-dd.')
+            return f'Data in not value. Enter numbers in format yyyy-mm-dd.'
 
         if birthday_data <= datetime.now():
             self._value = birthday_data 
 
     def __str__(self) -> str:
-
-        try:
-            return f'{self.value.date()}'
-
-        except AttributeError:
-            # raise AttributeError('Date in not value. Date in a future.')
-            print('Date in not value. Date in a future.')
+        return f'{self.value.date()}' if self.value else 'Data in not value.'
 
 
 class Email(Field):
@@ -247,4 +223,3 @@ class Record:
                 return True
 
         print(f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\"')
-
