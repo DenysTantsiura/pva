@@ -14,13 +14,13 @@ class NoteBook(UserDict):
         for record in self.data.values():
 
             tags.append(record)
-            i_counter += 1
+            counter += 1
 
-            if i_counter == count:
+            if counter == count:
 
                 yield tags
                 tags = []
-                i_counter = 0
+                counter = 0
 
         if tags:
             yield tags
