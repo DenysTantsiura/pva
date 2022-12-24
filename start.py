@@ -5,6 +5,7 @@ from typing import NoReturn, Union
 
 from address_book import AddressBook
 from handlers import (
+    handler_help,
     main_handler,
     ALL_COMMAND,
     ALL_COMMAND_ADDRESSBOOK,
@@ -17,7 +18,7 @@ from serialization import LoadBook, OpenBook
 
 class InputToParser:
 
-    def listen(self, request='Can I help you?\n'):
+    def listen(self, request='How can I help you?\n'):
         """Get a user string - separate the command and parameters - 
         return it to the list, where the first element is the command, 
         the others are parameters.
@@ -66,7 +67,7 @@ class OutputAnswer:
             for volume in bot_answer:
                 if volume:
                     print(volume)
-                    input('Press Enter for next Volume... ')
+                    input('Press Enter for next page... ')
 
         else:
             print('Something happened. Will you try again?')
@@ -98,14 +99,18 @@ class PVA():
         self.contact_dictionary, self.path_file = LoadBook(self.path_file).load_book(AddressBook)
         self.note_book, self.path_file_notes = LoadBook(self.path_file_notes).load_book(NoteBook)
 
+        self.parser = InputToParser()
+        print('Hello! A personal virtual assistant welcomes you.\nKnown commands:\n', handler_help(None, None, None))
+
     def start(self) -> NoReturn:
         """The main function of launching a helper console bot that recognize 
         the commands entered from the keyboard and respond according 
         to the command entered. Enter a command - get an answer.
         """
+
         while True:
 
-            user_request = InputToParser().listen()
+            user_request = self.parser.listen()
 
             if user_request[0] in ALL_COMMAND_ADDRESSBOOK:  # dict of commands
                 bot_answer_result = OutputAnswer().show_out(user_request, self.contact_dictionary, self.path_file)
