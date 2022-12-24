@@ -66,10 +66,13 @@ class Email(Field):
 
 class Name(Field):
     """Class of name contact."""   
+    def __init__(self, value):
+        super().__init__(value)
+        self._nickname = None
     
     @Field.value.setter
     def value(self, value):
-        if re.search(r"[\w'-]{2,}"):
+        if re.search(r"[\w'-]{2,}", value):
             self._value = value.title()
         else: 
             print ('Wrong name. Please input correct name.')
