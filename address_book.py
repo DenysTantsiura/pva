@@ -1,16 +1,13 @@
 from collections import UserDict
-from datetime import datetime, timedelta
+# from datetime import datetime, timedelta
 
 
 class AddressBook(UserDict):
-    """Class of Address Book """
-
-
+    """Class of Address Book."""
     def add_record(self, record) -> None:
         """Adds a new record to the address book."""
         
         self.data[record.name.value] = record
-
 
     def show_happy_birthday(self, meantime: int) -> list:
         """Shows a list of contacts whose birthday is a specified number of days from the current date."""
@@ -20,12 +17,10 @@ class AddressBook(UserDict):
             if contact.birthday and meantime >= contact.days_to_birthday():
                 birthday_people.append(contact)
         return birthday_people
-
     
     def __iter__(self):
         for key, value in self.data.items():
             yield key, value
-
 
     #def iterator(self, n_count: int) -> list:
     #    """Output of the address book by pages."""
@@ -44,11 +39,7 @@ class AddressBook(UserDict):
 #        if page:
 #            yield page
 
-
     def remove_record(self, name: str) -> None:
         """Delete contact from address book."""
         
         del self.data[name]
-        
-
-

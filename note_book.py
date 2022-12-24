@@ -1,14 +1,15 @@
 from collections import UserDict
 
+
 class NoteBook(UserDict):
-    """Class of NoteBook"""
+    """Class of NoteBook."""
 
     def add_record(self, record: str) -> None:
         """Add new record in the notebook."""
         self.data[record.name] = record
 
     def iterrator(self, count: int) -> list:
-        """Return (count) records of all notebook"""
+        """Return (count) records of all notebook."""
         tags = []
         
         for record in self.data.values():
@@ -40,6 +41,3 @@ class NoteBook(UserDict):
         tags.sort()
 
         return list(dict.fromkeys([note.name for tag in tags for note in self.data.values() if tag in note.tags]))
-
-
-

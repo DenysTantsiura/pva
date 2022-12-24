@@ -3,16 +3,16 @@ import sys
 from typing import NoReturn, Union
 
 
-from .address_book import AddressBook
-from .handlers import (
+from address_book import AddressBook
+from handlers import (
     main_handler,
     ALL_COMMAND,
     ALL_COMMAND_ADDRESSBOOK,
     ALL_COMMAND_NOTEBOOK,
     ALL_COMMAND_FILESORTER,
 )
-from .note_book import NoteBook
-from .serialization import LoadBook, OpenBook
+from note_book import NoteBook
+from serialization import LoadBook, OpenBook
 
 
 class InputToParser:
@@ -95,7 +95,7 @@ class PVA():
         self.path_file = OpenBook(self.path_file).open_book()
         self.path_file_notes = OpenBook(self.path_file_notes).open_book()
 
-        self.contact_dictionary, self.path_file = LoadBook(self.path_file).load_book()
+        self.contact_dictionary, self.path_file = LoadBook(self.path_file).load_book(AddressBook)
         self.note_book, self.path_file_notes = LoadBook(self.path_file_notes).load_book(NoteBook)
 
     def start(self) -> NoReturn:

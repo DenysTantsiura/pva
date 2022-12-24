@@ -1,9 +1,9 @@
 import pickle
-from typing import Union
 from pathlib import Path
+from typing import Union
 
-from .address_book import AddressBook
-from .note_book import NoteBook
+from address_book import AddressBook
+from note_book import NoteBook
 
 
 class LoadBook:
@@ -22,6 +22,7 @@ class LoadBook:
             data = pickle.load(fh)
             return data, self.path_file
 
+
 class OpenBook:
     """Return data file path."""
 
@@ -32,6 +33,7 @@ class OpenBook:
         file_path = Path(self.path_file)
         self.path_file = Path(file_path.parent, file_path.name)
         return self.path_file
+
 
 class SaveBook:
     """Save data in file."""
