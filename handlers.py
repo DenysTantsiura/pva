@@ -1,6 +1,6 @@
 from difflib import get_close_matches
 from typing import Union
-
+# from ... import sort_trash
 from .address_book import AddressBook
 
 from .note_book import NoteBook
@@ -138,6 +138,39 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
 
         else: 
             return f'Contacts{name} don`t have email.'
+
+def handler_exit(*_) -> str:
+    """The bot is terminating."""
+    exit()
+
+# @input_error
+def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) -> list:
+    pass
+
+def handler_hello(*_) -> str:
+    """The bot is welcome."""
+    return 'Hello! How can I help you?'
+
+def handler_help(*_) -> str:
+    """The bot shows all commands."""
+    help_list = []
+    for key in ALL_COMMAND.keys():
+        help_list.append(key)
+    return f'{help_list}'
+
+# @input_error
+def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
+    """The bot shows all contacts"""
+    list_contacts = []
+    contact = ''
+    for key, value in contact_dictionary.items():
+        contact += (f'{key}: {value}')
+        list_contacts.append(contact)
+    return f'{list_contacts}'
+
+def handler_sort(user_command: List[str], __=None, _=None) -> str:
+    """The bot sort trash"""
+    return sort_trash(user_command[1])
 
 ALL_COMMAND_ADDRESSBOOK = {
     '?': handler_help,
