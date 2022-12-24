@@ -141,8 +141,7 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
 
 def handler_exit(*_) -> str:
     """The bot is terminating."""
-    print('Good buy!')
-    exit()
+    return ('Good buy!')
 
 # @input_error
 def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) -> list:
