@@ -48,7 +48,7 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
    
         return f'You added new note - {name}: {text}.'
     except IndexError:
-        return f'Try againe! You should add <command> <name> <text>.'
+        return f'Try again! You should add <command> <name> <text>.'
 
 
 # @input_error
@@ -68,7 +68,7 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
         note_book.remove_record(name)
         return (f'You have removed the note - {name}.')
     except IndexError:
-        return f'Try againe! You should add <command> <name>.'
+        return f'Try again! You should add <command> <name>.'
 
 # @input_error
 def handler_change_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
@@ -406,13 +406,17 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
             path_file (str): Path of file record.
         Returns:
             string(str): Information about showing the note."""   
-    value = user_command[1]
+    
     try:   
-        for record in note_book.values():
-            if record[value]:
-                return f'{record}'
-    except ValueError:
-        return ('This note does not exist.')
+        value = user_command[1]
+        if value not in note_book:
+            # raise ValueError ('This note does not exist.')
+            return ('This note does not exist.')
+        for name, record in note_book.items():
+            if value == name:
+                return f'The note {record}.'
+    except IndexError:
+        return f'Try again! You should add <command> <name>.'
 
 
 # @input_error
