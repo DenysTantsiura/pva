@@ -46,7 +46,7 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
 
     name = user_command[1]
     
-    if name in contact_dictionary:
+    if contact_dictionary.get(name, None):
 
         if contact_dictionary[name].birthday:
             contact_dictionary[name].remove_birthday()
