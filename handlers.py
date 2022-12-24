@@ -1,6 +1,6 @@
 # hendlers...
 from typing import Union
-from ... import sort_trash
+# from ... import sort_trash
 from class_note import Note
 from .address_book import AddressBook
 from .note_book import NoteBook
@@ -64,7 +64,7 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
     return f'You have changed note.'
 
 # @input_error
-def handler_show_notes(note_book: NoteBook) -> list:
+def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
     '''handler_show_notes...": The bot shows all notes or some notes by tags.
         Parameters:
             *args (tuple): Tuple with tags or nothing.
@@ -75,7 +75,7 @@ def handler_show_notes(note_book: NoteBook) -> list:
     list_notes = ''
     for record in note_book.values():
         list_notes += f'{record}\n'
-    return list_notes
+    return f'{list_notes}'
 
 # @input_error
 def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
@@ -90,7 +90,7 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
     try:   
         for record in note_book.values():
             if record[value]:
-                return record
+                return f'{record}'
     except ValueError:
         return ('This note does not exist.')
 
@@ -110,7 +110,7 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
         for record in note_book:
             if tag in record:
                 list_notes += f'{record}'
-    return list_notes
+    return f'{list_notes}'
 
 # @input_error
 def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
