@@ -66,14 +66,11 @@ class Email(Field):
 
 class Name(Field):
     """Class of name contact."""   
-    def __init__(self, value):
-        super().__init__(value)
-        self._nickname = None
     
     @Field.value.setter
     def value(self, value):
         if re.search(r"[\w'-]{2,}", value):
-            self._value = value.title()
+            self._value = value.lower().title()
         else: 
             print ('Wrong name. Please input correct name.')
             # raise ValueError ('Wrong name. Please input correct name')
@@ -140,9 +137,7 @@ class Record:
         phone_new1 = Phone(phone_new)
 
         for phone in self.phones:
-            if phone_new1 == phone.value:
-                print(f'\"{phone_new1}\" already recorded for \"{self.name.value}\"')
-
+            if phone_new1.value == phone.value:
                 return False
         
         self.phones.append(phone_new1)

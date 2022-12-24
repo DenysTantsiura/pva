@@ -250,7 +250,7 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
     """add ...: The bot saves new contact and phone(s) to contact dictionary.
     User must write name of contact and one or more phone."""
     
-    name, *phones = user_command[1] , user_command[2:]
+    name, phones = user_command[1].lower().title() , user_command[2:]
     if name in contact_dictionary: 
         return 'This contact is already in the phone book. Please enter the correct name.'
         #raise ValueError ('This contact is already in the phone book. Please enter the correct name.')
@@ -260,7 +260,7 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
     else:
         record = Record(name)
         for phone in phones:
-            record.add_phone(phone[0])
+            record.add_phone(phone)
         contact_dictionary.add_record(record)
         SaveBook().save_book(contact_dictionary, path_file)
         return f'{name}"s phone added to the phone book.'
@@ -270,18 +270,18 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
     """add_phone ...: The bot adds the new phone(s) to an already existing contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary and one or more phone."""
     
-    name, *phones = user_command[1] , user_command[2:]
+    name, phones = user_command[1].lower().title() , user_command[2:]
     if name not in contact_dictionary:
         return 'This contact is not in the phone book. Please enter the correct name.'
         #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
     message_to_user = ''
     for phone in phones:
-        if contact_dictionary[name].add_phones(phone):
+        if contact_dictionary[name].add_phone(phone):
             message_to_user += f'{name}"s phones are appdate {phone}.\n'
         else:
             message_to_user += f'Contact {name} already have this {phone} phone number.\n '
             
-    return message_to_user[:-1]
+    return message_to_user[:-2]
 
 
 #@input_error
@@ -289,8 +289,7 @@ def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -
     """phone ...: The bot show all phones contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary."""
     
-    name = user_command[1].title()
-    print(name)
+    name = user_command[1].lower().title()
     if name not in contact_dictionary:
         return 'This contact is not in the phone book. Please enter the correct name.'
         #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
@@ -304,7 +303,7 @@ def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, pa
     """remove phone ...: The bot remove phone(s) from contact in contact dictionary.
     User must write name and one or more phone."""
     
-    name, *phones = user_command[1] , user_command[2:]
+    name, phones = user_command[1].lower().title() , user_command[2:]
     if name not in contact_dictionary:
         return 'This contact is not in the phone book. Please enter the correct name.'
         #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
@@ -322,7 +321,7 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
     """change ...: The bot changes phone number.
     User must write name and two phones."""
     
-    name, *phones = user_command[1] , user_command[2:]
+    name, phones = user_command[1].lower().title() , user_command[2:]
     if name not in contact_dictionary:
         return 'This contact is not in the phone book. Please enter the correct name.'
         #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
@@ -347,7 +346,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
     """remove ...: The bot delete contact from contact dictionary.
     User must write just name."""
     
-    name = user_command[1]
+    name = user_command[1].lower().title()
     if name in contact_dictionary:
         contact_dictionary.remove_record(name)
         return f'{name}"s contact has been deleted'
@@ -361,7 +360,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
     """show ...: The bot show all information about contact.
     User must write just name."""
     
-    name = user_command[1]
+    name = user_command[1].lower().title()
     if name not in contact_dictionary:
         return f'Contact {name} is not in contact book'
         #raise ValueError(f'Contact {name} is not in contact book') 
