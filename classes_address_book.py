@@ -144,7 +144,7 @@ class Record:
                 print(f'\"{phone_new1}\" already recorded for \"{self.name.value}\"')
 
                 return False
-
+        
         self.phones.append(phone_new1)
 
         return True

@@ -261,8 +261,9 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
         record = Record(name)
         for phone in phones:
             record.add_phone(phone[0])
-        if contact_dictionary.add_record(record):
-            return f'{name}"s phone added to the phone book.'
+        contact_dictionary.add_record(record)
+        SaveBook().save_book(contact_dictionary, path_file)
+        return f'{name}"s phone added to the phone book.'
 
 
 def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
@@ -288,7 +289,8 @@ def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -
     """phone ...: The bot show all phones contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary."""
     
-    name = user_command[1]
+    name = user_command[1].title()
+    print(name)
     if name not in contact_dictionary:
         return 'This contact is not in the phone book. Please enter the correct name.'
         #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
