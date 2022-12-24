@@ -1,10 +1,28 @@
-# hendlers...
+from difflib import get_close_matches
 from typing import Union
-
 
 from .address_book import AddressBook
 from .note_book import NoteBook
 from .serialization import SaveBook
+
+def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
+    """In the case of an unrecognized command, 
+        the bot offers the closest similar known command.
+    """
+    candidates = user_command[1:]  # list of words inputed by user
+    commands = []
+
+    for word in candidates:
+        commands.extend(get_close_matches(word, ALL_COMMAND))
+
+    commands = list(dict.fromkeys(commands))
+
+    if commands:
+        return f'Command with error? Maybe something from these knowns commands?:\n{commands}\n'
+
+    candidates = ' '.join(candidates)
+    return f'...\"{candidates}\"Unknown command... Nothing even to offer for you.'
+
 
 # @input_error
 def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
