@@ -58,11 +58,11 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
 
                 if contact_dictionary[name].remove_email() == True:
                     massage = 'Email {email} for  contact {name} has delete.'
+                    SaveBook().save_book(contact_dictionary, path_file)
+
                 
                 else:
                     massage = 'Email {email} not find in contact {name}.'
-
-            SaveBook().save_book(contact_dictionary, path_file)
 
             return massage
 
