@@ -384,7 +384,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
 # @input_error
 def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
-    """handler_show_notes...": The bot shows all notes or some notes by tags.
+    """handler_show_notes: The bot shows all notes or some notes by tags.
         Parameters:
             *args (tuple): Tuple with tags or nothing.
             book (NoteBook): Dictionary with notes.
@@ -399,7 +399,7 @@ def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
 
 # @input_error
 def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
-    """handler_show_note...": The bot shows note wich finds by a name.
+    """handler_show_note: The bot shows note wich finds by a name.
         Parameters:
             user_command (list): List with command and note's information which should adds.
             book (NoteBook): Dictionary with notes.
@@ -421,7 +421,7 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
 
 # @input_error
 def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
-    """handler_find_notes...": The bot finds notes in the NoteBook by the tags.
+    """handler_find_notes: The bot finds notes in the NoteBook by the tags.
         Parameters:
             user_command (list): List with command and tag.
             book (NoteBook): Dictionary with notes.
@@ -440,7 +440,7 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
 
 # @input_error
 def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
-    """handler_sort_notes...": The bot return list of note-names sorted by tags.
+    """handler_sort_notes: The bot return list of note-names sorted by tags.
         Parameters:
             book (NoteBook): Dictionary with notes.
         Returns:
