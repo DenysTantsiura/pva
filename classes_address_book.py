@@ -47,7 +47,7 @@ class Birthday(Field):
             self._value = birthday_data 
 
     def __str__(self) -> str:
-        return f'{self.value.date()}' if self.value else 'Data in not value.'
+        return f'{self.value.date()}' if self._value else 'Data in not value.'
 
 
 class Email(Field):
@@ -69,8 +69,8 @@ class Name(Field):
     
     @Field.value.setter
     def value(self, value):
-        if re.search(r"[\w'-]{2,}"):
-            self._value = value.title()
+        if re.search(r"[\w'-]{2,}", value):
+            self._value = value
         else: 
             print ('Wrong name. Please input correct name.')
             # raise ValueError ('Wrong name. Please input correct name')
@@ -137,11 +137,9 @@ class Record:
         phone_new1 = Phone(phone_new)
 
         for phone in self.phones:
-            if phone_new1 == phone.value:
-                print(f'\"{phone_new1}\" already recorded for \"{self.name.value}\"')
-
+            if phone_new1.value == phone.value:
                 return False
-
+        
         self.phones.append(phone_new1)
 
         return True
