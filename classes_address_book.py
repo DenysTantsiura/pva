@@ -47,7 +47,7 @@ class Birthday(Field):
             self._value = birthday_data 
 
     def __str__(self) -> str:
-        return f'{self.value.date()}' if self.value else 'Data in not value.'
+        return f'{self.value.date()}' if self._value else 'Data in not value.'
 
 
 class Email(Field):
@@ -70,7 +70,7 @@ class Name(Field):
     @Field.value.setter
     def value(self, value):
         if re.search(r"[\w'-]{2,}", value):
-            self._value = value.lower().title()
+            self._value = value
         else: 
             print ('Wrong name. Please input correct name.')
             # raise ValueError ('Wrong name. Please input correct name')
