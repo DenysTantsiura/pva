@@ -1,17 +1,13 @@
 # hendlers...
 from typing import Union
-
+from ... import sort_trash
 from class_note import Note
 from .address_book import AddressBook
-
 from .note_book import NoteBook
 
 
 # @input_error
-def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    ...
-# @input_error
-def handler_add_note(user_command: list, contact_dictionary: NoteBook, path_file: str) -> str:
+def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
     '''handler_add_note...": The bot creates and adds new note to the NoteBook.
         Parameters:
             user_command (list): List with command and note's information which should adds.
@@ -21,16 +17,18 @@ def handler_add_note(user_command: list, contact_dictionary: NoteBook, path_file
             string(str): Information about added note.'''
 
     name = user_command[1]
-    text = user_command[2]
+    text = ' '.join(user_command[2:])
 
-    if name in contact_dictionary:
-        raise ValueError('This note already exist.')
+    if name in note_book:
+        # raise ValueError('This note already exist.')
+        return ('This note already exist.')
     record = Note(name, text)
-    contact_dictionary.add_record(record)
+    note_book.add_record(record)
+   
     return f'You added new note {name}: {text}.'
 
 # @input_error
-def handler_remove_note(user_command: List[str], book: NoteBook, path_file: str) -> str:
+def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
     '''handler_remove_note...": The bot remove note from the NoteBook.
         Parameters:
             user_command (list): List with command and note's information which should adds.
@@ -38,12 +36,16 @@ def handler_remove_note(user_command: List[str], book: NoteBook, path_file: str)
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have removed note.'''    
+    
     name = user_command[1]
-    book.remove_record(name)
+    if name not in note_book:
+        # raise ('This note does not exist.')
+        return ('This note does not exist.')
+    note_book.remove_record(name)
     return (f'You have removed the note{name}.')
 
 # @input_error
-def handler_change_note(user_command: List[str], book: NoteBook, path_file: str) -> str:
+def handler_change_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
     '''handler_change_note...": The bot change all note.
         Parameters:
             user_command (list): List with command, name of notes and new note's information.
@@ -52,27 +54,31 @@ def handler_change_note(user_command: List[str], book: NoteBook, path_file: str)
         Returns:
             string(str): Information about have changed note.''' 
     name = user_command[1]
-    new_text = user_command[2] 
-    record = book[name]
+    new_text = ' '.join(user_command[2:]) 
+   
+    if name not in note_book:
+        # raise ('This note does not exist.')
+        return ('This note does not exist.')
+    record = note_book[name]
     record.change_note(new_text)
-    return f'You have changed note'
+    return f'You have changed note.'
 
 # @input_error
-def handler_show_notes(_, book: NoteBook, __) -> list:
-    '''handler_show_notes...": The bot shows all notes.
+def handler_show_notes(note_book: NoteBook) -> list:
+    '''handler_show_notes...": The bot shows all notes or some notes by tags.
         Parameters:
+            *args (tuple): Tuple with tags or nothing.
             book (NoteBook): Dictionary with notes.
         Returns:
             list_notes (list): Return all notes.'''
    
     list_notes = ''
-    for record in book.iterator(_):
-        for name, text in record.items():
-            list_notes += f'{name}: {text[0]}\n'
+    for record in note_book.values():
+        list_notes += f'{record}\n'
     return list_notes
 
 # @input_error
-def handler_show_note(user_command: List[str], book: NoteBook, _=None) -> str:
+def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
     '''handler_show_note...": The bot shows note wich finds by a name.
         Parameters:
             user_command (list): List with command and note's information which should adds.
@@ -81,14 +87,16 @@ def handler_show_note(user_command: List[str], book: NoteBook, _=None) -> str:
         Returns:
             string(str): Information about showing the note.'''    
     value = user_command[1]
-    for record in book.iterator(_):
-        for name, text in record.items():
-            if name == value:
-                return f'{name}: {text[0]}'
+    try:   
+        for record in note_book.values():
+            if record[value]:
+                return record
+    except ValueError:
+        return ('This note does not exist.')
 
 # @input_error
-def handler_find_notes(user_command: List[str], book: NoteBook, _=None) -> list:
-    '''handler_find_notes...": The bot finds notes in the NoteBook by the tag.
+def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
+    '''handler_find_notes...": The bot finds notes in the NoteBook by the tags.
         Parameters:
             user_command (list): List with command and tag.
             book (NoteBook): Dictionary with notes.
@@ -96,24 +104,22 @@ def handler_find_notes(user_command: List[str], book: NoteBook, _=None) -> list:
         Returns:
             list_notes (list): List of find notes.'''    
     
-    list_notes = []
-    value = user_command[1]
-    for record in book.iterator(_):
-        for element in record.values():
-            tags = element[1]
-            if value in tags:
-                list_notes.append(record) 
-    return list_notes   
+    list_notes = ''
+    tags = user_command[1:]
+    for tag in tags:
+        for record in note_book:
+            if tag in record:
+                list_notes += f'{record}'
+    return list_notes
 
 # @input_error
-def handler_sort_notes(__, book: NoteBook, _=None) -> list:
+def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
     '''handler_sort_notes...": The bot return list of note-names sorted by tags.
         Parameters:
             book (NoteBook): Dictionary with notes.
         Returns:
             list sorted note-names(list): Return list of note-names sorted by tags.'''   
-    return book.sort_by_tags()
-
+    return note_book.sort_by_tags()
 
 ALL_COMMAND_ADDRESSBOOK = {
     '?': handler_help,
