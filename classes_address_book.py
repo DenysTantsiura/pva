@@ -1,4 +1,4 @@
-from datetime import datetime, date
+from datetime import datetime, date  # date? where in use? build in datetime obj. not needed import, right?
 import re
 from typing import Union
 
@@ -281,7 +281,7 @@ class Record:
             return days_left.days
         
     def get_phones_list(self) -> list:
-        """Get all phones in list"""
+        """Get all phones in list."""
         
         phone_list = []
         for phone in self.phones:
@@ -289,7 +289,7 @@ class Record:
         return phone_list
     
     def get_emails_str(self) -> str:
-        """Get all emails in str"""
+        """Get all emails in str."""
         
         emails_str = []
         for email in self.emails:

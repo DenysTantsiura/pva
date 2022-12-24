@@ -2,10 +2,10 @@ from difflib import get_close_matches
 from typing import Union
 # from ... import sort_trash
 from class_note import Note
-from .address_book import AddressBook
+from address_book import AddressBook
 from classes_address_book import Record
-from .note_book import NoteBook
-from .serialization import SaveBook
+from note_book import NoteBook
+from serialization import SaveBook
 
 
 def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
@@ -66,6 +66,7 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
     note_book.remove_record(name)
     return (f'You have removed the note{name}.')
 
+
 # @input_error
 def handler_change_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
     """handler_change_note...": The bot change all note.
@@ -84,6 +85,7 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
     record = note_book[name]
     record.change_note(new_text)
     return f'You have changed note.'
+
 
 # @input_error
 def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
@@ -141,6 +143,7 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
     else:
         return f'Contact don`t found.'
 
+
 # @input_error
 def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot add email to contact."""
@@ -152,6 +155,7 @@ def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_
     SaveBook().save_book(contact_dictionary, path_file)
 
     return f'Email {email} for contact {name} added.'
+
 
 # @input_error
 def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
@@ -165,6 +169,7 @@ def handler_change_email(user_command: list, contact_dictionary: AddressBook, pa
     SaveBook().save_book(contact_dictionary, path_file)
 
     return f'Email {old_email} for contact {name} has changed on {new_email}.'
+
 
 # @input_error
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
@@ -201,7 +206,7 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
 
 def handler_exit(*_) -> str:
     """The bot is terminating."""
-    return ('Good buy!')
+    return 'Good bye!'
 
 
 # @input_error
@@ -233,13 +238,15 @@ def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
     return f'{list_contacts}'
 
 
-def handler_sort(user_command: List[str], __=None, _=None) -> str:
-    """The bot sort trash"""
-    return sort_trash(user_command[1])
+def handler_sort(user_command: list, __=None, _=None) -> str:
+    """The bot sort trash."""
+    # where ... module?
+    #return sort_trash(user_command[1])
+    return f'sort_trash(user_command[1])? Can\'t find module ... .'
 
 
 #@input_error
-def handler_add(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """add ...: The bot saves new contact and phone(s) to contact dictionary.
     User must write name of contact and one or more phone."""
     
@@ -258,7 +265,7 @@ def handler_add(user_command: List[str], contact_dictionary: AddressBook, path_f
             return f'{name}"s phone added to the phone book.'
 
 
-def handler_add_phone(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """add_phone ...: The bot adds the new phone(s) to an already existing contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary and one or more phone."""
     
@@ -277,7 +284,7 @@ def handler_add_phone(user_command: List[str], contact_dictionary: AddressBook, 
 
 
 #@input_error
-def handler_phone(user_command: List[str], contact_dictionary: AddressBook, _=None) -> str:
+def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """phone ...: The bot show all phones contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary."""
     
@@ -291,9 +298,9 @@ def handler_phone(user_command: List[str], contact_dictionary: AddressBook, _=No
 
 
 #@input_error
-def handler_remove_phone(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """remove phone ...: The bot remove phone(s) from contact in contact dictionary.
-    User must write name and one or more phone"""
+    User must write name and one or more phone."""
     
     name, *phones = user_command[0] , user_command[1:]
     if name not in contact_dictionary:
@@ -309,7 +316,7 @@ def handler_remove_phone(user_command: List[str], contact_dictionary: AddressBoo
 
 
 #@input_error
-def handler_change(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+def handler_change(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """change ...: The bot changes phone number.
     User must write name and two phones."""
     
@@ -334,7 +341,7 @@ def handler_change(user_command: List[str], contact_dictionary: AddressBook, pat
 
 
 #@input_error
-def handler_remove(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+def handler_remove(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """remove ...: The bot delete contact from contact dictionary.
     User must write just name."""
     
@@ -348,7 +355,7 @@ def handler_remove(user_command: List[str], contact_dictionary: AddressBook, pat
 
 
 #@input_error
-def handler_show(user_command: List[str], contact_dictionary: AddressBook, _=None) -> str:
+def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """show ...: The bot show all information about contact.
     User must write just name."""
     
@@ -430,6 +437,52 @@ def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
     return note_book.sort_by_tags()
 
 
+# @input_error
+def handler_add_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Add contact address.
+       Command:             add_address
+       User parameters:     contact_name
+                            contact_address
+       Function parameters: contact_dictionary - instance of AddressBook
+                            path_file - path to filename of address book
+    """
+    contact_name = user_command[1]
+    contact_address = ' '.join(user_command[2:])
+    contact_dictionary[contact_name].add_address(contact_address)
+
+    SaveBook().save_book(contact_dictionary, path_file)
+
+
+# @input_error
+def handler_change_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Change contact address.
+       Command:             change_address
+       User parameters:     contact_name
+                            contact_address
+       Function parameters: contact_dictionary - instance of AddressBook
+                            path_file - path to filename of address book
+    """
+    contact_name = user_command[1]
+    contact_address = ' '.join(user_command[2:])
+    contact_dictionary[contact_name].change_address(contact_address)
+
+    SaveBook().save_book(contact_dictionary, path_file)
+
+
+# @input_error
+def handler_remove_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Remove contact address.
+       Command:             remove_address
+       User parameters:     contact_name
+       Function parameters: contact_dictionary - instance of AddressBook
+                            path_file - path to filename of address book
+    """
+    contact_name = user_command[1]
+    contact_dictionary[contact_name].remove_address()
+
+    SaveBook().save_book(contact_dictionary, path_file)
+
+
 ALL_COMMAND_ADDRESSBOOK = {
     '?': handler_help,
     'add_address': handler_add_address,
@@ -495,47 +548,3 @@ def main_handler(user_command: list, contact_dictionary: Union[AddressBook, Note
             The result of the certain function is a string or a list of strings.
     """
     return ALL_COMMAND.get(user_command[0], lambda *args: None)(user_command, contact_dictionary, path_file) or 'Unknown command!'
-
-
-def handler_add_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Add contact address.
-       Command:             add_address
-       User parameters:     contact_name
-                            contact_address
-       Function parameters: contact_dictionary - instance of AddressBook
-                            path_file - path to filename of address book
-    """
-    contact_name = user_command[1]
-    contact_address = ' '.join(user_command[2:])
-    contact_dictionary[contact_name].add_address(contact_address)
-
-    SaveBook().save_book(contact_dictionary, path_file)
-
-
-def handler_change_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Change contact address.
-       Command:             change_address
-       User parameters:     contact_name
-                            contact_address
-       Function parameters: contact_dictionary - instance of AddressBook
-                            path_file - path to filename of address book
-    """
-    contact_name = user_command[1]
-    contact_address = ' '.join(user_command[2:])
-    contact_dictionary[contact_name].change_address(contact_address)
-
-    SaveBook().save_book(contact_dictionary, path_file)
-
-
-def handler_remove_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Remove contact address.
-       Command:             remove_address
-       User parameters:     contact_name
-       Function parameters: contact_dictionary - instance of AddressBook
-                            path_file - path to filename of address book
-    """
-    contact_name = user_command[1]
-    contact_dictionary[contact_name].remove_address()
-
-    SaveBook().save_book(contact_dictionary, path_file)
-
