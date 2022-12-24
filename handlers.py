@@ -10,13 +10,48 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
     ...
 
 
+#@input_error
+def handler_remove(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+    """remove ...: The bot delete contact from contact dictionary.
+    User must write just name."""
+    
+    name = user_command[0]
+    if name in contact_dictionary:
+        contact_dictionary.remove_record(name)
+        return f'{name}"s contact has been deleted'
+    else:
+        return f'Contact {name} is not in contact book'
+        #raise ValueError(f'Contact {name} is not in contact book')
+
+
+#@input_error
+def handler_show(user_command: List[str], contact_dictionary: AddressBook, _=None) -> str:
+    """show ...: The bot show all information about contact.
+    User must write just name."""
+    
+    name = user_command[0]
+    if name not in contact_dictionary:
+        return f'Contact {name} is not in contact book'
+        #raise ValueError(f'Contact {name} is not in contact book') 
+    message_to_user = f'{name}: '
+    if contact_dictionary[name].phones:
+        message_to_user += ' '.join(contact_dictionary[name].get_phones_list())
+    if contact_dictionary[name].birthday:
+        message_to_user += f'; {contact_dictionary[name].days_to_birthday} days left until the birthday; '
+    if contact_dictionary[name].emails:
+        message_to_user += f'{contact_dictionary[name].get_emails_str}; '
+    if contact_dictionary[name].address:
+        message_to_user += f'address: {contact_dictionary[name].address}.'
+    return message_to_user
+
+
 ALL_COMMAND_ADDRESSBOOK = {
     '?': handler_help,
     'add_address': handler_add_address,
     'add_birthday': handler_add_birthday,
     'add_email': handler_add_email,
     'add_phone': handler_add_phone,
-    'add': handler_add,
+    #'add': handler_add, покищо прибираємо, залишаємо add phone
     'change_address': handler_change_address,
     'change_birthday': handler_change_birthday,
     'change_email': handler_change_email,

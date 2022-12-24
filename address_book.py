@@ -15,16 +15,9 @@ class AddressBook(UserDict):
     def show_happy_birthday(self, meantime: int) -> list:
         """Shows a list of contacts whose birthday is a specified number of days from the current date."""
         
-        now_day = datetime.now().date()
         birthday_people = []
         for contact in self.data.values():
-            if contact.birthday:
-                b_day = contact.birthday.value
-                days_for_b_day = (b_day - now_day).days
-                if days_for_b_day < 0:
-                    next_b_day = datetime(year = now_day.year + 1, month=b_day.month, day = b_day.day)
-                    days_for_b_day = (next_b_day - now_day).days
-                if meantime >= days_for_b_day:
+            if contact.birthday and meantime >= contact.days_to_birthday():
                     birthday_people.append(contact)
         return birthday_people
 

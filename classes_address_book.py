@@ -254,3 +254,39 @@ class Record:
                 return True
 
         print(f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\"')
+
+    def days_to_birthday(self) -> int:
+        """Count the number of days until the next birthday of the user."""
+        if self.birthday:
+
+            user_day = datetime(year=datetime.now().date().year,
+                                month=self.birthday.value.month,
+                                day=self.birthday.value.day)
+
+            days_left = user_day.date() - datetime.now().date()
+
+            if days_left.days <= 0:
+
+                user_day = datetime(year=datetime.now().date().year + 1,
+                                    month=self.birthday.value.month,
+                                    day=self.birthday.value.day)
+
+                return (user_day.date() - datetime.now().date()).days
+
+            return days_left.days
+        
+    def get_phones_list(self):
+        '''Get all phones in list'''
+        
+        phone_str = []
+        for phone in self.phones:
+            phone_str.append(phone.value)
+        return phone_str
+    
+    def get_emails_str(self):
+        '''Get all emails in str'''
+        
+        emails_str = []
+        for email in self.emails:
+            emails_str.append(email.value)
+        return ' '.join(emails_str)
