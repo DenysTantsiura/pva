@@ -31,7 +31,7 @@ ALL_COMMAND_ADDRESSBOOK = {
     'hello': handler_hello,
     'help': handler_help,
     'phone': handler_phone,
-    'remmove_address': handler_remove_address,
+    'remove_address': handler_remove_address,
     'remove_birthday': handler_remove_birthday,
     'remove_email': handler_remove_email,
     'remove_phone': handler_remove_phone,
@@ -79,7 +79,13 @@ def main_handler(user_command: list, contact_dictionary: Union[AddressBook, Note
 
 
 def handler_add_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Add contact address."""
+    """Add contact address.
+       Command:             add_address
+       User parameters:     contact_name
+                            contact_address
+       Function parameters: contact_dictionary - instance of AddressBook
+                            path_file - path to filename of address book
+    """
     contact_name = user_command[1]
     contact_address = (' ').join(user_command[2:])
     contact_dictionary[contact_name].add_address(contact_address)
@@ -88,7 +94,13 @@ def handler_add_address(user_command: list, contact_dictionary: AddressBook, pat
 
 
 def handler_change_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Change contact address."""
+    """Change contact address.
+       Command:             change_address
+       User parameters:     contact_name
+                            contact_address
+       Function parameters: contact_dictionary - instance of AddressBook
+                            path_file - path to filename of address book
+    """
     contact_name = user_command[1]
     contact_address = (' ').join(user_command[2:])
     contact_dictionary[contact_name].change_address(contact_address)
@@ -97,7 +109,12 @@ def handler_change_address(user_command: list, contact_dictionary: AddressBook, 
 
 
 def handler_remove_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Remove contact address."""
+    """Remove contact address.
+       Command:             remove_address
+       User parameters:     contact_name
+       Function parameters: contact_dictionary - instance of AddressBook
+                            path_file - path to filename of address book
+    """
     contact_name = user_command[1]
     contact_dictionary[contact_name].remove_address()
 
