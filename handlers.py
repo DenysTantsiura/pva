@@ -47,32 +47,25 @@ def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -
 def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot removed email for contact."""
 
-    name = user_command[1]
-    email = user_command[2]
+    name, *emails = user_command[1], user_command[2:]
 
     if name in contact_dictionary:
-        
-        if len(emails) >= 0:
+
+        if len(emails) == 0:
 
             for email in emails:
+                if contact_dictionary[name].remove_email(email) == True:
 
-                if contact_dictionary[name].remove_email() == True:
                     massage = 'Email {email} for  contact {name} has delete.'
                     SaveBook().save_book(contact_dictionary, path_file)
 
-                
                 else:
                     massage = 'Email {email} not find in contact {name}.'
 
             return massage
 
-        else:
-            return f'Contacts don`t have email.'
-
-    else:
-        return f'Contact don`t find.'
-    
-
+        else: 
+            return f'Contacts{name} don`t have email.'
 
 ALL_COMMAND_ADDRESSBOOK = {
     '?': handler_help,
