@@ -41,13 +41,13 @@ class Birthday(Field):
 
         except ValueError:
             # raise ValueError('Data in not value. Enter numbers in format yyyy-mm-dd.')
-            return f'Data in not value. Enter numbers in format yyyy-mm-dd.'
+            print (f'Data in not value. Enter numbers in format yyyy-mm-dd.')
 
         if birthday_data <= datetime.now():
             self._value = birthday_data 
 
     def __str__(self) -> str:
-        return f'{self.value.date()}' if self._value else 'Data in not value.'
+        return f'{self.value.date()}' if self.value else 'Data in not value.'
 
 
 class Email(Field):
@@ -56,8 +56,8 @@ class Email(Field):
     @Field.value.setter
     def value(self, new_value: str) -> None:
         
-        if re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+\.[a-zA-z]{2,}$', new_value) or\
-            re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
+        if re.search(r'\b[a-zA-z0-9][\w_.]+@[a-zA-z]+\.[a-zA-z]{2,}$', new_value) or\
+            re.search(r'\b[a-zA-z0-9][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
             self._value = new_value
 
         else:
@@ -69,7 +69,7 @@ class Name(Field):
     
     @Field.value.setter
     def value(self, value):
-        if re.search(r"[\w'-]{2,}", value):
+        if re.search(r'[\w\'-]{2,}', value):
             self._value = value
         else: 
             print ('Wrong name. Please input correct name.')
@@ -110,7 +110,7 @@ class Record:
         self.address = None
 
     def __str__(self) -> str:
-        return f'{self.name}, \nbirthday{self.birthday}, \nphone(s): {self.phones}, \naddress: {self.address}, \nemail(s): {self.emails}\n'
+        return f'{self.name.value}, \nbirthday: {self.birthday}, \nphone(s): {self.phones}, \naddress: {self.address}, \nemail(s): {self.emails}\n'
 
     def add_address(self, address: str) -> tuple:
         """Adds a new entry for the user's name - address."""
@@ -124,6 +124,7 @@ class Record:
 
     def add_birthday(self, birthday: str) -> tuple:
         """Adds a new entry for the user's birthday to the address book."""
+
         if not self.birthday:
             self.birthday = Birthday(birthday)
 
@@ -138,6 +139,7 @@ class Record:
 
         for phone in self.phones:
             if phone_new1.value == phone.value:
+                #print(f'\"{phone_new1.value}\" already recorded for \"{self.name.value}\"')
                 return False
         
         self.phones.append(phone_new1)
@@ -147,8 +149,9 @@ class Record:
     def add_email(self, email_new: str) -> bool:
         """Adds a new entry for the user's email to the address book."""
         email_new1 = Email(email_new)
-
+        print('f', email_new1.value, email_new)
         for email in self.emails:
+            print('f', email_new1, email_new, email)
             if email_new1 == email.value:
                 print(f'\"{email_new1}\" already recorded for \"{self.name.value}\"')
 
@@ -289,7 +292,7 @@ class Record:
     def get_emails_str(self) -> str:
         """Get all emails in str."""
         
-        emails_str = []
+        emails_str = ''
         for email in self.emails:
-            emails_str.append(email.value)
-        return ' '.join(emails_str)
+            emails_str += f'{email.value} '
+        return emails_str

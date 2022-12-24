@@ -190,13 +190,14 @@ def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -
 def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot removed email for contact."""
 
-    name, *emails = user_command[1], user_command[2:]
+    name, emails = user_command[1], user_command[2:]
 
     if name in contact_dictionary:
-
+          
         if len(emails) == 0:
-
+            
             for email in emails:
+                print(email)
                 if contact_dictionary[name].remove_email(email) == True:
 
                     massage = 'Email {email} for  contact {name} has delete.'
@@ -270,7 +271,7 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
             record.add_phone(phone)
         contact_dictionary.add_record(record)
         SaveBook().save_book(contact_dictionary, path_file)
-        return f'{name}"s phone added to the phone book.'
+        return f'{name}\'s phone added to the phone book.'
 
 
 def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
@@ -284,7 +285,7 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
     message_to_user = ''
     for phone in phones:
         if contact_dictionary[name].add_phone(phone):
-            message_to_user += f'{name}"s phones are appdate {phone}.\n'
+            message_to_user += f'{name}\'s phones are appdate {phone}.\n'
         else:
             message_to_user += f'Contact {name} already have this {phone} phone number.\n'
             
@@ -317,9 +318,9 @@ def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, pa
     message_to_user = ''  
     for phone in phones:
         if contact_dictionary[name].remove_phone(phone) == True:
-            message_to_user += f'Phone number {phone} was delate from {name}"s contact.\n'
+            message_to_user += f'Phone number {phone} was delate from {name}\'s contact.\n'
         else:
-            message_to_user =+ f'Phone number {phone} not specified in the {name}"s contact.\n'
+            message_to_user =+ f'Phone number {phone} not specified in the {name}\'s contact.\n'
     return message_to_user[:-1]
 
 
@@ -345,7 +346,7 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
             new_phone, old_phone = phones[0], phones[1]
         contact_dictionary[name].remove_phone(old_phone)
         contact_dictionary[name].add_phone(new_phone)
-        return f'{name}"s phone number has been changed'
+        return f'{name}\'s phone number has been changed'
 
 
 #@input_error
@@ -356,7 +357,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
     name = user_command[1]
     if name in contact_dictionary:
         contact_dictionary.remove_record(name)
-        return f'{name}"s contact has been deleted'
+        return f'{name}\'s contact has been deleted'
     else:
         return f'Contact {name} is not in contact book'
         #raise ValueError(f'Contact {name} is not in contact book')
@@ -375,11 +376,11 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
     if contact_dictionary[name].phones:
         message_to_user += ' '.join(contact_dictionary[name].get_phones_list())
     if contact_dictionary[name].birthday:
-        message_to_user += f'; Birthday: {contact_dictionary[name].birthday}; '
+        message_to_user += f'; Birthday: {contact_dictionary[name].birthday} ({contact_dictionary[name].days_to_birthday()} days left until the birthday); '
     if contact_dictionary[name].emails:
-        message_to_user += f'{contact_dictionary[name].get_emails_str}; '
+        message_to_user += f'{contact_dictionary[name].get_emails_str()}; '
     if contact_dictionary[name].address:
-        message_to_user += f'address: {contact_dictionary[name].address}.'
+        message_to_user += f'address: {contact_dictionary[name].address.value}.'
     return message_to_user
 
 

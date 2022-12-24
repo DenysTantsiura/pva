@@ -12,11 +12,11 @@ class AddressBook(UserDict):
     def show_happy_birthday(self, meantime: int) -> list:
         """Shows a list of contacts whose birthday is a specified number of days from the current date."""
         
-        birthday_people = []
+        birthday_people = ""
         for contact in self.data.values():
-            if contact.birthday and meantime >= contact.days_to_birthday():
-                birthday_people.append(contact)
-        return birthday_people
+            if contact.birthday and int(meantime) >= contact.days_to_birthday():
+                birthday_people += f'{contact.name.value}\'s birthday: {contact.birthday.value.date()}\n'
+        return birthday_people[:-1]
     
     def __iter__(self):
         for key, value in self.data.items():
