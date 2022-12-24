@@ -49,7 +49,6 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
     if name in contact_dictionary:
 
         if contact_dictionary[name].birthday:
-
             contact_dictionary[name].remove_birthday()
             
             SaveBook().save_book(contact_dictionary, path_file)
@@ -57,8 +56,8 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
             return f'Birthday for contact {name} has delete.'
 
         else:
-
             return f'Birthday for cottact {name} don`t added. You can add.'
+
     else:
         return f'Contact don`t found.'
 
