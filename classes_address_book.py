@@ -23,12 +23,15 @@ class Address(Field):
     @Field.value.setter
     def value(self, new_value: str) -> None:
         
-        if re.search(r'ave', new_value) or re.search(r'str', new_value):
+        if re.search(r'ave.', new_value) or re.search(r'str.', new_value):
             self._value = new_value
         
         else:
-            print('Wrong adress. Enter "Type street. Name street"')
-            
+            return f'Wrong adress. Enter "Type street.Name street"'
+    
+    def __str__(self) -> str:
+        return f'{self.value}' if self._value else ''
+
 
 class Birthday(Field):
     """Class of Birthday data."""
@@ -47,7 +50,7 @@ class Birthday(Field):
             self._value = birthday_data 
 
     def __str__(self) -> str:
-        return f'{self.value.date()}' if self.value else 'Data in not value.'
+        return f'{self.value.date()}' if self._value else ''
 
 
 class Email(Field):
@@ -61,20 +64,20 @@ class Email(Field):
             self._value = new_value
 
         else:
-            print('Email incorect. Try again.')
+            return f'Email incorect. Try again.'
             
 
 class Name(Field):
     """Class of name contact."""   
-    
+
     @Field.value.setter
     def value(self, value):
-        if re.search(r"[\w'-]{2,}"):
-            self._value = value.title()
+        if re.search(r"[\w'-]{2,}", value):
+            self._value = value
         else: 
-            print ('Wrong name. Please input correct name.')
+            return ('Wrong name. Please input correct name.')
             # raise ValueError ('Wrong name. Please input correct name')
-
+        
 
 class Phone(Field):
     """Class of number phone contact."""
@@ -99,6 +102,7 @@ class Phone(Field):
         )
         return new_value
     
+
 class Record:
     """Record class of person information."""
 
@@ -137,9 +141,7 @@ class Record:
         phone_new1 = Phone(phone_new)
 
         for phone in self.phones:
-            if phone_new1 == phone.value:
-                print(f'\"{phone_new1}\" already recorded for \"{self.name.value}\"')
-
+            if phone_new1.value == phone.value:
                 return False
 
         self.phones.append(phone_new1)
@@ -151,9 +153,7 @@ class Record:
         email_new1 = Email(email_new)
 
         for email in self.emails:
-            if email_new1 == email.value:
-                print(f'\"{email_new1}\" already recorded for \"{self.name.value}\"')
-
+            if email_new1.value == email.value:
                 return False
 
         self.emails.append(email_new1)
@@ -257,24 +257,21 @@ class Record:
 
                 return True
 
-        print(f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\"')
-
-
     def days_to_birthday(self) -> int:
         """Count the number of days until the next birthday of the user."""
         if self.birthday:
 
             user_day = datetime(year=datetime.now().date().year,
-                                month=self.birthday.value.month,
-                                day=self.birthday.value.day)
+            month=self.birthday.value.month,
+            day=self.birthday.value.day)
 
             days_left = user_day.date() - datetime.now().date()
 
             if days_left.days <= 0:
 
                 user_day = datetime(year=datetime.now().date().year + 1,
-                                    month=self.birthday.value.month,
-                                    day=self.birthday.value.day)
+                month=self.birthday.value.month,
+                day=self.birthday.value.day)
 
                 return (user_day.date() - datetime.now().date()).days
 
