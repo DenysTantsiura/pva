@@ -141,6 +141,7 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
 
 def handler_exit(*_) -> str:
     """The bot is terminating."""
+    print('Good buy!')
     exit()
 
 # @input_error
@@ -154,7 +155,7 @@ def handler_hello(*_) -> str:
 def handler_help(*_) -> str:
     """The bot shows all commands."""
     help_list = []
-    for key in ALL_COMMAND.keys():
+    for key in ALL_COMMAND:
         help_list.append(key)
     return f'{help_list}'
 
