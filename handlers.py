@@ -53,21 +53,22 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
 
 # @input_error
 def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
-    """handler_remove_note...": The bot remove note from the NoteBook.
+    """handler_remove_note: The bot remove note from the NoteBook.
         Parameters:
             user_command (list): List with command and note's information which should adds.
             book (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have removed note."""  
-    
-    name = user_command[1]
-    if name not in note_book:
-        # raise ('This note does not exist.')
-        return ('This note does not exist.')
-    note_book.remove_record(name)
-    return (f'You have removed the note{name}.')
-
+    try:
+        name = user_command[1]
+        if name not in note_book:
+            # raise ('This note does not exist.')
+            return ('This note does not exist.')
+        note_book.remove_record(name)
+        return (f'You have removed the note - {name}.')
+    except IndexError:
+        return f'Try againe! You should add <command> <name>.'
 
 # @input_error
 def handler_change_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
