@@ -54,7 +54,7 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
             
             SaveBook().save_book(contact_dictionary, path_file)
 
-            return f'Birthday for contact {name} delete.'
+            return f'Birthday for contact {name} has delete.'
 
         else:
 
