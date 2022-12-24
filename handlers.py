@@ -29,24 +29,26 @@ def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
     
 # @input_error
 def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
-    """handler_add_note...": The bot creates and adds new note to the NoteBook.
+    """handler_add_note: The bot creates and adds new note to the NoteBook.
         Parameters:
             user_command (list): List with command and note's information which should adds.
             contact_dictionary (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
             string(str): Information about added note."""
+    try:
+        name = user_command[1]
+        text = ' '.join(user_command[2:])
 
-    name = user_command[1]
-    text = ' '.join(user_command[2:])
-
-    if name in note_book:
-        # raise ValueError('This note already exist.')
-        return ('This note already exist.')
-    record = Note(name, text)
-    note_book.add_record(record)
+        if name in note_book:
+            # raise ValueError('This note already exist.')
+            return ('This note already exist.')
+        record = Note(name, text)
+        note_book.add_record(record)
    
-    return f'You added new note {name}: {text}.'
+        return f'You added new note - {name}: {text}.'
+    except IndexError:
+        return f'Try againe! You should add <command> <name> <text>.'
 
 
 # @input_error
