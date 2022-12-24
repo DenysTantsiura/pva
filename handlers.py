@@ -8,13 +8,13 @@ from .note_book import NoteBook
 
 # @input_error
 def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
-    '''handler_add_note...": The bot creates and adds new note to the NoteBook.
+    """handler_add_note...": The bot creates and adds new note to the NoteBook.
         Parameters:
             user_command (list): List with command and note's information which should adds.
             contact_dictionary (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
-            string(str): Information about added note.'''
+            string(str): Information about added note."""
 
     name = user_command[1]
     text = ' '.join(user_command[2:])
@@ -29,13 +29,13 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
 
 # @input_error
 def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
-    '''handler_remove_note...": The bot remove note from the NoteBook.
+    """handler_remove_note...": The bot remove note from the NoteBook.
         Parameters:
             user_command (list): List with command and note's information which should adds.
             book (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
-            string(str): Information about have removed note.'''    
+            string(str): Information about have removed note."""  
     
     name = user_command[1]
     if name not in note_book:
@@ -46,13 +46,13 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
 
 # @input_error
 def handler_change_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
-    '''handler_change_note...": The bot change all note.
+    """handler_change_note...": The bot change all note.
         Parameters:
             user_command (list): List with command, name of notes and new note's information.
             book (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
-            string(str): Information about have changed note.''' 
+            string(str): Information about have changed note."""
     name = user_command[1]
     new_text = ' '.join(user_command[2:]) 
    
@@ -65,12 +65,12 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
 
 # @input_error
 def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
-    '''handler_show_notes...": The bot shows all notes or some notes by tags.
+    """handler_show_notes...": The bot shows all notes or some notes by tags.
         Parameters:
             *args (tuple): Tuple with tags or nothing.
             book (NoteBook): Dictionary with notes.
         Returns:
-            list_notes (list): Return all notes.'''
+            list_notes (list): Return all notes."""
    
     list_notes = ''
     for record in note_book.values():
@@ -79,13 +79,13 @@ def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
 
 # @input_error
 def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
-    '''handler_show_note...": The bot shows note wich finds by a name.
+    """handler_show_note...": The bot shows note wich finds by a name.
         Parameters:
             user_command (list): List with command and note's information which should adds.
             book (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
-            string(str): Information about showing the note.'''    
+            string(str): Information about showing the note."""   
     value = user_command[1]
     try:   
         for record in note_book.values():
@@ -96,13 +96,13 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
 
 # @input_error
 def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
-    '''handler_find_notes...": The bot finds notes in the NoteBook by the tags.
+    """handler_find_notes...": The bot finds notes in the NoteBook by the tags.
         Parameters:
             user_command (list): List with command and tag.
             book (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
-            list_notes (list): List of find notes.'''    
+            list_notes (list): List of find notes."""  
     
     list_notes = ''
     tags = user_command[1:]
@@ -114,11 +114,11 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
 
 # @input_error
 def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
-    '''handler_sort_notes...": The bot return list of note-names sorted by tags.
+    """handler_sort_notes...": The bot return list of note-names sorted by tags.
         Parameters:
             book (NoteBook): Dictionary with notes.
         Returns:
-            list sorted note-names(list): Return list of note-names sorted by tags.'''   
+            list sorted note-names(list): Return list of note-names sorted by tags."""   
     return note_book.sort_by_tags()
 
 ALL_COMMAND_ADDRESSBOOK = {
