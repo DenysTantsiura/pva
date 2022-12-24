@@ -4,6 +4,7 @@ from typing import Union
 
 from .address_book import AddressBook
 
+from .serialization import SaveBook
 
 # @input_error
 def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
@@ -11,61 +12,66 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
 
 # @input_error
 def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Bot add email to contact"""
+    """Bot add email to contact."""
 
     name = user_command[1]
     email = user_command[2]
     contact_dictionary[name].add_email(email)
 
-    return f'Email {email} for contact {name} added'
+    SaveBook().save_book(contact_dictionary, path_file)
+
+    return f'Email {email} for contact {name} added.'
 
 # @input_error
 def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Bot change email for contact"""
+    """Bot change email for contact."""
 
     name = user_command[1]
     old_email = user_command[2]
     new_email = user_command[3]
     contact_dictionary[name].change_email(old_email, new_email)
 
-    return f'Email {old_email} for contact {name} has changed on {new_email}'
+    SaveBook().save_book(contact_dictionary, path_file)
+
+    return f'Email {old_email} for contact {name} has changed on {new_email}.'
 
 # @input_error
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
-    """Bot showed email for contact"""
+    """Bot showed email for contact."""
 
     name = user_command[1]
-    return f"{name} have email are: {[mail.value for mail in contact_dictionary.email]}"
+    return f'{name} have email are: {[mail.value for mail in contact_dictionary.email]}.'
 
 
 # @input_error
 def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    """Bot removed email for contact"""
+    """Bot removed email for contact."""
 
     name = user_command[1]
     email = user_command[2]
 
-    # if name in contact_dictionary: 
-    #     contact_dictionary[name].remove_email(email)
-    #     return f'Email {email} for  contact {name} removed'
-
-    # else:
-    #     return f'Contact don`t found'
-
     if name in contact_dictionary:
+        
+        if len(emails) >= 0:
 
-        for email in emails:
+            for email in emails:
 
-            if contact_dictionary[name].remove_email() == True:
-                massage = 'Email {email} for  contact {name} has delited'
-            
-            else:
-                massage = 'Email {email} not find in contact {name}'
+                if contact_dictionary[name].remove_email() == True:
+                    massage = 'Email {email} for  contact {name} has delete.'
+                
+                else:
+                    massage = 'Email {email} not find in contact {name}.'
 
-        return massage
+            SaveBook().save_book(contact_dictionary, path_file)
+
+            return massage
+
+        else:
+            return f'Contacts don`t have email.'
 
     else:
-        return f'Contact don`t find'
+        return f'Contact don`t find.'
+    
 
 
 ALL_COMMAND_ADDRESSBOOK = {
