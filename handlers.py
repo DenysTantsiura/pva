@@ -82,6 +82,62 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
     else:
         return f'Contact don`t found.'
 
+# @input_error
+def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Bot add email to contact."""
+
+    name = user_command[1]
+    email = user_command[2]
+    contact_dictionary[name].add_email(email)
+
+    SaveBook().save_book(contact_dictionary, path_file)
+
+    return f'Email {email} for contact {name} added.'
+
+# @input_error
+def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Bot change email for contact."""
+
+    name = user_command[1]
+    old_email = user_command[2]
+    new_email = user_command[3]
+    contact_dictionary[name].change_email(old_email, new_email)
+
+    SaveBook().save_book(contact_dictionary, path_file)
+
+    return f'Email {old_email} for contact {name} has changed on {new_email}.'
+
+# @input_error
+def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
+    """Bot showed email for contact."""
+
+    name = user_command[1]
+    return f'{name} have email are: {[mail.value for mail in contact_dictionary.email]}.'
+
+
+# @input_error
+def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Bot removed email for contact."""
+
+    name, *emails = user_command[1], user_command[2:]
+
+    if name in contact_dictionary:
+
+        if len(emails) == 0:
+
+            for email in emails:
+                if contact_dictionary[name].remove_email(email) == True:
+
+                    massage = 'Email {email} for  contact {name} has delete.'
+                    SaveBook().save_book(contact_dictionary, path_file)
+
+                else:
+                    massage = 'Email {email} not find in contact {name}.'
+
+            return massage
+
+        else: 
+            return f'Contacts{name} don`t have email.'
 
 ALL_COMMAND_ADDRESSBOOK = {
     '?': handler_help,
@@ -191,3 +247,4 @@ def handler_remove_address(user_command: list, contact_dictionary: AddressBook, 
     contact_dictionary[contact_name].remove_address()
 
     SaveBook().save_book(contact_dictionary, path_file)
+
