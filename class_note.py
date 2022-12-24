@@ -48,5 +48,4 @@ class Note:
             self.text: Changed text."""
 
         self.text = new_text
-        print(f'{self.name}: {self.text}')
         return self.text

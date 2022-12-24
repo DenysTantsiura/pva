@@ -48,45 +48,50 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
    
         return f'You added new note - {name}: {text}.'
     except IndexError:
-        return f'Try againe! You should add <command> <name> <text>.'
+        return f'Try again! You should add <command> <name> <text>.'
 
 
 # @input_error
 def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
-    """handler_remove_note...": The bot remove note from the NoteBook.
+    """handler_remove_note: The bot remove note from the NoteBook.
         Parameters:
             user_command (list): List with command and note's information which should adds.
             book (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have removed note."""  
-    
-    name = user_command[1]
-    if name not in note_book:
-        # raise ('This note does not exist.')
-        return ('This note does not exist.')
-    note_book.remove_record(name)
-    return (f'You have removed the note{name}.')
-
+    try:
+        name = user_command[1]
+        if name not in note_book:
+            # raise ('This note does not exist.')
+            return ('This note does not exist.')
+        note_book.remove_record(name)
+        return (f'You have removed the note - {name}.')
+    except IndexError:
+        return f'Try again! You should add <command> <name>.'
 
 # @input_error
 def handler_change_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
-    """handler_change_note...": The bot change all note.
+    """handler_change_note: The bot change all note.
         Parameters:
             user_command (list): List with command, name of notes and new note's information.
             book (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have changed note."""
-    name = user_command[1]
-    new_text = ' '.join(user_command[2:]) 
    
-    if name not in note_book:
-        # raise ('This note does not exist.')
-        return ('This note does not exist.')
-    record = note_book[name]
-    record.change_note(new_text)
-    return f'You have changed note.'
+    try:   
+        name = user_command[1]
+        new_text = ' '.join(user_command[2:]) 
+   
+        if name not in note_book:
+            # raise ('This note does not exist.')
+            return ('This note does not exist.')
+        record = note_book[name]
+        record.change_note(new_text)
+        return f'You have changed note {record}.'
+    except IndexError:
+        return f'Try againe! You should add <command> <name> <new text>.'
 
 
 # @input_error
@@ -387,7 +392,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
 # @input_error
 def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
-    """handler_show_notes...": The bot shows all notes or some notes by tags.
+    """handler_show_notes: The bot shows all notes or some notes by tags.
         Parameters:
             *args (tuple): Tuple with tags or nothing.
             book (NoteBook): Dictionary with notes.
@@ -402,25 +407,29 @@ def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
 
 # @input_error
 def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
-    """handler_show_note...": The bot shows note wich finds by a name.
+    """handler_show_note: The bot shows note wich finds by a name.
         Parameters:
             user_command (list): List with command and note's information which should adds.
             book (NoteBook): Dictionary with notes.
             path_file (str): Path of file record.
         Returns:
             string(str): Information about showing the note."""   
-    value = user_command[1]
+    
     try:   
-        for record in note_book.values():
-            if record[value]:
-                return f'{record}'
-    except ValueError:
-        return ('This note does not exist.')
+        value = user_command[1]
+        if value not in note_book:
+            # raise ValueError ('This note does not exist.')
+            return ('This note does not exist.')
+        for name, record in note_book.items():
+            if value == name:
+                return f'The note {record}.'
+    except IndexError:
+        return f'Try again! You should add <command> <name>.'
 
 
 # @input_error
 def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
-    """handler_find_notes...": The bot finds notes in the NoteBook by the tags.
+    """handler_find_notes: The bot finds notes in the NoteBook by the tags.
         Parameters:
             user_command (list): List with command and tag.
             book (NoteBook): Dictionary with notes.
@@ -439,7 +448,7 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
 
 # @input_error
 def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
-    """handler_sort_notes...": The bot return list of note-names sorted by tags.
+    """handler_sort_notes: The bot return list of note-names sorted by tags.
         Parameters:
             book (NoteBook): Dictionary with notes.
         Returns:
