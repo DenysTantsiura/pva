@@ -81,6 +81,15 @@ class Phone(Field):
     
     @Field.value.setter
     def value(self, value):
+        new_value = self.preformatting(value)
+        if re.search(r'[0-9]{10,12}', new_value):
+            self._value = new_value
+        else:
+            print('Wrong phone. Please enter correct phone number.')
+            #raise ValueError ('Wrong phone. Please enter correct phone number.')
+
+    @staticmethod
+    def preformatting(value: str) -> str:
         new_value = (
         value.strip()
         .replace('+', '')
@@ -88,12 +97,7 @@ class Phone(Field):
         .replace(')', '')
         .replace('-', '')
         )
-        if re.search(r'[0-9]{10,12}', new_value):
-            self._value = new_value
-        else:
-            print('Wrong phone. Please enter correct phone number.')
-            #raise ValueError ('Wrong phone. Please enter correct phone number.')
-
+        return new_value
     
 class Record:
     """Record class of person information."""
@@ -254,3 +258,9 @@ class Record:
                 return True
 
         print(f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\"')
+        
+    def get_phones_list(self):
+        phone_str = []
+        for phone in self.phones:
+            phone_str.append(phone.value)
+        return phone_str
