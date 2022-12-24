@@ -275,16 +275,16 @@ class Record:
 
             return days_left.days
         
-    def get_phones_list(self):
-        '''Get all phones in list'''
+    def get_phones_list(self) -> list:
+        """Get all phones in list"""
         
-        phone_str = []
+        phone_list = []
         for phone in self.phones:
-            phone_str.append(phone.value)
-        return phone_str
+            phone_list.append(phone.value)
+        return phone_list
     
-    def get_emails_str(self):
-        '''Get all emails in str'''
+    def get_emails_str(self) -> str:
+        """Get all emails in str"""
         
         emails_str = []
         for email in self.emails:

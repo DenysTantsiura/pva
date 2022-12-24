@@ -51,7 +51,7 @@ ALL_COMMAND_ADDRESSBOOK = {
     'add_birthday': handler_add_birthday,
     'add_email': handler_add_email,
     'add_phone': handler_add_phone,
-    #'add': handler_add, покищо прибираємо, залишаємо add phone
+    'add': handler_add, 
     'change_address': handler_change_address,
     'change_birthday': handler_change_birthday,
     'change_email': handler_change_email,

@@ -18,7 +18,7 @@ class AddressBook(UserDict):
         birthday_people = []
         for contact in self.data.values():
             if contact.birthday and meantime >= contact.days_to_birthday():
-                    birthday_people.append(contact)
+                birthday_people.append(contact)
         return birthday_people
 
     
