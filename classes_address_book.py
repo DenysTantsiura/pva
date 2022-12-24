@@ -81,6 +81,15 @@ class Phone(Field):
     
     @Field.value.setter
     def value(self, value):
+        new_value = self.preformatting(value)
+        if re.search(r'[0-9]{10,12}', new_value):
+            self._value = new_value
+        else:
+            print('Wrong phone. Please enter correct phone number.')
+            #raise ValueError ('Wrong phone. Please enter correct phone number.')
+
+    @staticmethod
+    def preformatting(value: str) -> str:
         new_value = (
         value.strip()
         .replace('+', '')
@@ -88,12 +97,7 @@ class Phone(Field):
         .replace(')', '')
         .replace('-', '')
         )
-        if re.search(r'[0-9]{10,12}', new_value):
-            self._value = new_value
-        else:
-            print('Wrong phone. Please enter correct phone number.')
-            #raise ValueError ('Wrong phone. Please enter correct phone number.')
-
+        return new_value
     
 class Record:
     """Record class of person information."""
@@ -254,3 +258,40 @@ class Record:
                 return True
 
         print(f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\"')
+
+
+    def days_to_birthday(self) -> int:
+        """Count the number of days until the next birthday of the user."""
+        if self.birthday:
+
+            user_day = datetime(year=datetime.now().date().year,
+                                month=self.birthday.value.month,
+                                day=self.birthday.value.day)
+
+            days_left = user_day.date() - datetime.now().date()
+
+            if days_left.days <= 0:
+
+                user_day = datetime(year=datetime.now().date().year + 1,
+                                    month=self.birthday.value.month,
+                                    day=self.birthday.value.day)
+
+                return (user_day.date() - datetime.now().date()).days
+
+            return days_left.days
+        
+    def get_phones_list(self) -> list:
+        """Get all phones in list"""
+        
+        phone_list = []
+        for phone in self.phones:
+            phone_list.append(phone.value)
+        return phone_list
+    
+    def get_emails_str(self) -> str:
+        """Get all emails in str"""
+        
+        emails_str = []
+        for email in self.emails:
+            emails_str.append(email.value)
+        return ' '.join(emails_str)
