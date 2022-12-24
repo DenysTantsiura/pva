@@ -2,8 +2,10 @@ from difflib import get_close_matches
 from typing import Union
 
 from .address_book import AddressBook
+
 from .note_book import NoteBook
 from .serialization import SaveBook
+
 
 def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
     """In the case of an unrecognized command, 
@@ -26,7 +28,59 @@ def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
 
 # @input_error
 def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
-    ...
+    """Bot add birthday to contact."""
+
+    name = user_command[1]
+    birthday = user_command[2]
+    contact_dictionary[name].add_birthday(birthday)
+
+    SaveBook().save_book(contact_dictionary, path_file)
+
+    return f'Birthday {birthday} for contact {name} added.' 
+    
+    #path_file in future
+
+
+# @input_error
+def handler_change_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Bot has changed birthday for contact on new birthday."""
+
+    name = user_command[1]
+    birthday = user_command[2]
+    contact_dictionary[name].change_birthday(birthday)
+
+    SaveBook().save_book(contact_dictionary, path_file)
+
+    return f'Birthday {birthday} for contact {name} has changed.'
+
+
+# @input_error
+def handler_happy_birthday(user_command: list, contact_dictionary: AddressBook, _=None) -> list:
+    """Bot show birthdey for contacts."""
+
+    return contact_dictionary.show_happy_birthday(user_command[1])
+
+
+# @input_error
+def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
+    """Bot has removed birthday for contact. Birthday changed on 'None'."""
+
+    name = user_command[1]
+    
+    if contact_dictionary.get(name, None):
+
+        if contact_dictionary[name].birthday:
+            contact_dictionary[name].remove_birthday()
+            
+            SaveBook().save_book(contact_dictionary, path_file)
+
+            return f'Birthday for contact {name} has delete.'
+
+        else:
+            return f'Birthday for cottact {name} don`t added. You can add.'
+
+    else:
+        return f'Contact don`t found.'
 
 
 ALL_COMMAND_ADDRESSBOOK = {
