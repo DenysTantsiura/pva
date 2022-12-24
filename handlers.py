@@ -87,7 +87,7 @@ def handler_add_address(user_command: list, contact_dictionary: AddressBook, pat
                             path_file - path to filename of address book
     """
     contact_name = user_command[1]
-    contact_address = (' ').join(user_command[2:])
+    contact_address = ' '.join(user_command[2:])
     contact_dictionary[contact_name].add_address(contact_address)
 
     SaveBook().save_book(contact_dictionary, path_file)
@@ -102,7 +102,7 @@ def handler_change_address(user_command: list, contact_dictionary: AddressBook, 
                             path_file - path to filename of address book
     """
     contact_name = user_command[1]
-    contact_address = (' ').join(user_command[2:])
+    contact_address = ' '.join(user_command[2:])
     contact_dictionary[contact_name].change_address(contact_address)
 
     SaveBook().save_book(contact_dictionary, path_file)
