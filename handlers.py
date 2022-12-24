@@ -1,5 +1,5 @@
 # hendlers...
-from typing import List, Union
+from typing import Union
 
 
 from .address_book import AddressBook
@@ -78,25 +78,25 @@ def main_handler(user_command: list, contact_dictionary: Union[AddressBook, Note
     return ALL_COMMAND.get(user_command[0], lambda *args: None)(user_command, contact_dictionary, path_file) or 'Unknown command!'
 
 
-def handler_add_address(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+def handler_add_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Add contact address."""
     contact_name = user_command[1]
-    contact_address = user_command[2]
+    contact_address = (' ').join(user_command[2:])
     contact_dictionary[contact_name].add_address(contact_address)
 
     SaveBook().save_book(contact_dictionary, path_file)
 
 
-def handler_change_address(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+def handler_change_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Change contact address."""
     contact_name = user_command[1]
-    contact_address = user_command[2]
+    contact_address = (' ').join(user_command[2:])
     contact_dictionary[contact_name].change_address(contact_address)
 
     SaveBook().save_book(contact_dictionary, path_file)
 
 
-def handler_remove_address(user_command: List[str], contact_dictionary: AddressBook, path_file: str) -> str:
+def handler_remove_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Remove contact address."""
     contact_name = user_command[1]
     contact_dictionary[contact_name].remove_address()
