@@ -8,6 +8,10 @@ from note_book import NoteBook
 from serialization import SaveBook
 from validator import input_error
 
+import colorama
+from colorama import Fore, Style
+colorama.init()
+
 
 def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
     """In the case of an unrecognized command,
@@ -121,11 +125,11 @@ def handler_change_in_note(user_command: list, note_book: NoteBook, path_file: s
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have changed note."""
-    try:   
+    try:
         name = user_command[1].title()
         ind = user_command.index('--')
         changed_text = ' '.join(user_command[2:ind])
-        new_text = ' '.join(user_command[(ind+1):]) 
+        new_text = ' '.join(user_command[(ind+1):])
         if name not in note_book:
             # raise ('This note does not exist.')
             return ('This note does not exist.')
@@ -141,13 +145,13 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
     """Bot add birthday to contact."""
     name = user_command[1].title()
     if name not in contact_dictionary:
-        raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
 
     birthday = user_command[2]
-    if contact_dictionary[name].add_birthday(birthday): 
+    if contact_dictionary[name].add_birthday(birthday):
         SaveBook().save_book(contact_dictionary, path_file)
-        return f'Birthday {birthday} for contact {name} added.' 
-    
+        return f'Birthday {birthday} for contact {name} added.'
+
     else:
         raise ValueError ('Birthday already recorded for \"{name}\". You can change it.')
 
@@ -157,7 +161,7 @@ def handler_change_birthday(user_command: list, contact_dictionary: AddressBook,
     """Bot has changed birthday for contact on new birthday."""
     name = user_command[1].title()
     if name not in contact_dictionary:
-        raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
     if not contact_dictionary[name].birthday:
         raise ValueError ('Birthday not specified for "{name}". You can add it.')
     birthday = user_command[2]
@@ -288,7 +292,7 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
                 if record.birthday:
                     part += f'\nBirthday: {record.birthday.value.date()}' \
                         f' (Next after {record.days_to_birthday()} day(s)); '
-                
+
                 if record.phones:
                     part += f'\nPhone(s): '
                     for phone in record.phones:
@@ -327,34 +331,35 @@ def handler_help(*_) -> str:
 @input_error
 def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
     """The bot shows all contacts."""
-    all_list = ['All user records:\n']
+    all_list = [Fore.CYAN + 'All contacts:\n' + Style.RESET_ALL]
     LIMIT = 10
     for records in contact_dictionary.iterator(LIMIT):
-        page = ''
+        contact_message = ''
         for record in records:
-            page += f'\n\n{record.name.value}'
+            contact_message += Fore.MAGENTA + '{:-^10}\n{}:\n{:-^10}\n'.format('', record.name.value, '') + Style.RESET_ALL
 
-            if record.birthday:
-                page += f'\nBirthday: {record.birthday.value.date()}' \
-                    f' (Next after {record.days_to_birthday()} day(s)); '
-            
             if record.phones:
-                page += f'\nPhone(s): '
-                for phone in record.phones:
-                    page += f'{phone.value}; '
+                contact_message += Fore.BLUE + 'Phone(s): ' + Style.RESET_ALL
+                phones = ', '.join([phone.value for phone in record.phones])
+                contact_message += Fore.GREEN + f'{phones}' + Style.RESET_ALL
+            if not record.phones:
+                contact_message += Fore.BLUE + 'Phone(s): ' + Style.RESET_ALL
+                contact_message += Fore.YELLOW + 'empty' + Style.RESET_ALL
 
             if record.emails:
-                page += f'\nEmail(s): '
-                for email in record.emails:
-                    page += f'{email.value}; '
+                contact_message += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
+                emails = ', '.join([email.value for email in record.emails])
+                contact_message += Fore.GREEN + f'{emails}\n' + Style.RESET_ALL
+            if not record.emails:
+                contact_message += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
+                contact_message += Fore.YELLOW + 'empty\n' + Style.RESET_ALL
 
-            if record.address:
-                page += f'\nAddress: '
-                page += f'{record.address.value}.\n'
+            contact_message += Fore.MAGENTA + '{:-^10}\n\n'.format('') + Style.RESET_ALL
 
-        all_list.append(page)
+        all_list.append(contact_message)
 
     return all_list
+
 
 @input_error
 def handler_sort(user_command: list, __=None, _=None) -> str:
@@ -393,7 +398,7 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
 
     message_to_user = ''
     for phone in phones:
@@ -402,7 +407,7 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
 
         else:
             message_to_user += f'Contact {name} already have this {phone} phone number.\n'
-    SaveBook().save_book(contact_dictionary, path_file)        
+    SaveBook().save_book(contact_dictionary, path_file)
     return message_to_user[:-1]
 
 
@@ -413,7 +418,7 @@ def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -
     name = user_command[1].title()
 
     if name not in contact_dictionary:
-        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
 
     if contact_dictionary[name].phones:
         phones = ' '.join(contact_dictionary[name].get_phones_list())
@@ -427,8 +432,8 @@ def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, pa
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
-    message_to_user = ''  
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
+    message_to_user = ''
 
     for phone in phones:
         if contact_dictionary[name].remove_phone(phone) == True:
@@ -446,7 +451,7 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
 
     if name in contact_dictionary:
         if len(phones) != 2:
@@ -482,22 +487,43 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
     """show ...: The bot show all information about contact.
     User must write just name."""
     name = user_command[1].title()
-
     if name not in contact_dictionary:
-        raise ValueError(f'Contact {name} is not in contact book') 
-    
-    message_to_user = f'{name}: '
-    if contact_dictionary[name].phones:
-        message_to_user += ' '.join(contact_dictionary[name].get_phones_list())
+        raise ValueError(f'Contact {name} is not in contact book')
 
-    if contact_dictionary[name].birthday:
-        message_to_user += f'; Birthday: {contact_dictionary[name].birthday.value.date()} ({contact_dictionary[name].days_to_birthday()} days left until the birthday); '
-    
+    message_to_user = Fore.MAGENTA + '{:-^10}\n{}:\n{:-^10}\n'.format('', name, '') + Style.RESET_ALL
+    if contact_dictionary[name].phones:
+        message_to_user += Fore.BLUE + 'Phone(s): ' + Style.RESET_ALL
+        message_to_user += Fore.GREEN + ' '.join(contact_dictionary[name].get_phones_list()) + Style.RESET_ALL
+
+    if not contact_dictionary[name].phones:
+        message_to_user += Fore.BLUE + 'Phone(s): ' + Style.RESET_ALL
+        message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
+
     if contact_dictionary[name].emails:
-        message_to_user += f' {contact_dictionary[name].get_emails_str()}; '
+        message_to_user += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
+        message_to_user += Fore.GREEN + f'{contact_dictionary[name].get_emails_str()}' + Style.RESET_ALL
+
+    if not contact_dictionary[name].emails:
+        message_to_user += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
+        message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
 
     if contact_dictionary[name].address:
-        message_to_user += f' address: {contact_dictionary[name].address.value}.'
+        message_to_user += Fore.BLUE + '\nAddress: ' + Style.RESET_ALL
+        message_to_user += Fore.GREEN + f'{contact_dictionary[name].address.value}' + Style.RESET_ALL
+
+    if not contact_dictionary[name].address:
+        message_to_user += Fore.BLUE + '\nAddress: ' + Style.RESET_ALL
+        message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
+
+    if contact_dictionary[name].birthday:
+        message_to_user += Fore.BLUE + '\nBirthday: ' + Style.RESET_ALL
+        message_to_user += Fore.GREEN + f'{contact_dictionary[name].birthday.value.date()} ({contact_dictionary[name].days_to_birthday()} days left until the birthday)\n' + Style.RESET_ALL
+
+    if not contact_dictionary[name].birthday:
+        message_to_user += Fore.BLUE + '\nBirthday: ' + Style.RESET_ALL
+        message_to_user += Fore.YELLOW + 'empty\n' + Style.RESET_ALL
+
+    message_to_user += Fore.MAGENTA + '{:-^10}'.format('') + Style.RESET_ALL
 
     return message_to_user
 
