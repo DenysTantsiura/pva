@@ -431,6 +431,9 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
     
     list_notes = ''
     tags = user_command[1:]
+    if len(tags) == 0:
+        # raise ValueError ('Try again! You should input <command> <tag> ...<tag>.')
+        return ('Try again! You should input <command> <tag> ...<tag>.')
     for tag in tags:
         for record in note_book:
             if tag in record:
