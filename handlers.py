@@ -39,17 +39,34 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         Returns:
             string(str): Information about added note."""
     try:
+        tags = []
+        text_list = []
         name = user_command[1].title()
-        text = ' '.join(user_command[2:])
+        commands = user_command[2:]
 
-        if name in note_book:
-            # raise ValueError('This note already exist.')
-            return ('This note already exist.')
-        record = Note(name, text)
-        note_book.add_record(record)
+        for element in commands:
+            if '#' in element:
+                tags.append(element)
 
-   
-        return f'You added new note - {name}: {text}.'
+        for element in commands:
+            if element not in tags:
+                text_list.append(element)
+                # commands.remove(element)
+        text = ' '.join(text_list)
+        if len(text) > 0:
+            if name in note_book:
+                # raise ValueError('This note already exist.')
+                return ('This note already exist.')
+            record = Note(name, text)
+            note_book.add_record(record)
+            print (f'You added new note - {name}: {text}.')
+        if len(tags) > 0:
+            if name not in note_book:
+                # raise ValueError('This note already exist.')
+                return ('This note not exist. You can add it.')
+            note_book[name].add_tags(tags)
+            
+        return f'What is your next step?'
     except IndexError:
         return f'Try again! You should add <command> <name> <text>.'
 
