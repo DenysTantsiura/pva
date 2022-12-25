@@ -39,17 +39,34 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         Returns:
             string(str): Information about added note."""
     try:
+        tags = []
+        text_list = []
         name = user_command[1].title()
-        text = ' '.join(user_command[2:])
+        commands = user_command[2:]
 
-        if name in note_book:
-            # raise ValueError('This note already exist.')
-            return ('This note already exist.')
-        record = Note(name, text)
-        note_book.add_record(record)
+        for element in commands:
+            if '#' in element:
+                tags.append(element)
 
-   
-        return f'You added new note - {name}: {text}.'
+        for element in commands:
+            if element not in tags:
+                text_list.append(element)
+                # commands.remove(element)
+        text = ' '.join(text_list)
+        if len(text) > 0:
+            if name in note_book:
+                # raise ValueError('This note already exist.')
+                return ('This note already exist.')
+            record = Note(name, text)
+            note_book.add_record(record)
+            print (f'You added new note - {name}: {text}.')
+        if len(tags) > 0:
+            if name not in note_book:
+                # raise ValueError('This note already exist.')
+                return ('This note not exist. You can add it.')
+            note_book[name].add_tags(tags)
+            
+        return f'What is your next step?'
     except IndexError:
         return f'Try again! You should add <command> <name> <text>.'
 
@@ -475,12 +492,19 @@ def handler_show_notes(user_command, note_book: NoteBook, _=None) -> list:
             book (NoteBook): Dictionary with notes.
         Returns:
             list_notes (list): Return all notes."""
-   
     list_notes = ''
-    for record in note_book.values():
-        list_notes += f'{record}\n'
-    return f'{list_notes}'
-
+    tasks = user_command[1:]
+    if len(tasks) == 0:  
+        for record in note_book.values():
+            list_notes += f'{record}\n'
+        return (f'{list_notes}')
+    else:
+        for tag in tasks:
+            for record in note_book.data.values():
+                for el in record.tags:
+                    if tag == el:
+                       list_notes += f'{tag} {record}\n'
+        return f'NoteBook has - {list_notes}' 
 
 @input_error
 def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
@@ -506,7 +530,7 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
 
 @input_error
 def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
-    """handler_find_notes: The bot finds notes in the NoteBook by the tags.
+    """handler_find_notes: The bot finds notes in the NoteBook by some words.
         Parameters:
             user_command (list): List with command and tag.
             book (NoteBook): Dictionary with notes.
@@ -515,15 +539,19 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
             list_notes (list): List of find notes."""  
     
     list_notes = ''
-    tags = user_command[1:]
-    if len(tags) == 0:
+    look_for_word = user_command[1:]
+    if len(look_for_word) == 0:
         # raise ValueError ('Try again! You should input <command> <tag> ...<tag>.')
-        return ('Try again! You should input <command> <tag> ...<tag>.')
-    for tag in tags:
-        for record in note_book:
-            if tag in record:
-                list_notes += f'{record}'
-    return f'{list_notes}'
+        return ('Try again! You should input <command> <word> ...<word>.')
+    for word in look_for_word:
+        for record in note_book.data.values():
+            if word in record.text:
+                list_notes += f'{record}\n'
+        if len(list_notes) > 0:
+            print(word)
+            print(list_notes)
+            list_notes = ''
+    return ('What is your next step?')
 
 
 @input_error
