@@ -161,7 +161,7 @@ class Record:
 
                 return False
 
-        self.emails.append(email_new1)
+        self.emails.append(email_new)
 
         return True
 
