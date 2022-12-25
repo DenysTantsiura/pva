@@ -6,6 +6,7 @@ from address_book import AddressBook
 from classes_address_book import Record
 from note_book import NoteBook
 from serialization import SaveBook
+from validator import input_error
 
 
 def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
@@ -28,7 +29,7 @@ def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
     return f'...\"{candidates}\" Unknown command... Nothing even to offer for you.'
     
     
-# @input_error
+@input_error
 def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
     """handler_add_note: The bot creates and adds new note to the NoteBook.
         Parameters:
@@ -53,7 +54,7 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         return f'Try again! You should add <command> <name> <text>.'
 
 
-# @input_error
+@input_error
 def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
     """handler_remove_note: The bot remove note from the NoteBook.
         Parameters:
@@ -73,7 +74,7 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
         return f'Try again! You should add <command> <name>.'
 
 
-# @input_error
+@input_error
 def handler_change_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
     """handler_change_note: The bot change all note.
         Parameters:
@@ -96,7 +97,7 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
         return f'Try againe! You should add <command> <name> <new text>.'
 
 
-# @input_error
+@input_error
 def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot add birthday to contact."""
     name = user_command[1].title()
@@ -114,7 +115,7 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
     #path_file in future
 
 
-# @input_error
+@input_error
 def handler_change_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot has changed birthday for contact on new birthday."""
     name = user_command[1].title()
@@ -130,14 +131,14 @@ def handler_change_birthday(user_command: list, contact_dictionary: AddressBook,
     return f'Birthday {birthday} for contact {name} has changed.'
 
 
-# @input_error
+@input_error
 def handler_happy_birthday(user_command: list, contact_dictionary: AddressBook, _=None) -> list:
     """Bot show birthdey for contacts."""
 
     return contact_dictionary.show_happy_birthday(user_command[1])
 
 
-# @input_error
+@input_error
 def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot has removed birthday for contact. Birthday changed on 'None'."""
 
@@ -159,7 +160,7 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
         return f'Contact don`t found.'
 
 
-# @input_error
+@input_error
 def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot add email to contact."""
 
@@ -181,7 +182,7 @@ def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_
     return message
 
 
-# @input_error
+@input_error
 def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot change email for contact."""
     name = user_command[1].title()
@@ -194,14 +195,14 @@ def handler_change_email(user_command: list, contact_dictionary: AddressBook, pa
     return f'Email {old_email} for contact {name} has changed on {new_email}.'
 
 
-# @input_error
+@input_error
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """Bot showed email for contact."""
     name = user_command[1].title()
     return f'''{name} have email are: {' '.join([email.value for email in contact_dictionary[name].emails])}.'''
 
 
-# @input_error
+@input_error
 def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot removed email for contact."""
 
@@ -233,7 +234,7 @@ def handler_exit(*_) -> str:
     return 'Good bye!'
 
 
-# @input_error
+@input_error
 def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) -> list:
     """Find ...": The bot outputs a list of users whose name or phone number 
     matches the entered one or more(with an OR setting) string without space(' ').
@@ -286,7 +287,7 @@ def handler_help(*_) -> str:
     return f'{help_list}'
 
 
-# @input_error
+@input_error
 def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
     """The bot shows all contacts."""
     all_list = ['All user records:\n']
@@ -326,7 +327,7 @@ def handler_sort(user_command: list, __=None, _=None) -> str:
     return f'sort_trash(user_command[1].title())? Can\'t find module ... .'
 
 
-#@input_error
+@input_error
 def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """add ...: The bot saves new contact and phone(s) to contact dictionary.
     User must write name of contact and one or more phone."""
@@ -348,6 +349,7 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
         return f'Records \'{name}\' done.'
 
 
+@input_error
 def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """add_phone ...: The bot adds the new phone(s) to an already existing contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary and one or more phone."""
@@ -367,7 +369,7 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
     return message_to_user[:-1]
 
 
-#@input_error
+@input_error
 def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """phone ...: The bot show all phones contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary."""
@@ -381,7 +383,7 @@ def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -
         return f'{name} phone(s): {phones}'
 
 
-#@input_error
+@input_error
 def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """remove phone ...: The bot remove phone(s) from contact in contact dictionary.
     User must write name and one or more phone."""
@@ -399,7 +401,7 @@ def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, pa
     return message_to_user[:-1]
 
 
-#@input_error
+@input_error
 def handler_change(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """change ...: The bot changes phone number.
     User must write name and two phones."""
@@ -425,7 +427,7 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
         return f"{name}'s phone number has been changed"
 
 
-#@input_error
+@input_error
 def handler_remove(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """remove ...: The bot delete contact from contact dictionary.
     User must write just name."""
@@ -439,7 +441,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
         #raise ValueError(f'Contact {name} is not in contact book')
 
 
-#@input_error
+@input_error
 def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """show ...: The bot show all information about contact.
     User must write just name."""
@@ -465,7 +467,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
     return message_to_user
 
 
-# @input_error
+@input_error
 def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
     """handler_show_notes: The bot shows all notes or some notes by tags.
         Parameters:
@@ -480,7 +482,7 @@ def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
     return f'{list_notes}'
 
 
-# @input_error
+@input_error
 def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
     """handler_show_note: The bot shows note wich finds by a name.
         Parameters:
@@ -502,7 +504,7 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
         return f'Try again! You should add <command> <name>.'
 
 
-# @input_error
+@input_error
 def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
     """handler_find_notes: The bot finds notes in the NoteBook by the tags.
         Parameters:
@@ -521,7 +523,7 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
     return f'{list_notes}'
 
 
-# @input_error
+@input_error
 def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
     """handler_sort_notes: The bot return list of note-names sorted by tags.
         Parameters:
@@ -531,7 +533,7 @@ def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
     return note_book.sort_by_tags()
 
 
-# @input_error
+@input_error
 def handler_add_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Add contact address.
        Command:             add_address
@@ -549,7 +551,7 @@ def handler_add_address(user_command: list, contact_dictionary: AddressBook, pat
     return 'Done!'
 
 
-# @input_error
+@input_error
 def handler_change_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Change contact address.
        Command:             change_address
@@ -567,7 +569,7 @@ def handler_change_address(user_command: list, contact_dictionary: AddressBook, 
     return 'Done!'
 
 
-# @input_error
+@input_error
 def handler_remove_address(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Remove contact address.
        Command:             remove_address
