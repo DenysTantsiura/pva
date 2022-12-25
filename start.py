@@ -107,7 +107,6 @@ class PVA:
         the commands entered from the keyboard and respond according 
         to the command entered. Enter a command - get an answer.
         """
-
         while True:
 
             user_request = self.parser.listen()
