@@ -29,6 +29,9 @@ class Address(Field):
         else:
             print('Wrong adress. Enter "Type street. Name street"')
             
+    def __str__(self) -> str:
+        return f'{self.value}' if self.value else ''
+
 
 class Birthday(Field):
     """Class of Birthday data."""
@@ -47,7 +50,7 @@ class Birthday(Field):
             self._value = birthday_data 
 
     def __str__(self) -> str:
-        return f'{self._value.date()}' if self._value else 'Data in not value.'
+        return f'{self.value.date()}' if self.value else 'Data in not value.'
 
 
 class Email(Field):
@@ -62,6 +65,7 @@ class Email(Field):
 
         else:
             print('Email incorect. Try again.')
+            # return '? Email incorect. Try again.'  # ???
             
 
 class Name(Field):
@@ -134,25 +138,25 @@ class Record:
 
     def add_phone(self, phone_new: str) -> bool:
         """Adds a new entry for the user's phone to the address book."""
-        phone_new1 = Phone(phone_new)
+        phone_new = Phone(phone_new)
 
         for phone in self.phones:
-            if phone_new1.value == phone.value:
-                print(f'\"{phone_new1.value}\" already recorded for \"{self.name.value}\"')
+            if phone_new.value == phone.value:
+                print(f'\"{phone_new.value}\" already recorded for \"{self.name.value}\"')
 
                 return False
 
-        self.phones.append(phone_new1)
+        self.phones.append(phone_new)
 
         return True
     
     def add_email(self, email_new: str) -> bool:
         """Adds a new entry for the user's email to the address book."""
-        email_new1 = Email(email_new)
+        email_new = Email(email_new)
 
         for email in self.emails:
-            if email_new1 == email.value:
-                print(f'\"{email_new1}\" already recorded for \"{self.name.value}\"')
+            if email_new == email.value:
+                print(f'\"{email_new}\" already recorded for \"{self.name.value}\"')
 
                 return False
 

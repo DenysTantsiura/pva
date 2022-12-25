@@ -149,19 +149,27 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
 def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot add email to contact."""
 
-    name = user_command[1].title()
-    email = user_command[2]
-    contact_dictionary[name].add_email(email)
+    name, emails = user_command[1].title(), user_command[2:]
+    
+    if name not in contact_dictionary:
+        return f'Contact don\'t found.'
+        #raise ValueError ('Contact don\'t found')    
+    message = ''
+    for email in emails:
+        if contact_dictionary[name].add_email(email):
+            message += f'Email {email} for contact {name} added.'
+
+        else:
+            message += f'Contact {name} have this email {email}'
 
     SaveBook().save_book(contact_dictionary, path_file)
 
-    return f'Email {email} for contact {name} added.'
+    return message
 
 
 # @input_error
 def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot change email for contact."""
-
     name = user_command[1].title()
     old_email = user_command[2]
     new_email = user_command[3]
@@ -175,9 +183,8 @@ def handler_change_email(user_command: list, contact_dictionary: AddressBook, pa
 # @input_error
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """Bot showed email for contact."""
-
     name = user_command[1].title()
-    return f'{name} have email are: {[mail.value for mail in contact_dictionary[name].emails]}.'
+    return f'''{name} have email are: {' '.join([email.value for email in contact_dictionary[name].emails])}.'''
 
 
 # @input_error
