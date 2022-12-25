@@ -492,12 +492,19 @@ def handler_show_notes(user_command, note_book: NoteBook, _=None) -> list:
             book (NoteBook): Dictionary with notes.
         Returns:
             list_notes (list): Return all notes."""
-   
     list_notes = ''
-    for record in note_book.values():
-        list_notes += f'{record}\n'
-    return f'{list_notes}'
-
+    tasks = user_command[1:]
+    if len(tasks) == 0:  
+        for record in note_book.values():
+            list_notes += f'{record}\n'
+        return (f'{list_notes}')
+    else:
+        for tag in tasks:
+            for record in note_book.data.values():
+                for el in record.tags:
+                    if tag == el:
+                       list_notes += f'{tag} {record}\n'
+        return f'NoteBook has - {list_notes}' 
 
 @input_error
 def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
