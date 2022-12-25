@@ -530,7 +530,7 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
 
 @input_error
 def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
-    """handler_find_notes: The bot finds notes in the NoteBook by the tags.
+    """handler_find_notes: The bot finds notes in the NoteBook by some words.
         Parameters:
             user_command (list): List with command and tag.
             book (NoteBook): Dictionary with notes.
@@ -539,15 +539,18 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
             list_notes (list): List of find notes."""  
     
     list_notes = ''
-    tags = user_command[1:]
-    if len(tags) == 0:
+    look_for_word = user_command[1:]
+    if len(look_for_word) == 0:
         # raise ValueError ('Try again! You should input <command> <tag> ...<tag>.')
-        return ('Try again! You should input <command> <tag> ...<tag>.')
-    for tag in tags:
-        for record in note_book:
-            if tag in record:
-                list_notes += f'{record}'
-    return f'{list_notes}'
+        return ('Try again! You should input <command> <word> ...<word>.')
+    for word in look_for_word:
+        for record in note_book.data.values():
+            if word in record.text:
+                list_notes += f'{record}\n'
+        print(word)
+        print(list_notes)
+        list_notes = ''
+    return ('What is your next step?')
 
 
 @input_error
