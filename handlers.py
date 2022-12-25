@@ -466,9 +466,9 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
     
     return message_to_user
 
+# @input_error
+def handler_show_notes(user_command, note_book: NoteBook, _=None) -> list:
 
-@input_error
-def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
     """handler_show_notes: The bot shows all notes or some notes by tags.
         Parameters:
             *args (tuple): Tuple with tags or nothing.
@@ -516,6 +516,9 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
     
     list_notes = ''
     tags = user_command[1:]
+    if len(tags) == 0:
+        # raise ValueError ('Try again! You should input <command> <tag> ...<tag>.')
+        return ('Try again! You should input <command> <tag> ...<tag>.')
     for tag in tags:
         for record in note_book:
             if tag in record:
@@ -530,7 +533,13 @@ def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
             book (NoteBook): Dictionary with notes.
         Returns:
             list sorted note-names(list): Return list of note-names sorted by tags."""   
-    return note_book.sort_by_tags()
+   
+    list_sort_notes = note_book.sort_by_tags()
+    if len(list_sort_notes) == 0:
+        # raise ValueError('Notes with tags are missing from Notepad. Try another way.')
+        return ('Notes with tags are missing from Notepad. Try another way.')
+    else:
+        return f'Sorted notes with tags - {list_sort_notes}'
 
 
 @input_error
