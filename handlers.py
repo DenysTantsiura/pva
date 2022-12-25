@@ -70,6 +70,7 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
             note_book[name].add_tags(tags)
 
         return f'What is your next step?'
+
     except IndexError:
         return f'Try again! You should add <command> <name> <text>.'
 
@@ -86,8 +87,8 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
     try:
         name = user_command[1].title()
         if name not in note_book:
-            # raise ('This note does not exist.')
-            return ('This note does not exist.')
+            raise ValueError('This note does not exist.')
+            # return ('This note does not exist.')
         note_book.remove_record(name)
         return (f'You have removed the note - {name}.')
     except IndexError:
@@ -108,8 +109,8 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
         new_text = ' '.join(user_command[2:])
 
         if name not in note_book:
-            # raise ('This note does not exist.')
-            return ('This note does not exist.')
+            raise ValueError('This note does not exist.')
+            # return ('This note does not exist.')
         record = note_book[name]
         record.change_note(new_text)
         return f'You have changed note {record}.'
@@ -161,9 +162,11 @@ def handler_change_birthday(user_command: list, contact_dictionary: AddressBook,
     """Bot has changed birthday for contact on new birthday."""
     name = user_command[1].title()
     if name not in contact_dictionary:
-        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
+
     if not contact_dictionary[name].birthday:
         raise ValueError ('Birthday not specified for "{name}". You can add it.')
+
     birthday = user_command[2]
     contact_dictionary[name].change_birthday(birthday)
 
@@ -204,21 +207,23 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
 @input_error
 def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot add email to contact."""
+    if len(user_command) == 1:
+        return f'Comand "add email" add to record person email. Example:\nadd_email <username> <email1>...<new emailN>\n'
 
     name, emails = user_command[1].title(), user_command[2:]
 
     if name not in contact_dictionary:
-        return f'Contact don\'t found.'
-        #raise ValueError ('Contact don\'t found')
+        raise ValueError(f'Contact {name} don\'t found in records!')    
+
     message = ''
     for email in emails:
-        if contact_dictionary[name].add_email(email):
-            message += f'Email {email} for contact {name} added.'
-
-        else:
-            message += f'Contact {name} have this email {email}'
+        result, message_result = contact_dictionary[name].add_email(email)
+        message += message_result
 
     SaveBook().save_book(contact_dictionary, path_file)
+
+    if not message:
+        raise ValueError(f'Give me email(s) for record {name}!') 
 
     return message
 
@@ -226,48 +231,62 @@ def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_
 @input_error
 def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot change email for contact."""
+    if len(user_command) == 1:
+        return f'Comand "change email" change person email. Example:\nchange_email <username> <email for change> <new email>\n'
+
     name = user_command[1].title()
     old_email = user_command[2]
     new_email = user_command[3]
-    contact_dictionary[name].change_email(old_email, new_email)
 
-    SaveBook().save_book(contact_dictionary, path_file)
+    if name not in contact_dictionary:
+        raise ValueError(f'Contact {name} don\'t found in records!') 
 
-    return f'Email {old_email} for contact {name} has changed on {new_email}.'
+    result, message_result = contact_dictionary[name].change_email(old_email, new_email)
+    if result:
+        SaveBook().save_book(contact_dictionary, path_file)
+
+    return message_result
 
 
 @input_error
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """Bot showed email for contact."""
+    if len(user_command) == 1:
+        return f'Comand "email show" all known person emails. Example:\nemail <username>\n'
+
     name = user_command[1].title()
+    if name not in contact_dictionary:
+        raise ValueError(f'Contact {name} don\'t found in records!')
+        
+    if not contact_dictionary[name].emails:
+        return f'No email in record for {name}.\n'
+
     return f'''{name} have email are: {' '.join([email.value for email in contact_dictionary[name].emails])}.'''
 
 
 @input_error
 def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot removed email for contact."""
+    if len(user_command) == 1:
+        return f'Comand "remove email" delete person email(s). Example:\nremove_email <username> <email1>...<emailN>\n'
 
     name, emails = user_command[1].title(), user_command[2:]
 
     if name in contact_dictionary:
-
         if len(emails) != 0:
-
+            message = ''
             for email in emails:
-                if contact_dictionary[name].remove_email(email) == True:
+                result, message_result = contact_dictionary[name].remove_email(email)
+                message += message_result
 
-                    massage = f'Email {email} for  contact {name} has delete.'
-                    SaveBook().save_book(contact_dictionary, path_file)
+            SaveBook().save_book(contact_dictionary, path_file)
+            return message
 
-                else:
-                    massage = f'Email {email} not find in contact {name}.'
+        else: 
+            return f'Email(s) not entered. Give me email(s) too.'
+    
+    return f'Unknown name: {name}.'
 
-            return massage
-
-        else:
-            return f'Email not entered.' # 'Contacts {name} don\'t have email.'
-
-    return f'Unknown name.'
 
 
 def handler_exit(*_) -> str:
@@ -375,12 +394,12 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
     """add ...: The bot saves new contact and phone(s) to contact dictionary.
     User must write name of contact and one or more phone."""
     name, phones = user_command[1].title() , user_command[2:]
-
     if name in contact_dictionary:
         raise ValueError ('This contact is already in the phone book. Please enter the correct name.')
 
     if not name:  # or not phones:
         raise SyntaxError ('You entered an incorrect phone number or name.')
+
     else:
         record = Record(name)
         for phone in phones:
@@ -432,8 +451,9 @@ def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, pa
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
-    message_to_user = ''
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
+
+    message_to_user = ''  
 
     for phone in phones:
         if contact_dictionary[name].remove_phone(phone) == True:
@@ -478,6 +498,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
     if name in contact_dictionary:
         contact_dictionary.remove_record(name)
         return f'{name}\'s contact has been deleted'
+
     else:
         raise ValueError(f'Contact {name} is not in contact book')
 
@@ -529,14 +550,12 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
 # @input_error
 def handler_show_notes(user_command, note_book: NoteBook, _=None) -> list:
-
     """handler_show_notes: The bot shows all notes or some notes by tags.
         Parameters:
             *args (tuple): Tuple with tags or nothing.
             book (NoteBook): Dictionary with notes.
         Returns:
             list_notes (list): Return all notes."""
-
     list_notes = ''
     tasks = user_command[1:]
     if len(tasks) == 0:
@@ -570,7 +589,8 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
             if value == name:
                 return f'The note {record}.'
     except IndexError:
-        return f'Try again! You should add <command> <name>.'
+        # return f'Try again! You should add <command> <name>.'
+        raise IndexError('Try again! You should add <command> <name>.')
 
 
 @input_error
@@ -582,8 +602,8 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
             path_file (str): Path of file record.
         Returns:
             list_notes (list): List of find notes."""
-
     list_notes = ''
+
     look_for_word = user_command[1:]
     if len(look_for_word) == 0:
         # raise ValueError ('Try again! You should input <command> <tag> ...<tag>.')
@@ -606,11 +626,10 @@ def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
             book (NoteBook): Dictionary with notes.
         Returns:
             list sorted note-names(list): Return list of note-names sorted by tags."""
-
     list_sort_notes = note_book.sort_by_tags()
     if len(list_sort_notes) == 0:
-        # raise ValueError('Notes with tags are missing from Notepad. Try another way.')
-        return ('Notes with tags are missing from Notepad. Try another way.')
+        raise ValueError('Notes with tags are missing from Notepad. Try another way.')
+
     else:
         return f'Sorted notes with tags - {list_sort_notes}'
 
