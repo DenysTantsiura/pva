@@ -204,7 +204,7 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
 def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot add email to contact."""
     if len(user_command) == 1:
-        return f'Comand add_email add to record person email. Example:\nadd_email <username> <email1>...<new emailN>\n'
+        return f'Comand "add email" add to record person email. Example:\nadd_email <username> <email1>...<new emailN>\n'
 
     name, emails = user_command[1].title(), user_command[2:]
 
@@ -228,7 +228,7 @@ def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_
 def handler_change_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot change email for contact."""
     if len(user_command) == 1:
-        return f'Comand change_email change person email. Example:\nchange_email <username> <email for change> <new email>\n'
+        return f'Comand "change email" change person email. Example:\nchange_email <username> <email for change> <new email>\n'
 
     name = user_command[1].title()
     old_email = user_command[2]
@@ -248,7 +248,7 @@ def handler_change_email(user_command: list, contact_dictionary: AddressBook, pa
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """Bot showed email for contact."""
     if len(user_command) == 1:
-        return f'Comand email show all known person emails. Example:\nemail <username>\n'
+        return f'Comand "email show" all known person emails. Example:\nemail <username>\n'
 
     name = user_command[1].title()
     if name not in contact_dictionary:
@@ -264,7 +264,7 @@ def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -
 def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot removed email for contact."""
     if len(user_command) == 1:
-        return f'Comand remove_email delete person email(s). Example:\nremove_email <username> <email1>...<emailN>\n'
+        return f'Comand "remove email" delete person email(s). Example:\nremove_email <username> <email1>...<emailN>\n'
 
     name, emails = user_command[1].title(), user_command[2:]
 
