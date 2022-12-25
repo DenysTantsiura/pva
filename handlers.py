@@ -383,7 +383,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
 
 # @input_error
-def handler_show_notes(*args, note_book: NoteBook, _=None) -> list:
+def handler_show_notes(user_command, note_book: NoteBook, _=None) -> list:
     """handler_show_notes: The bot shows all notes or some notes by tags.
         Parameters:
             *args (tuple): Tuple with tags or nothing.
