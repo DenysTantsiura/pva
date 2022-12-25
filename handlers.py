@@ -361,7 +361,8 @@ def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
                 contact_message += Fore.BLUE + 'Phone(s): ' + Style.RESET_ALL
                 phones = ', '.join([phone.value for phone in record.phones])
                 contact_message += Fore.GREEN + f'{phones}' + Style.RESET_ALL
-            if not record.phones:
+
+            else:
                 contact_message += Fore.BLUE + 'Phone(s): ' + Style.RESET_ALL
                 contact_message += Fore.YELLOW + 'empty' + Style.RESET_ALL
 
@@ -369,7 +370,8 @@ def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
                 contact_message += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
                 emails = ', '.join([email.value for email in record.emails])
                 contact_message += Fore.GREEN + f'{emails}\n' + Style.RESET_ALL
-            if not record.emails:
+                
+            else:
                 contact_message += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
                 contact_message += Fore.YELLOW + 'empty\n' + Style.RESET_ALL
 
