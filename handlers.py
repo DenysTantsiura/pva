@@ -547,9 +547,10 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
         for record in note_book.data.values():
             if word in record.text:
                 list_notes += f'{record}\n'
-        print(word)
-        print(list_notes)
-        list_notes = ''
+        if len(list_notes) > 0:
+            print(word)
+            print(list_notes)
+            list_notes = ''
     return ('What is your next step?')
 
 
