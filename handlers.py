@@ -1,6 +1,6 @@
 from difflib import get_close_matches
 from typing import Union
-# from ... import sort_trash
+from sort_files import sort_trash
 from class_note import Note
 from address_book import AddressBook
 from classes_address_book import Record
@@ -119,17 +119,15 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
     """Bot add birthday to contact."""
     name = user_command[1].title()
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
 
     birthday = user_command[2]
-    contact_dictionary[name].add_birthday(birthday)
-
-    SaveBook().save_book(contact_dictionary, path_file)
-
-    return f'Birthday {birthday} for contact {name} added.'
-
-    #path_file in future
+    if contact_dictionary[name].add_birthday(birthday): 
+        SaveBook().save_book(contact_dictionary, path_file)
+        return f'Birthday {birthday} for contact {name} added.' 
+    
+    else:
+        raise ValueError ('Birthday already recorded for \"{name}\". You can change it.')
 
 
 @input_error
@@ -137,9 +135,9 @@ def handler_change_birthday(user_command: list, contact_dictionary: AddressBook,
     """Bot has changed birthday for contact on new birthday."""
     name = user_command[1].title()
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
-
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
+    if not contact_dictionary[name].birthday:
+        raise ValueError ('Birthday not specified for "{name}". You can add it.')
     birthday = user_command[2]
     contact_dictionary[name].change_birthday(birthday)
 
@@ -266,9 +264,9 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
                 part = f'\n\n{record.name.value}'
 
                 if record.birthday:
-                    part += f'\nBirthday: {record.birthday.value}' \
-                        f'(Next after {record.days_to_birthday()} day(s)); '
-
+                    part += f'\nBirthday: {record.birthday.value.date()}' \
+                        f' (Next after {record.days_to_birthday()} day(s)); '
+                
                 if record.phones:
                     part += f'\nPhone(s): '
                     for phone in record.phones:
@@ -315,9 +313,9 @@ def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
             page += f'\n\n{record.name.value}'
 
             if record.birthday:
-                page += f'\nBirthday: {record.birthday.value}' \
-                    f'(Next after {record.days_to_birthday()} day(s)); '
-
+                page += f'\nBirthday: {record.birthday.value.date()}' \
+                    f' (Next after {record.days_to_birthday()} day(s)); '
+            
             if record.phones:
                 page += f'\nPhone(s): '
                 for phone in record.phones:
@@ -336,12 +334,13 @@ def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
 
     return all_list
 
-
+@input_error
 def handler_sort(user_command: list, __=None, _=None) -> str:
     """The bot sort trash."""
-    # where ... module?
-    #return sort_trash(user_command[1].title())
-    return f'sort_trash(user_command[1].title())? Can\'t find module ... .'
+    if user_command[1]:
+        return sort_trash(user_command[1])
+    else:
+        return 'Please enter the path to the folder with you want to sort'
 
 
 @input_error
@@ -351,11 +350,10 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
     name, phones = user_command[1].title() , user_command[2:]
 
     if name in contact_dictionary:
-        return 'This contact is already in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is already in the phone book. Please enter the correct name.')
+        raise ValueError ('This contact is already in the phone book. Please enter the correct name.')
+
     if not name:  # or not phones:
-        return 'You must enter the name, or name and phone(s).'
-        #raise SyntaxError ('You entered an incorrect phone number or name.')
+        raise SyntaxError ('You entered an incorrect phone number or name.')
     else:
         record = Record(name)
         for phone in phones:
@@ -373,8 +371,8 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
+
     message_to_user = ''
     for phone in phones:
         if contact_dictionary[name].add_phone(phone):
@@ -382,7 +380,7 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
 
         else:
             message_to_user += f'Contact {name} already have this {phone} phone number.\n'
-
+    SaveBook().save_book(contact_dictionary, path_file)        
     return message_to_user[:-1]
 
 
@@ -393,8 +391,8 @@ def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -
     name = user_command[1].title()
 
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
+
     if contact_dictionary[name].phones:
         phones = ' '.join(contact_dictionary[name].get_phones_list())
         return f'{name} phone(s): {phones}'
@@ -407,14 +405,15 @@ def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, pa
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
-    message_to_user = ''
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
+    message_to_user = ''  
+
     for phone in phones:
         if contact_dictionary[name].remove_phone(phone) == True:
             message_to_user += f'Phone number {phone} was delate from {name}\'s contact.\n'
         else:
             message_to_user =+ f'Phone number {phone} not specified in the {name}\'s contact.\n'
+    SaveBook().save_book(contact_dictionary, path_file)
     return message_to_user[:-1]
 
 
@@ -425,15 +424,13 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
+        raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
+
     if name in contact_dictionary:
         if len(phones) != 2:
-            return 'Input Error. Enter correct information'
-            #raise ValueError ('Input Error. Enter correct information')
+            raise ValueError ('Input Error. Enter correct information')
         if phones[0] not in contact_dictionary[name].get_phones_list() and phones[1] not in contact_dictionary[name].get_phones_list():
-            return 'Unknown number. Check the correctness of the input'
-            #raise ValueError ('Unknown number. Check the correctness of the input')
+            raise ValueError ('Unknown number. Check the correctness of the input')
         if phones[0] in contact_dictionary[name].get_phones_list():
             new_phone, old_phone = phones[1], phones[0]
         else:
@@ -441,6 +438,7 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
         contact_dictionary[name].remove_phone(old_phone)
         contact_dictionary[name].add_phone(new_phone)
 
+        SaveBook().save_book(contact_dictionary, path_file)
         return f"{name}'s phone number has been changed"
 
 
@@ -454,8 +452,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
         contact_dictionary.remove_record(name)
         return f'{name}\'s contact has been deleted'
     else:
-        return f'Contact {name} is not in contact book'
-        #raise ValueError(f'Contact {name} is not in contact book')
+        raise ValueError(f'Contact {name} is not in contact book')
 
 
 @input_error
@@ -465,16 +462,15 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
     name = user_command[1].title()
 
     if name not in contact_dictionary:
-        return f'Contact {name} is not in contact book'
-        #raise ValueError(f'Contact {name} is not in contact book')
-
+        raise ValueError(f'Contact {name} is not in contact book') 
+    
     message_to_user = f'{name}: '
     if contact_dictionary[name].phones:
         message_to_user += ' '.join(contact_dictionary[name].get_phones_list())
 
     if contact_dictionary[name].birthday:
-        message_to_user += f'; Birthday: {contact_dictionary[name].birthday.value} ({contact_dictionary[name].days_to_birthday()} days left until the birthday); '
-
+        message_to_user += f'; Birthday: {contact_dictionary[name].birthday.value.date()} ({contact_dictionary[name].days_to_birthday()} days left until the birthday); '
+    
     if contact_dictionary[name].emails:
         message_to_user += f' {contact_dictionary[name].get_emails_str()}; '
 
