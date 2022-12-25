@@ -105,14 +105,12 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
         raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
 
     birthday = user_command[2]
-    if contact_dictionary[name].add_birthday(birthday) == True: 
+    if contact_dictionary[name].add_birthday(birthday): 
         SaveBook().save_book(contact_dictionary, path_file)
-
         return f'Birthday {birthday} for contact {name} added.' 
-    else:
-        return contact_dictionary[name].add_birthday(birthday)
     
-    #path_file in future
+    else:
+        raise ValueError ('Birthday already recorded for \"{name}\". You can change it.')
 
 
 @input_error

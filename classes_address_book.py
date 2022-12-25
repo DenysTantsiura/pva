@@ -130,7 +130,7 @@ class Record:
             return True
 
         else:
-            return f'Birthday already recorded for \"{self.name.value}\". You can change it.'
+            return False
 
     def add_phone(self, phone_new: str) -> bool:
         """Adds a new entry for the user's phone to the address book."""
@@ -138,8 +138,6 @@ class Record:
 
         for phone in self.phones:
             if phone_new.value == phone.value:
-                #print(f'\"{phone_new.value}\" already recorded for \"{self.name.value}\"')
-
                 return False
 
         self.phones.append(phone_new)
