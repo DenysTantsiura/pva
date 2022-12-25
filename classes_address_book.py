@@ -43,9 +43,8 @@ class Birthday(Field):
             birthday_data = datetime.strptime(new_value, "%Y-%m-%d")
 
         except ValueError:
-            # raise ValueError('Data in not value. Enter numbers in format yyyy-mm-dd.')
-            return print(f'Data in not value. Enter numbers in format yyyy-mm-dd.')
-
+            raise ValueError('Data in not value. Enter numbers in format yyyy-mm-dd.')
+            
         if birthday_data <= datetime.now():
             self._value = birthday_data 
 
@@ -64,8 +63,7 @@ class Email(Field):
             self._value = new_value
 
         else:
-            print('Email incorect. Try again.')
-            # return '? Email incorect. Try again.'  # ???
+            raise ValueError ('Email incorect. Try again.')
             
 
 class Name(Field):
@@ -77,8 +75,7 @@ class Name(Field):
             self._value = value.title()
 
         else: 
-            print ('Wrong name. Please input correct name.')
-            # raise ValueError ('Wrong name. Please input correct name')
+            raise ValueError ('Wrong name. Please input correct name')
 
 
 class Phone(Field):
@@ -90,8 +87,7 @@ class Phone(Field):
         if re.search(r'[0-9]{10,12}', new_value):
             self._value = new_value
         else:
-            print('Wrong phone. Please enter correct phone number.')
-            #raise ValueError ('Wrong phone. Please enter correct phone number.')
+            raise ValueError ('Wrong phone. Please enter correct phone number.')
 
     @staticmethod
     def preformatting(value: str) -> str:
@@ -131,11 +127,10 @@ class Record:
         """Adds a new entry for the user's birthday to the address book."""
         if not self.birthday:
             self.birthday = Birthday(birthday)  # or None
-
-            return True,
+            return True
 
         else:
-            return False, f'Birthday already recorded for \"{self.name.value}\"You can change it.'
+            return False
 
     def add_phone(self, phone_new: str) -> bool:
         """Adds a new entry for the user's phone to the address book."""
@@ -143,8 +138,6 @@ class Record:
 
         for phone in self.phones:
             if phone_new.value == phone.value:
-                print(f'\"{phone_new.value}\" already recorded for \"{self.name.value}\"')
-
                 return False
 
         self.phones.append(phone_new)
@@ -161,7 +154,7 @@ class Record:
 
                 return False
 
-        self.emails.append(email_new1)
+        self.emails.append(email_new)
 
         return True
 
@@ -176,12 +169,8 @@ class Record:
 
     def change_birthday(self, birthday: str) -> tuple:
         """Modify an existing user's birthday entry in the address book."""
-        if not self.birthday:
-            return False, f'Birthday not specified for \"{self.name.value}\". You can add it.'
-
-        else:
-            self.birthday = Birthday(birthday)
-            return True,
+        self.birthday = Birthday(birthday)
+        return True
 
     def change_phone(self, phone_to_change: str, phone_new: str) -> tuple:
         """Modify an existing user's phone entry in the address book."""
