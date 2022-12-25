@@ -581,14 +581,13 @@ def handler_add_address(user_command: list, contact_dictionary: AddressBook, pat
                             path_file - path to filename of address book
     """
     contact_name = user_command[1].title()
+    contact_address = ' '.join(user_command[2:])
+    if not contact_address:
+        raise ValueError('You should enter contact address with this command: \'add address <name> <address>\'.')
     if contact_name not in contact_dictionary:
         raise KeyError(f'Contact {contact_name} is not in contact book.')
     if contact_dictionary[contact_name].address is not None:
         raise ValueError(f'Contact {contact_name} already has address. If you want to change address use \'change address <name> <address>\' command.')
-
-    contact_address = ' '.join(user_command[2:])
-    if not contact_address:
-        raise ValueError('You should enter contact address with this command: \'add address <name> <address>\'.')
 
     contact_dictionary[contact_name].add_address(contact_address)
 
@@ -607,16 +606,14 @@ def handler_change_address(user_command: list, contact_dictionary: AddressBook, 
                             path_file - path to filename of address book
     """
     contact_name = user_command[1].title()
-    if contact_name not in contact_dictionary:
-        raise KeyError(f'Contact {contact_name} is not in contact book.')
-
-    previous_address = contact_dictionary[contact_name].address
-    if previous_address is None:
-        raise ValueError(f'Contact {contact_name} has no address yet. If you want to add address use \'add address <name> <address>\' command.')
-
     contact_address = ' '.join(user_command[2:])
+    previous_address = contact_dictionary[contact_name].address
     if not contact_address:
         raise ValueError('You should enter contact address with this command: \'change address <name> <address>\'.')
+    if contact_name not in contact_dictionary:
+        raise KeyError(f'Contact {contact_name} is not in contact book.')
+    if previous_address is None:
+        raise ValueError(f'Contact {contact_name} has no address yet. If you want to add address use \'add address <name> <address>\' command.')
 
     contact_dictionary[contact_name].change_address(contact_address)
 
