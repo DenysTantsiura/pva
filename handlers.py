@@ -51,7 +51,6 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         for element in commands:
             if element not in tags:
                 text_list.append(element)
-                # commands.remove(element)
         text = ' '.join(text_list)
         if len(text) > 0:
             if name in note_book:
@@ -112,6 +111,29 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
         return f'You have changed note {record}.'
     except IndexError:
         return f'Try againe! You should add <command> <name> <new text>.'
+
+@input_error
+def handler_change_in_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
+    """handler_change_in: The bot changes part of the note.
+        Parameters:
+            user_command (list): List with command, name of notes and new note's information.
+            book (NoteBook): Dictionary with notes.
+            path_file (str): Path of file record.
+        Returns:
+            string(str): Information about have changed note."""
+    try:   
+        name = user_command[1].title()
+        ind = user_command.index('--')
+        changed_text = ' '.join(user_command[2:ind])
+        new_text = ' '.join(user_command[(ind+1):]) 
+        if name not in note_book:
+            # raise ('This note does not exist.')
+            return ('This note does not exist.')
+        record = note_book[name]
+        record.change_in(changed_text, new_text)
+        return f'You have changed note {record}.'
+    except IndexError:
+        return f'Try againe! You should add <command> <name> <changed_text> <--> <new text>.'
 
 
 @input_error
@@ -676,6 +698,7 @@ ALL_COMMAND_NOTEBOOK = {
     'show_note': handler_show_note,
     'remove_note': handler_remove_note,
     'change_note': handler_change_note,
+    'change_in': handler_change_in_note,
     'find_notes': handler_find_notes,
     'sort_notes': handler_sort_notes,
 }
