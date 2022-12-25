@@ -78,7 +78,7 @@ class OutputAnswer:
         return True
 
 
-class PVA():
+class PVA:
     """Main personal virtual assistant class."""
     def __init__(self) -> None:
         try:
@@ -127,8 +127,7 @@ class PVA():
 
 
 def main() -> NoReturn:
-    pva_start = PVA()
-    pva_start.start()
+    PVA().start()
 
 
 if __name__ == '__main__':

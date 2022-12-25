@@ -63,9 +63,9 @@ class Email(Field):
             re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
             self._value = new_value
 
-        else:
-            print('Email incorect. Try again.')
-            # return '? Email incorect. Try again.'  # ???
+        # else:  
+        #     raise ValueError('Email incorect. Try again.')
+            # return '? Email incorect. Try again.'  # ??? print
             
 
 class Name(Field):
@@ -151,19 +151,19 @@ class Record:
 
         return True
     
-    def add_email(self, email_new: str) -> bool:
+    def add_email(self, email_new: str) -> tuple:
         """Adds a new entry for the user's email to the address book."""
-        email_new = Email(email_new)
+        email_new_ = Email(email_new)
+        if not email_new_.value:
+            return False, f'Email: {email_new} - incorect.\n'
 
         for email in self.emails:
-            if email_new == email.value:
-                print(f'\"{email_new}\" already recorded for \"{self.name.value}\"')
+            if email_new_.value == email.value:
+                return False, f'\"{email_new}\" already recorded for \"{self.name.value}\".\n'
 
-                return False
+        self.emails.append(email_new_)
 
-        self.emails.append(email_new1)
-
-        return True
+        return True, f'Email: {email_new} for contact {self.name.value} added.\n'
 
     def change_address(self, new_address: str) -> tuple:
         """Modify an existing user's address entry in the address book."""
@@ -214,7 +214,7 @@ class Record:
 
         for email in self.emails:
             if email.value == email_new:  # new email already in record
-                return False, f'\"{email_new}\" already recorded for \"{self.name.value}\"'
+                return False, f'\"{email_new}\" already recorded for \"{self.name.value}\".'
 
             if email.value == email_to_change:  # old email not exist in record
                 verdict = True
@@ -225,10 +225,13 @@ class Record:
         for index, email in enumerate(self.emails):
             if email.value == email_to_change:
                 email_new_to = Email(email_new)
+                if not email_new_to.value:
+                    return False, f'Invalid email: {email_new}'
+                    
                 self.emails.remove(email)
                 self.emails.insert(index, email_new_to)
 
-                return True,
+                return True, f'Email {email_to_change} for contact {self.name.value} has changed on {email_new}.'
 
     def remove_address(self) -> Union[bool, None]:
         """Deleting an address entry from a user entry in the address book."""
@@ -254,15 +257,15 @@ class Record:
 
         print(f'\"{phone_to_remove}\" not specified in the contact \"{self.name.value}\"')
 
-    def remove_email(self, email_to_remove: str) -> Union[bool, None]:
+    def remove_email(self, email_to_remove: str) -> bool:
         """Deleting an email entry from a user entry in the address book."""
         for email in self.emails:
             if email.value == email_to_remove:
                 self.emails.remove(email)
 
-                return True
+                return True, f'Email {email_to_remove} for  contact {self.name.value} has delete.\n'
 
-        print(f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\".')
+        return False, f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\".\n'
 
 
     def days_to_birthday(self) -> int:

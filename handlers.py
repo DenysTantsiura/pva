@@ -167,17 +167,17 @@ def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_
     name, emails = user_command[1].title(), user_command[2:]
     
     if name not in contact_dictionary:
-        #return f'Contact don\'t found.'
-        raise ValueError ('Contact don\'t found')    
+        raise ValueError(f'Contact {name} don\'t found in records!')    
+
     message = ''
     for email in emails:
-        if contact_dictionary[name].add_email(email):
-            message += f'Email {email} for contact {name} added.'
-
-        else:
-            message += f'Contact {name} have this email {email}'
+        result, message_result = contact_dictionary[name].add_email(email)
+        message += message_result
 
     SaveBook().save_book(contact_dictionary, path_file)
+
+    if not message:
+        raise ValueError(f'Give me email(s) for record {name}!') 
 
     return message
 
@@ -188,17 +188,27 @@ def handler_change_email(user_command: list, contact_dictionary: AddressBook, pa
     name = user_command[1].title()
     old_email = user_command[2]
     new_email = user_command[3]
-    contact_dictionary[name].change_email(old_email, new_email)
 
-    SaveBook().save_book(contact_dictionary, path_file)
+    if name not in contact_dictionary:
+        raise ValueError(f'Contact {name} don\'t found in records!') 
 
-    return f'Email {old_email} for contact {name} has changed on {new_email}.'
+    result, message_result = contact_dictionary[name].change_email(old_email, new_email)
+    if result:
+        SaveBook().save_book(contact_dictionary, path_file)
+
+    return message_result
 
 
 @input_error
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """Bot showed email for contact."""
     name = user_command[1].title()
+    if name not in contact_dictionary:
+        raise ValueError(f'Contact {name} don\'t found in records!')
+        
+    if not contact_dictionary[name].emails:
+        return f'No email in record for {name}.\n'
+
     return f'''{name} have email are: {' '.join([email.value for email in contact_dictionary[name].emails])}.'''
 
 
@@ -209,24 +219,19 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
     name, emails = user_command[1].title(), user_command[2:]
 
     if name in contact_dictionary:
-
         if len(emails) != 0:
-
+            message = ''
             for email in emails:
-                if contact_dictionary[name].remove_email(email) == True:
+                result, message_result = contact_dictionary[name].remove_email(email)
+                message += message_result
 
-                    massage = f'Email {email} for  contact {name} has delete.'
-                    SaveBook().save_book(contact_dictionary, path_file)
-
-                else:
-                    massage = f'Email {email} not find in contact {name}.'
-
-            return massage
+            SaveBook().save_book(contact_dictionary, path_file)
+            return message
 
         else: 
-            return f'Email not entered.' # 'Contacts {name} don\'t have email.'
+            return f'Email(s) not entered. Give me email(s) too.'
     
-    return f'Unknown name.'
+    return f'Unknown name: {name}.'
 
 
 def handler_exit(*_) -> str:
