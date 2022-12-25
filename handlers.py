@@ -445,7 +445,13 @@ def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
             book (NoteBook): Dictionary with notes.
         Returns:
             list sorted note-names(list): Return list of note-names sorted by tags."""   
-    return note_book.sort_by_tags()
+   
+    list_sort_notes = note_book.sort_by_tags()
+    if len(list_sort_notes) == 0:
+        # raise ValueError('Notes with tags are missing from Notepad. Try another way.')
+        return ('Notes with tags are missing from Notepad. Try another way.')
+    else:
+        return f'Sorted notes with tags - {list_sort_notes}'
 
 
 # @input_error
