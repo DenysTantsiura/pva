@@ -341,6 +341,8 @@ def handler_sort(user_command: list, __=None, _=None) -> str:
     """The bot sort trash."""
     if user_command[1]:
         return sort_trash(user_command[1])
+    else:
+        return 'Please enter the path to the folder with you want to sort'
 
 
 @input_error

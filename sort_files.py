@@ -76,6 +76,3 @@ def sort_trash(path_to_folder):
     unpack(FOLDERS)
     return f'I sorted folder {FOLDERS}'
     
-
-#print (sort_trash('C:\\Users\\Asus\\Desktop\\Мотло'))
-#sort_trash('C:\\Users\\Asus\\Desktop\\Мотлох')
