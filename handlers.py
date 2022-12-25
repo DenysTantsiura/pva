@@ -43,8 +43,8 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         text = ' '.join(user_command[2:])
 
         if name in note_book:
-            # raise ValueError('This note already exist.')
-            return ('This note already exist.')
+            raise ValueError('This note already exist.')
+            # return ('This note already exist.')
         record = Note(name, text)
         note_book.add_record(record)
 
@@ -66,8 +66,8 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
     try:
         name = user_command[1].title()
         if name not in note_book:
-            # raise ('This note does not exist.')
-            return ('This note does not exist.')
+            raise ValueError('This note does not exist.')
+            # return ('This note does not exist.')
         note_book.remove_record(name)
         return (f'You have removed the note - {name}.')
     except IndexError:
@@ -88,8 +88,8 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
         new_text = ' '.join(user_command[2:]) 
    
         if name not in note_book:
-            # raise ('This note does not exist.')
-            return ('This note does not exist.')
+            raise ValueError('This note does not exist.')
+            # return ('This note does not exist.')
         record = note_book[name]
         record.change_note(new_text)
         return f'You have changed note {record}.'
@@ -102,8 +102,8 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
     """Bot add birthday to contact."""
     name = user_command[1].title()
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
+        #return 'This contact is not in the phone book. Please enter the correct name.'
+        raise ValueError('This contact is not in the phone book. Please enter the correct name.') 
 
     birthday = user_command[2]
     contact_dictionary[name].add_birthday(birthday)
@@ -120,8 +120,8 @@ def handler_change_birthday(user_command: list, contact_dictionary: AddressBook,
     """Bot has changed birthday for contact on new birthday."""
     name = user_command[1].title()
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
+        #return 'This contact is not in the phone book. Please enter the correct name.'
+        raise ValueError('This contact is not in the phone book. Please enter the correct name.') 
 
     birthday = user_command[2]
     contact_dictionary[name].change_birthday(birthday)
@@ -167,8 +167,8 @@ def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_
     name, emails = user_command[1].title(), user_command[2:]
     
     if name not in contact_dictionary:
-        return f'Contact don\'t found.'
-        #raise ValueError ('Contact don\'t found')    
+        #return f'Contact don\'t found.'
+        raise ValueError ('Contact don\'t found')    
     message = ''
     for email in emails:
         if contact_dictionary[name].add_email(email):
@@ -334,11 +334,11 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
     name, phones = user_command[1].title() , user_command[2:]
 
     if name in contact_dictionary: 
-        return 'This contact is already in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is already in the phone book. Please enter the correct name.')
+        #return 'This contact is already in the phone book. Please enter the correct name.'
+        raise ValueError('This contact is already in the phone book. Please enter the correct name.')
     if not name:  # or not phones:
-        return 'You must enter the name, or name and phone(s).'
-        #raise SyntaxError ('You entered an incorrect phone number or name.')
+        #return 'You must enter the name, or name and phone(s).'
+        raise SyntaxError('You entered an incorrect phone number or name.')
     else:
         record = Record(name)
         for phone in phones:
@@ -356,8 +356,8 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
+        #return 'This contact is not in the phone book. Please enter the correct name.'
+        raise ValueError('This contact is not in the phone book. Please enter the correct name.')    
     message_to_user = ''
     for phone in phones:
         if contact_dictionary[name].add_phone(phone):
@@ -376,8 +376,8 @@ def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -
     name = user_command[1].title()
 
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')    
+        #return 'This contact is not in the phone book. Please enter the correct name.'
+        raise ValueError('This contact is not in the phone book. Please enter the correct name.')    
     if contact_dictionary[name].phones:
         phones = ' '.join(contact_dictionary[name].get_phones_list())
         return f'{name} phone(s): {phones}'
@@ -390,8 +390,8 @@ def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, pa
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
+        #return 'This contact is not in the phone book. Please enter the correct name.'
+        raise ValueError('This contact is not in the phone book. Please enter the correct name.')  
     message_to_user = ''  
     for phone in phones:
         if contact_dictionary[name].remove_phone(phone) == True:
@@ -408,8 +408,8 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
-        return 'This contact is not in the phone book. Please enter the correct name.'
-        #raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
+        #return 'This contact is not in the phone book. Please enter the correct name.'
+        raise ValueError('This contact is not in the phone book. Please enter the correct name.')  
     if name in contact_dictionary:
         if len(phones) != 2:
             return 'Input Error. Enter correct information'
@@ -437,8 +437,8 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
         contact_dictionary.remove_record(name)
         return f'{name}\'s contact has been deleted'
     else:
-        return f'Contact {name} is not in contact book'
-        #raise ValueError(f'Contact {name} is not in contact book')
+        #return f'Contact {name} is not in contact book'
+        raise ValueError(f'Contact {name} is not in contact book')
 
 
 @input_error
@@ -448,8 +448,8 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
     name = user_command[1].title()
 
     if name not in contact_dictionary:
-        return f'Contact {name} is not in contact book'
-        #raise ValueError(f'Contact {name} is not in contact book') 
+        #return f'Contact {name} is not in contact book'
+        raise ValueError(f'Contact {name} is not in contact book') 
     
     message_to_user = f'{name}: '
     if contact_dictionary[name].phones:
@@ -501,7 +501,8 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
             if value == name:
                 return f'The note {record}.'
     except IndexError:
-        return f'Try again! You should add <command> <name>.'
+        # return f'Try again! You should add <command> <name>.'
+        raise IndexError('Try again! You should add <command> <name>.')
 
 
 @input_error
@@ -516,6 +517,9 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
     
     list_notes = ''
     tags = user_command[1:]
+    if len(tags) == 0:
+        raise ValueError('Try again! You should input <command> <tag> ...<tag>.')
+        # return ('Try again! You should input <command> <tag> ...<tag>.')
     for tag in tags:
         for record in note_book:
             if tag in record:
@@ -530,7 +534,12 @@ def handler_sort_notes(__, note_book: NoteBook, _=None) -> list:
             book (NoteBook): Dictionary with notes.
         Returns:
             list sorted note-names(list): Return list of note-names sorted by tags."""   
-    return note_book.sort_by_tags()
+    list_sort_notes = note_book.sort_by_tags()
+    if len(list_sort_notes) == 0:
+        raise ValueError('Notes with tags are missing from Notepad. Try another way.')
+        # return ('Notes with tags are missing from Notepad. Try another way.')
+    else:
+        return f'Sorted notes with tags - {list_sort_notes}'
 
 
 @input_error
