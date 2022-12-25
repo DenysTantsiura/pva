@@ -51,3 +51,13 @@ class Note:
 
         self.text = new_text
         return self.text
+
+    def change_in(self, changed_text, new_text) -> tuple:
+        '''change_note...": The bot changes some words in note.
+        Parameters:
+            changed_text (str): The text the user wants to change.
+            new_text (str): The new text the user wants to add.
+        Returns:
+            self.text: Changed text.'''
+        self.text = self.text.replace(changed_text, new_text)
+        return self.text
