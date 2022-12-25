@@ -23,22 +23,24 @@ class Note:
         Returns:
             string(str): If false - the answer for the user, otherwise - a list of tags."""
         NUMBER_TAGS = 5
-        add_tags = new_tags.split(', ')
+        add_tags = []
         
         if len(self.tags) > NUMBER_TAGS:
             return ('You cannot add more than five tags!')
         else:
             delta = NUMBER_TAGS - len(self.tags)
-            if len(add_tags) <= delta:
+            if len(new_tags) <= delta:
                 
-                for tag in add_tags:
+                for tag in new_tags:
                     if tag in self.tags:
                         print (f'This tag "{tag}" already exists!')
                     else:   
                        self.tags.append(tag)
+                       add_tags.append(tag)
+                print (f'You added tags {add_tags}')
                 return self.tags
             else:
-                return (f'You can add only {delta} tags!')
+                print (f'You can add only {delta} tags to this note!')
    
     def change_note(self, new_text: str) -> str:
         """change_note...": The bot rewrites note.
