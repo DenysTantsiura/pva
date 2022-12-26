@@ -100,7 +100,7 @@ class PVA:
         self.note_book, self.path_file_notes = LoadBook(self.path_file_notes).load_book(NoteBook)
 
         self.parser = InputToParser()
-        print('Hello! A personal virtual assistant welcomes you.\nKnown commands:\n', handler_help(None, None, None))
+        print('A personal virtual assistant welcomes you.\nHello!\n')
 
     def start(self) -> NoReturn:
         """The main function of launching a helper console bot that recognize 
