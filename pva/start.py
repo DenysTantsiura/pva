@@ -16,7 +16,8 @@ from serialization import LoadBook, OpenBook
 
 class InputToParser:
 
-    def listen(self, request='How can I help you?\n'):
+    @staticmethod
+    def listen(request='How can I help you?\n'):
         """Get a user string - separate the command and parameters - 
         return it to the list, where the first element is the command, 
         the others are parameters.
@@ -36,7 +37,7 @@ class InputToParser:
         for command in all_commands:
             command = str(command)  # Example: 'remove~birthday' ... 'add~birthday'
             if (command_line.startswith(command) and len(command_line) == len(command)) or \
-                    command_line.startswith(f'{command}~'):   # if command_line.startswith(command):  # Example: 'add~phone'
+                    command_line.startswith(f'{command}~'):   # Example: 'add~phone'
                 # # Example: ['add_birthday'] + ['2000-11-12']
                 return [command.replace('~', '_')] + [word for word in user_input[len(command):].split(' ') if word]
         # Example: ['unknown', 'command', 'abracadabra']
@@ -45,7 +46,8 @@ class InputToParser:
 
 class OutputAnswer:
 
-    def show_out(self, user_request: list, book_instance: Union[AddressBook, NoteBook], new_path_file: str) -> bool:
+    @staticmethod
+    def show_out(user_request: list, book_instance: Union[AddressBook, NoteBook], new_path_file: str) -> bool:
         """Show answer for the user.
             
             Parameters:
@@ -97,7 +99,7 @@ class PVA:
         self.contact_dictionary, self.path_file = LoadBook(self.path_file).load_book(AddressBook)
         self.note_book, self.path_file_notes = LoadBook(self.path_file_notes).load_book(NoteBook)
 
-        self.parser = InputToParser()
+        # self.parser = InputToParser()
         print('A personal virtual assistant welcomes you.\nHello!\n')
 
     def start(self) -> NoReturn:
@@ -107,17 +109,17 @@ class PVA:
         """
         while True:
 
-            user_request = self.parser.listen()
+            user_request = InputToParser.listen()
 
             if user_request[0] in ALL_COMMAND_ADDRESSBOOK:  # dict of commands
-                bot_answer_result = OutputAnswer().show_out(user_request, self.contact_dictionary, self.path_file)
+                bot_answer_result = OutputAnswer.show_out(user_request, self.contact_dictionary, self.path_file)
             elif user_request[0] in ALL_COMMAND_NOTEBOOK:
-                bot_answer_result = OutputAnswer().show_out(user_request, self.note_book, self.path_file_notes)
+                bot_answer_result = OutputAnswer.show_out(user_request, self.note_book, self.path_file_notes)
             elif user_request[0] in ALL_COMMAND_FILESORTER:
-                bot_answer_result = OutputAnswer().show_out(user_request, None, '')
+                bot_answer_result = OutputAnswer.show_out(user_request, None, '')
             else:
                 user_request = ['command_guesser'] + user_request
-                bot_answer_result = OutputAnswer().show_out(user_request, None, '')
+                bot_answer_result = OutputAnswer.show_out(user_request, None, '')
 
             if not bot_answer_result:
                 break
