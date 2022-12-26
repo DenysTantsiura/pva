@@ -23,11 +23,11 @@ class Address(Field):
     @Field.value.setter
     def value(self, new_value: str) -> None:
         
-        if re.search(r'ave', new_value) or re.search(r'st', new_value):
+        if re.search(r'ave', new_value) or re.search(r'str', new_value) or re.search(r'City', new_value) or re.search(r'city', new_value):
             self._value = new_value
         
         else:
-            print('Wrong adress. Enter "Type street. Name street"')
+            print('Wrong adress. Enter "Type street. Name street. Or name city"')
             
     def __str__(self) -> str:
         return f'{self.value}' if self.value else ''
