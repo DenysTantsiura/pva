@@ -273,14 +273,42 @@ def handler_hello(*_) -> str:
 
 def handler_help(*_) -> str:
     """The bot shows all commands."""
-    return  'c - contact, p - phone, op - old phone, b - birthday, e - email, oe - old email, a - address\n'\
-            'Command "add" adds "c" and "p". Example (add c p)\n'\
+    return  'c - contact, p - phone, op - old phone, b - birthday, e - email, oe - old email, a - address, n - note\n'\
+            '                                                                                \n'\
+            'Command ContactBook\n'\
+             '                                                                                \n'\
+            'First command to create contact. Command "add" adds "c" and "p". Example (add c p)\n'\
             'Command "remove" delete "c". Example (remove c)\n'\
-            'Command "add_phone" adds "p". Example (add_phone c p)\n'\
+            'Command "add_phone" adds "p" for "c". Example (add_phone c p)\n'\
+            'Command "phone" show "p" for "c". Example (phone c)\n'\
             'Command "change_phone" change "op" on "p". Example (change_phone c op p)\n'\
             'Command "remove_phone" delete "p". Example (remove_phone c p)\n'\
-                
-            
+            'Command "add_email" adds "e" for "c". Example (add_email c e)\n'\
+            'Command "email" show "e" for "c". Example (email c )\n'\
+            'Command "change_email" change "oe" on "e". Example (change_email c oe e)\n'\
+            'Command "remove_email" delete "e". Example (remove_email c e)\n'\
+            'Command "add_address" adds "a" for  "c". Example (add_address c a)\n'\
+            'Command "change_address" change "a". Example (change_address c a)\n'\
+            'Command "remove_address" delete "a". Example (remove_address c)\n'\
+            'Command "add_birthday" adds "b" for "c". Example (add_birthday c b)\n'\
+            'Command "change_birthday" change "b". Example (change_birthday c b)\n'\
+            'Command "remove_birthday" delete "b". Example (remove_birthday c)\n'\
+            'Command "find" search information in contactbook and show match. Example (find 99) or (find aa)\n'\
+            'Command "show" show all added information in "c". Example (show c)\n'\
+            'Command "show_all" show all contactbook. Example (show_all)\n'\
+            '                                                                                \n'\
+            'Command NoteBook\n'\
+            '                                                                                \n'\
+            'Command "add_note" . Example ()\n'\
+            'Command "change_note" . Example ()\n'\
+            'Command "remove_note" . Example ()\n'\
+            'Command "find_notes" . Example ()\n'\
+            'Command "sort_note" . Example ()\n'\
+            'Command "show_notes" . Example ()\n'\
+            '                                                                                \n'\
+            'Command for sort fili in folder\n'\
+            '                                                                                \n'\
+            'Command "sort". Example (sort)\n'\
 
 
 # @input_error
