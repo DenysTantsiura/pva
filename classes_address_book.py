@@ -23,7 +23,7 @@ class Address(Field):
     @Field.value.setter
     def value(self, new_value: str) -> None:
         
-        if re.search(r'ave', new_value) or re.search(r'str', new_value):
+        if re.search(r'ave', new_value) or re.search(r'st', new_value):
             self._value = new_value
         
         else:

@@ -273,10 +273,14 @@ def handler_hello(*_) -> str:
 
 def handler_help(*_) -> str:
     """The bot shows all commands."""
-    help_list = []
-    for key in ALL_COMMAND:
-        help_list.append(key.replace('_', ' '))
-    return f'{help_list}'
+    return  'c - contact, p - phone, op - old phone, b - birthday, e - email, oe - old email, a - address\n'\
+            'Command "add" adds "c" and "p". Example (add c p)\n'\
+            'Command "remove" delete "c". Example (remove c)\n'\
+            'Command "add_phone" adds "p". Example (add_phone c p)\n'\
+            'Command "change_phone" change "op" on "p". Example (change_phone c op p)\n'\
+            'Command "remove_phone" delete "p". Example (remove_phone c p)\n'\
+                
+            
 
 
 # @input_error
@@ -353,6 +357,7 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
     for phone in phones:
         if contact_dictionary[name].add_phone(phone):
             message_to_user += f'{name}\'s phones are appdate {phone}.\n'
+            SaveBook().save_book(contact_dictionary, path_file)
 
         else:
             message_to_user += f'Contact {name} already have this {phone} phone number.\n'
@@ -414,6 +419,7 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
             new_phone, old_phone = phones[0], phones[1]
         contact_dictionary[name].remove_phone(old_phone)
         contact_dictionary[name].add_phone(new_phone)
+        SaveBook().save_book(contact_dictionary, path_file)
 
         return f"{name}'s phone number has been changed"
 
@@ -426,6 +432,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
 
     if name in contact_dictionary:
         contact_dictionary.remove_record(name)
+        SaveBook().save_book(contact_dictionary, path_file)
         return f'{name}\'s contact has been deleted'
     else:
         return f'Contact {name} is not in contact book'
@@ -450,10 +457,10 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
         message_to_user += f'; Birthday: {contact_dictionary[name].birthday.value} ({contact_dictionary[name].days_to_birthday()} days left until the birthday); '
     
     if contact_dictionary[name].emails:
-        message_to_user += f' {contact_dictionary[name].get_emails_str()}; '
+        message_to_user += f' Email: {contact_dictionary[name].get_emails_str()}; '
     
     if contact_dictionary[name].address:
-        message_to_user += f' address: {contact_dictionary[name].address.value}.'
+        message_to_user += f' Address: {contact_dictionary[name].address.value}.'
     
     return message_to_user
 
@@ -586,7 +593,7 @@ ALL_COMMAND_ADDRESSBOOK = {
     'change_address': handler_change_address,
     'change_birthday': handler_change_birthday,
     'change_email': handler_change_email,
-    'change': handler_change,
+    'change_phone': handler_change,
     'close': handler_exit,
     'email': handler_email,
     'exit': handler_exit,
