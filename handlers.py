@@ -584,20 +584,13 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
         message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
 
     if contact_dictionary[name].emails:
-
-        message_to_user += f' Email: {contact_dictionary[name].get_emails_str()}; '
-    
-    if contact_dictionary[name].address:
-        message_to_user += f' Address: {contact_dictionary[name].address.value}.'
-    
-
         message_to_user += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
         message_to_user += Fore.GREEN + f'{contact_dictionary[name].get_emails_str()}' + Style.RESET_ALL
 
     else:
         message_to_user += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
         message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
-
+    
     if contact_dictionary[name].address:
         message_to_user += Fore.BLUE + '\nAddress: ' + Style.RESET_ALL
         message_to_user += Fore.GREEN + f'{contact_dictionary[name].address.value}' + Style.RESET_ALL
