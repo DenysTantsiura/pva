@@ -65,7 +65,7 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         record = Note(name, text)
         note_book.add_record(record)
         print (f'You added new note - {name}: {text}.')
-
+        
     if tags:
         if name not in note_book:
             raise ValueError('This note not exist. You should add note (<command> <name> <text> <tag>)')
@@ -93,6 +93,7 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
         raise ValueError('This note does not exist.')
     note_book.remove_record(name)
     SaveBook.save_book(note_book, path_file)
+
     return (f'You have removed the note - {name}.')
 
 
@@ -114,6 +115,7 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
     record = note_book[name]
     record.change_note(new_text)
     SaveBook.save_book(note_book, path_file)
+
     return f'You have changed note {record}.'
 
 
@@ -289,21 +291,20 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
 
     name, emails = user_command[1].title(), user_command[2:]
 
-    if name in contact_dictionary:
-        if len(emails) != 0:
-            message = ''
-            for email in emails:
-                result, message_result = contact_dictionary[name].remove_email(email)
-                message += message_result
+    if name not in contact_dictionary:
+        return f'Unknown name: {name}.'
 
-            SaveBook.save_book(contact_dictionary, path_file)
-            return message
+    if not emails: 
+        return f'Email(s) not entered. Give me email(s) too.'
 
-        else: 
-            return f'Email(s) not entered. Give me email(s) too.'
-    
-    return f'Unknown name: {name}.'
+    message = ''
+    for email in emails:
+        result, message_result = contact_dictionary[name].remove_email(email)
+        message += message_result
 
+    SaveBook.save_book(contact_dictionary, path_file)
+
+    return message
 
 
 def handler_exit(*_) -> str:
@@ -318,7 +319,6 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
     """
     if len(user_command) == 1:
         return f'Comand "find ..." information in contact book. Please write some information. Example:\nfind <text> <text1> <textN>\n'
-
 
     found_list = ['Matches:\n']
     flag = False
@@ -708,7 +708,7 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
         for record in note_book.data.values():
             if word in record.text:
                 list_notes += f'{record}\n'
-        if len(list_notes) > 0:
+        if list_notes:
             print(word)
             print(list_notes)
             list_notes = ''
