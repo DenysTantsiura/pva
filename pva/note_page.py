@@ -1,5 +1,6 @@
-
 class Note:
+
+    NUMBER_TAGS = 5
 
     def __init__(self, name: str, text: str) -> None:
         """__init__...": The bot initializes an object of the Notes class and creates list of tags.
@@ -22,25 +23,25 @@ class Note:
             new_tags (str): Tags that the user wants to add.
         Returns:
             string(str): If false - the answer for the user, otherwise - a list of tags."""
-        NUMBER_TAGS = 5
+        
         add_tags = []
 
-        if len(self.tags) > NUMBER_TAGS:
+        if len(self.tags) > Note.NUMBER_TAGS:
             return ('You cannot add more than five tags!')
-        else:
-            delta = NUMBER_TAGS - len(self.tags)
-            if len(new_tags) <= delta:
+        
+        delta = Note.NUMBER_TAGS - len(self.tags)
+        if len(new_tags) <= delta:
 
-                for tag in new_tags:
-                    if tag in self.tags:
-                        print (f'This tag "{tag}" already exists!')
-                    else:
-                       self.tags.append(tag)
-                       add_tags.append(tag)
-                print (f'You added tags {add_tags}')
-                return self.tags
-            else:
-                print (f'You can add only {delta} tags to this note!')
+            for tag in new_tags:
+                if tag in self.tags:
+                    print (f'This tag "{tag}" already exists!')
+                else:
+                    self.tags.append(tag)
+                    add_tags.append(tag)
+            print (f'You added tags {add_tags}')
+            return self.tags
+        else:
+            print (f'You can add only {delta} tags to this note!')
 
     def change_note(self, new_text: str) -> str:
         """change_note...": The bot rewrites note.

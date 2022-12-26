@@ -1,6 +1,6 @@
 from pva.address_book import AddressBook
-from pva.class_note import Note
-from pva.classes_address_book import (
+from pva.note_page import Note
+from pva.records import (
     Field,
     Address,
     Birthday,
@@ -37,7 +37,7 @@ from pva.handlers import (
     handler_remove_email,
     handler_remove_note,
     handler_remove_phone,
-    handler_show
+    handler_show,
     handler_show_all,
     handler_show_note,
     handler_show_notes,
@@ -100,7 +100,7 @@ __all__ = ['AddressBook',
            'handler_remove_email',
            'handler_remove_note',
            'handler_remove_phone',
-           'handler_show,
+           'handler_show',
            'handler_show_all',
            'handler_show_note',
            'handler_show_notes',

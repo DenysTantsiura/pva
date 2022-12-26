@@ -11,10 +11,3 @@ setup(name='personal_virtual_assistant',
       packages=find_namespace_packages(),
       install_requires=['colorama'],
       entry_points={'console_scripts': ['pva = pva.start:main']})
-"""
-The package is installed in the system by the command:
- pip install -e . 
- (or :
-python setup.py install
-, administrator rights are required!)
-"""

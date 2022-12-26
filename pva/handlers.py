@@ -2,9 +2,9 @@ from difflib import get_close_matches
 from typing import Union
 from sort_files import sort_trash
 
-from class_note import Note
+from note_page import Note
 from address_book import AddressBook
-from classes_address_book import Record
+from records import Record
 from note_book import NoteBook
 from serialization import SaveBook
 from validator import input_error
@@ -14,7 +14,7 @@ from colorama import Fore, Style
 colorama.init()
 
 
-def handler_command_guesser(user_command: list, *args) -> Union[str, None]:
+def handler_command_guesser(user_command: list, *args) -> str:
     """In the case of an unrecognized command,
         the bot offers the closest similar known command.
     """
@@ -59,13 +59,14 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         if element not in tags:
             text_list.append(element)
     text = ' '.join(text_list)
-    if len(text) > 0:
+    if text:
         if name in note_book:
             raise ValueError(f'Note \'{name}\' already exists.')
         record = Note(name, text)
         note_book.add_record(record)
         print (f'Note \'{name}\' with text \'{text}\' was successfully added.')
-    if len(tags) > 0:
+
+    if tags:
         if name not in note_book:
             raise ValueError(f'Note \'{name}\' doesn\'t exist. You can add note with command: add note <note_title> <text> <tag>)')
         note_book[name].add_tags(tags)
@@ -73,7 +74,7 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         raise ValueError (f'Note \'{name}\' already exists.')
     elif name not in note_book:
         raise ValueError (f'Note \'{name}\' doesn\'t exist. You can add note with command: add note <note_title> <text> <tag>)')
-    SaveBook().save_book(note_book, path_file)
+    SaveBook.save_book(note_book, path_file)
 
     return f'What is your next step?'
 
@@ -91,7 +92,8 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
     if name not in note_book:
         raise ValueError(f'Note {name} doesn\'t exist.')
     note_book.remove_record(name)
-    SaveBook().save_book(note_book, path_file)
+    SaveBook.save_book(note_book, path_file)
+
     return (f'Note \'{name}\' was successfully removed.')
 
 
@@ -112,7 +114,8 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
         raise ValueError(f'Note \'{name}\' doesn\'t exist.')
     record = note_book[name]
     record.change_note(new_text)
-    SaveBook().save_book(note_book, path_file)
+    SaveBook.save_book(note_book, path_file)
+
     return f'Note \'{name}\' was successfully updated with text \'{new_text}\'.'
 
 
@@ -134,7 +137,7 @@ def handler_change_in_note(user_command: list, note_book: NoteBook, path_file: s
         raise (f'Note \'{name}\' doesn\'t exist.')
     record = note_book[name]
     record.change_in(changed_text, new_text)
-    SaveBook().save_book(note_book, path_file)
+    SaveBook.save_book(note_book, path_file)
     return f'Note \'{name}\' was successfully updated with text \'{new_text}\'.'
 
 
@@ -153,7 +156,7 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
 
     birthday = user_command[2]
     if contact_dictionary[name].add_birthday(birthday):
-        SaveBook().save_book(contact_dictionary, path_file)
+        SaveBook.save_book(contact_dictionary, path_file)
         return f'Birthday {birthday} for contact {name} was successfully added.'
 
     else:
@@ -180,7 +183,7 @@ def handler_change_birthday(user_command: list, contact_dictionary: AddressBook,
     birthday = user_command[2]
     contact_dictionary[name].change_birthday(birthday)
 
-    SaveBook().save_book(contact_dictionary, path_file)
+    SaveBook.save_book(contact_dictionary, path_file)
 
     return f'Birthday date \'{birthday}\' for contact {name} was successfully updated.'
 
@@ -203,21 +206,16 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
         return 'Command \'remove birthday\' remove contact\'s birthday. Please enter contact\'s name. Example:\nremove birthday <username>\n'
 
     name = user_command[1].title()
-
-    if contact_dictionary.get(name, None):
-
-        if contact_dictionary[name].birthday:
-            contact_dictionary[name].remove_birthday()
-
-            SaveBook().save_book(contact_dictionary, path_file)
-
-            return f'Birthday date for contact \'{name}\' was successfully deleted.'
-
-        else:
-            return f'Birthday is not specified for contact \'{name}\'. You can add it.'
-
-    else:
+    if name not in contact_dictionary:
         return f'Contact \'{name}\' doesn\'t exist. Please enter name that is in the contact book.'
+
+    if not contact_dictionary[name].birthday:
+        return f'Birthday is not specified for contact \'{name}\'. You can add it.'
+
+    contact_dictionary[name].remove_birthday()
+    SaveBook.save_book(contact_dictionary, path_file)
+
+    return f'Birthday date for contact \'{name}\' was successfully deleted.'
 
 
 @input_error
@@ -236,7 +234,7 @@ def handler_add_email(user_command: list, contact_dictionary: AddressBook, path_
         result, message_result = contact_dictionary[name].add_email(email)
         message += message_result
 
-    SaveBook().save_book(contact_dictionary, path_file)
+    SaveBook.save_book(contact_dictionary, path_file)
 
     if not message:
         raise ValueError('You should enter email(s) with command \'add email\'. Example:\nadd email <username> <email 1>...<email N>\n')
@@ -263,7 +261,7 @@ def handler_change_email(user_command: list, contact_dictionary: AddressBook, pa
 
     result, message_result = contact_dictionary[name].change_email(old_email, new_email)
     if result:
-        SaveBook().save_book(contact_dictionary, path_file)
+        SaveBook.save_book(contact_dictionary, path_file)
 
     return message_result
 
@@ -292,21 +290,20 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
 
     name, emails = user_command[1].title(), user_command[2:]
 
-    if name in contact_dictionary:
-        if len(emails) != 0:
-            message = ''
-            for email in emails:
-                result, message_result = contact_dictionary[name].remove_email(email)
-                message += message_result
+    if name not in contact_dictionary:
+        return f'Unknown name: {name}.'
 
-            SaveBook().save_book(contact_dictionary, path_file)
-            return message
+    if not emails:
+        return f'Email(s) not entered. Give me email(s) too.'
 
-        else:
-            return 'You should enter emails(s) with command \'remove email\'. Example:\nremove email <username> <email 1>...<email N>\n'
+    message = ''
+    for email in emails:
+        result, message_result = contact_dictionary[name].remove_email(email)
+        message += message_result
 
-    return f'Contact \'{name}\' doesn\'t exist. Please enter name that is in the contact book.'
+    SaveBook.save_book(contact_dictionary, path_file)
 
+    return message
 
 
 def handler_exit(*_) -> str:
@@ -322,8 +319,8 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
     if len(user_command) == 1:
         return 'Command \'find\' searches information in the contact book that fits entered query(ies). Please enter query(ies). Example:\nfind <text 1>...<text N>\n'
 
-
     found_list = ['Search results:\n']
+
     flag = False
 
     for records in contact_dictionary.iterator(10):
@@ -415,7 +412,7 @@ def handler_help(*_) -> str:
 @input_error
 def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
     """The bot shows all contacts."""
-    all_list = [Fore.CYAN + 'All contacts:\n' + Style.RESET_ALL]
+    all_list = [Fore.CYAN + 'All contacts from next page.' + Style.RESET_ALL]
     LIMIT = 10
     for records in contact_dictionary.iterator(LIMIT):
         contact_message = ''
@@ -475,7 +472,7 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
     contact_dictionary.add_record(record)
     for phone in phones:
         record.add_phone(phone)
-    SaveBook().save_book(contact_dictionary, path_file)
+    SaveBook.save_book(contact_dictionary, path_file)
     return f'Contact \'{name}\' was successfully added.'
 
 
@@ -499,8 +496,8 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
             flag = True
 
     if flag:
-        SaveBook().save_book(contact_dictionary, path_file)
-        return f'Contact \'{name}\' was successfully updated'
+        SaveBook.save_book(contact_dictionary, path_file)
+        return f'Contact \'{name}\' was successfully updated.'
     else:
         return 'If you want to remove phone for contact, please use next command:\nremove phone <username> <phone 1>...<phone N>'
 
@@ -544,7 +541,7 @@ def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, pa
             flag = True
 
     if flag:
-        SaveBook().save_book(contact_dictionary, path_file)
+        SaveBook.save_book(contact_dictionary, path_file)
         return f'Contact \'{name}\' was successfully updated.'
     else:
         return f'If you want to remove phone(s) for contact, please enter this command:\nremove phone <username> <phone 1>...<phone N>'
@@ -573,9 +570,9 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
             new_phone, old_phone = phones[0], phones[1]
         contact_dictionary[name].remove_phone(old_phone)
         contact_dictionary[name].add_phone(new_phone)
-        SaveBook().save_book(contact_dictionary, path_file)
+        SaveBook.save_book(contact_dictionary, path_file)
 
-        SaveBook().save_book(contact_dictionary, path_file)
+        SaveBook.save_book(contact_dictionary, path_file)
         return f'Phone {old_phone} for contact {name} was successfully updated with phone {new_phone}.'
 
 
@@ -590,7 +587,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
 
     if name in contact_dictionary:
         contact_dictionary.remove_record(name)
-        SaveBook().save_book(contact_dictionary, path_file)
+        SaveBook.save_book(contact_dictionary, path_file)
         return f'Contact {name} was successfully deleted.'
 
     else:
@@ -599,7 +596,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
 
 @input_error
 def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
-    """show ...: The bot show all information about contact.
+    """show ...: The bot shows all information about contact.
     User must write just name."""
     if len(user_command) == 1:
         return f'Command \'show\' shows information about contact. Example:\nshow <username>\n'
@@ -646,7 +643,6 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
         message_to_user += Fore.YELLOW + 'empty\n' + Style.RESET_ALL
 
     message_to_user += Fore.MAGENTA + '{:-^10}'.format('') + Style.RESET_ALL
-
 
     return message_to_user
 
@@ -710,7 +706,7 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
         for record in note_book.data.values():
             if word in record.text:
                 list_notes += f'{record}\n'
-        if len(list_notes) > 0:
+        if list_notes:
             print(word)
             print(list_notes)
             list_notes = ''
@@ -755,7 +751,7 @@ def handler_add_address(user_command: list, contact_dictionary: AddressBook, pat
 
     contact_dictionary[contact_name].add_address(contact_address)
 
-    SaveBook().save_book(contact_dictionary, path_file)
+    SaveBook.save_book(contact_dictionary, path_file)
 
     return f'Address \'{contact_address}\' for contact {contact_name} was successfully added.'
 
@@ -785,7 +781,7 @@ def handler_change_address(user_command: list, contact_dictionary: AddressBook, 
         raise ValueError(f'Contact {contact_name} has no address yet. If you want to add address use \'add address <name> <address>\' command.')
 
     if contact_dictionary[contact_name].change_address(contact_address):
-        SaveBook().save_book(contact_dictionary, path_file)
+        SaveBook.save_book(contact_dictionary, path_file)
         return f'Address \'{previous_address}\' for contact {contact_name} was successfully updated to address \'{contact_address}\'.'
     else:
         return f'Address is missing!\"{contact_address}\"'
@@ -812,7 +808,7 @@ def handler_remove_address(user_command: list, contact_dictionary: AddressBook, 
 
     contact_dictionary[contact_name].remove_address()
 
-    SaveBook().save_book(contact_dictionary, path_file)
+    SaveBook.save_book(contact_dictionary, path_file)
 
     return f'Address \'{previous_address}\' for contact {contact_name} was successfully deleted.'
 
