@@ -1,6 +1,7 @@
 from difflib import get_close_matches
 from typing import Union
 from sort_files import sort_trash
+
 from class_note import Note
 from address_book import AddressBook
 from classes_address_book import Record
@@ -335,10 +336,43 @@ def handler_hello(*_) -> str:
 
 def handler_help(*_) -> str:
     """The bot shows all commands."""
-    help_list = []
-    for key in ALL_COMMAND:
-        help_list.append(key.replace('_', ' '))
-    return f'{help_list}'
+    return  'c - contact, p - phone, op - old phone, b - birthday, e - email, oe - old email, a - address, n - note\n'\
+            '                                                                                \n'\
+            'Command ContactBook\n'\
+             '                                                                                \n'\
+            'First command to create contact. Command "add" adds "c" and "p". Example (add c p)\n'\
+            'Command "remove" delete "c". Example (remove c)\n'\
+            'Command "add phone" adds "p" for "c". Example (add phone c p)\n'\
+            'Command "phone" show "p" for "c". Example (phone c)\n'\
+            'Command "change phone" change "op" on "p". Example (change phone c op p)\n'\
+            'Command "remove phone" delete "p". Example (remove phone c p)\n'\
+            'Command "add email" adds "e" for "c". Example (add email c e)\n'\
+            'Command "email" show "e" for "c". Example (email c )\n'\
+            'Command "change email" change "oe" on "e". Example (change email c oe e)\n'\
+            'Command "remove email" delete "e". Example (remove email c e)\n'\
+            'Command "add address" adds "a" for  "c". Example (add address c a)\n'\
+            'Command "change address" change "a". Example (change address c a)\n'\
+            'Command "remove address" delete "a". Example (remove address c)\n'\
+            'Command "add birthday" adds "b" for "c". Example (add birthday c b)\n'\
+            'Command "change birthday" change "b". Example (change birthday c b)\n'\
+            'Command "remove birthday" delete "b". Example (remove birthday c)\n'\
+            'Command "find" search information in contactbook and show match. Example (find 99) or (find aa)\n'\
+            'Command "show" show all added information in "c". Example (show c)\n'\
+            'Command "show all" show all contactbook. Example (show all)\n'\
+            '                                                                                \n'\
+            'Command NoteBook\n'\
+            '                                                                                \n'\
+            'Command "add_note" add note. Example (add note name text)\n'\
+            'Command "change_note" change note. Example (change note name text)\n'\
+            'Command "remove_note" delete note. Example (remove note name)\n'\
+            'Command "find_notes" search by text. Example (find note text)\n'\
+            'Command "sort_note" sort note. Example (sort note)\n'\
+            'Command "show_note" show note. Example (show note name)\n'\
+            'Command "show_notes" show all note. Example (show notes)\n'\
+            '                                                                                \n'\
+            'Command for sort file in folder\n'\
+            '                                                                                \n'\
+            'Command "sort". Example (sort path_folder)\n'\
 
 
 @input_error
@@ -384,6 +418,7 @@ def handler_sort(user_command: list, __=None, _=None) -> str:
         command_list = user_command[1:]
         command = " ".join(command_list)
         return sort_trash(command)
+
     else:
         return 'Please enter the path to the folder with you want to sort'
 
@@ -417,11 +452,16 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
 
     if name not in contact_dictionary:
         raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
-
+    
+    if not phones:
+        raise ValueError('Please enter <name> <phone>')
+        
     message_to_user = ''
     for phone in phones:
         if contact_dictionary[name].add_phone(phone):
             message_to_user += f'{name}\'s phones are appdate {phone}.\n'
+            SaveBook().save_book(contact_dictionary, path_file)
+
 
         else:
             message_to_user += f'Contact {name} already have this {phone} phone number.\n'
@@ -483,6 +523,7 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
             new_phone, old_phone = phones[0], phones[1]
         contact_dictionary[name].remove_phone(old_phone)
         contact_dictionary[name].add_phone(new_phone)
+        SaveBook().save_book(contact_dictionary, path_file)
 
         SaveBook().save_book(contact_dictionary, path_file)
         return f"{name}'s phone number has been changed"
@@ -496,6 +537,7 @@ def handler_remove(user_command: list, contact_dictionary: AddressBook, path_fil
 
     if name in contact_dictionary:
         contact_dictionary.remove_record(name)
+        SaveBook().save_book(contact_dictionary, path_file)
         return f'{name}\'s contact has been deleted'
 
     else:
@@ -520,6 +562,13 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
         message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
 
     if contact_dictionary[name].emails:
+
+        message_to_user += f' Email: {contact_dictionary[name].get_emails_str()}; '
+    
+    if contact_dictionary[name].address:
+        message_to_user += f' Address: {contact_dictionary[name].address.value}.'
+    
+
         message_to_user += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
         message_to_user += Fore.GREEN + f'{contact_dictionary[name].get_emails_str()}' + Style.RESET_ALL
 
@@ -537,13 +586,18 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
     if contact_dictionary[name].birthday:
         message_to_user += Fore.BLUE + '\nBirthday: ' + Style.RESET_ALL
-        message_to_user += Fore.GREEN + f'{contact_dictionary[name].birthday.value.date()} ({contact_dictionary[name].days_to_birthday()} days left until the birthday)\n' + Style.RESET_ALL
+        
+        if contact_dictionary[name].days_to_birthday() == 365 or contact_dictionary[name].days_to_birthday() == 366:
+            message_to_user += Fore.GREEN + f'{contact_dictionary[name].birthday.value.date()} (Happy Birthday!!!)\n' + Style.RESET_ALL
+        else:
+            message_to_user += Fore.GREEN + f'{contact_dictionary[name].birthday.value.date()} ({contact_dictionary[name].days_to_birthday()} days left until the birthday)\n' + Style.RESET_ALL
 
     else:
         message_to_user += Fore.BLUE + '\nBirthday: ' + Style.RESET_ALL
         message_to_user += Fore.YELLOW + 'empty\n' + Style.RESET_ALL
 
     message_to_user += Fore.MAGENTA + '{:-^10}'.format('') + Style.RESET_ALL
+
 
     return message_to_user
 
@@ -713,7 +767,7 @@ ALL_COMMAND_ADDRESSBOOK = {
     'change_address': handler_change_address,
     'change_birthday': handler_change_birthday,
     'change_email': handler_change_email,
-    'change': handler_change,
+    'change_phone': handler_change,
     'close': handler_exit,
     'email': handler_email,
     'exit': handler_exit,
