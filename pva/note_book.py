@@ -11,7 +11,7 @@ class NoteBook(UserDict):
     def iterrator(self, count: int) -> list:
         """Return (count) records of all notebook."""
         tags = []
-        
+        counter = 0
         for record in self.data.values():
 
             tags.append(record)

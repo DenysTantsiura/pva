@@ -29,7 +29,7 @@ class OpenBook:
     def __init__(self, path_file: str) -> None:
         self.path_file = path_file
 
-    def open_book(self) -> str:
+    def open_book(self) -> Path:
         file_path = Path(self.path_file)
         self.path_file = Path(file_path.parent, file_path.name)
         return self.path_file
