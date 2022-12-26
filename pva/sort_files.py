@@ -71,6 +71,6 @@ def sort_trash(path_to_folder):
     try:
         overrun_folder(folders, folders)
     except FileNotFoundError:
-        raise FileNotFoundError(f'I can\'t find this {folders} folder')
+        raise FileNotFoundError(f'I can\'t find folder - {FOLDERS}')
     unpack(folders)
-    return f'I sorted folder {folders}'
+    return f'I sorted folder - {FOLDERS}'

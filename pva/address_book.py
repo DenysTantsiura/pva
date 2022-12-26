@@ -5,18 +5,17 @@ class AddressBook(UserDict):
     """Class of Address Book."""
     def add_record(self, record) -> None:
         """Adds a new record to the address book."""
-        
+
         self.data[record.name.value] = record
 
     def show_happy_birthday(self, meantime: str) -> str:
         """Shows a list of contacts whose birthday is a specified number of days from the current date."""
-        
+
         birthday_people = ''
         try:
             meantime = int(meantime)
         except ValueError:
-            raise ValueError('Command "happy birthday...." shows users whose birthday is in a given number of days.'
-                             ' Please write number of days. Example:\nremove_birthday <username>')
+            raise ValueError('Command \'happy birthday\' shows users whose birthday is in a given range of days. Please enter range of days. Example:\nhappy birthday <days>')
         for contact in self.data.values():
             if contact.birthday and contact.birthday.value and int(meantime) >= contact.days_to_birthday():
                 birthday_people += f'{contact.name.value}\'s birthday: {contact.birthday.value.date()}\n'
@@ -42,5 +41,5 @@ class AddressBook(UserDict):
 
     def remove_record(self, name: str) -> None:
         """Delete contact from address book."""
-        
+
         del self.data[name]
