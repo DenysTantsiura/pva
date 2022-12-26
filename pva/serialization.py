@@ -15,7 +15,7 @@ class LoadBook:
     def load_book(self, book) -> tuple[Union[AddressBook, NoteBook], str]:
         if not Path.exists(self.path_file):
             new_book = book()
-            SaveBook().save_book(new_book, self.path_file)
+            SaveBook.save_book(new_book, self.path_file)
             return new_book, self.path_file
 
         with open(self.path_file, 'rb') as fh:
