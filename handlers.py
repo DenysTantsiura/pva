@@ -343,7 +343,7 @@ def handler_help(*_) -> str:
             'Command "remove" delete "c". Example (remove c)\n'\
             'Command "add_phone" adds "p" for "c". Example (add_phone c p)\n'\
             'Command "phone" show "p" for "c". Example (phone c)\n'\
-            'Command "change" change "op" on "p". Example (change_phone c op p)\n'\
+            'Command "change_phone" change "op" on "p". Example (change_phone c op p)\n'\
             'Command "remove_phone" delete "p". Example (remove_phone c p)\n'\
             'Command "add_email" adds "e" for "c". Example (add_email c e)\n'\
             'Command "email" show "e" for "c". Example (email c )\n'\
@@ -371,7 +371,7 @@ def handler_help(*_) -> str:
             '                                                                                \n'\
             'Command for sort file in folder\n'\
             '                                                                                \n'\
-            'Command "sort". Example (sort C:\user...)\n'\
+            'Command "sort". Example (sort path_folder)\n'\
 
 
 @input_error
@@ -754,7 +754,7 @@ ALL_COMMAND_ADDRESSBOOK = {
     'change_address': handler_change_address,
     'change_birthday': handler_change_birthday,
     'change_email': handler_change_email,
-    'change': handler_change,
+    'change_phone': handler_change,
     'close': handler_exit,
     'email': handler_email,
     'exit': handler_exit,
