@@ -341,33 +341,33 @@ def handler_help(*_) -> str:
              '                                                                                \n'\
             'First command to create contact. Command "add" adds "c" and "p". Example (add c p)\n'\
             'Command "remove" delete "c". Example (remove c)\n'\
-            'Command "add phone" adds "p" for "c". Example (add_phone c p)\n'\
+            'Command "add phone" adds "p" for "c". Example (add phone c p)\n'\
             'Command "phone" show "p" for "c". Example (phone c)\n'\
-            'Command "change phone" change "op" on "p". Example (change_phone c op p)\n'\
-            'Command "remove phone" delete "p". Example (remove_phone c p)\n'\
-            'Command "add email" adds "e" for "c". Example (add_email c e)\n'\
+            'Command "change phone" change "op" on "p". Example (change phone c op p)\n'\
+            'Command "remove phone" delete "p". Example (remove phone c p)\n'\
+            'Command "add email" adds "e" for "c". Example (add email c e)\n'\
             'Command "email" show "e" for "c". Example (email c )\n'\
-            'Command "change email" change "oe" on "e". Example (change_email c oe e)\n'\
-            'Command "remove email" delete "e". Example (remove_email c e)\n'\
-            'Command "add address" adds "a" for  "c". Example (add_address c a)\n'\
-            'Command "change address" change "a". Example (change_address c a)\n'\
-            'Command "remove address" delete "a". Example (remove_address c)\n'\
-            'Command "add birthday" adds "b" for "c". Example (add_birthday c b)\n'\
-            'Command "change birthday" change "b". Example (change_birthday c b)\n'\
-            'Command "remove birthday" delete "b". Example (remove_birthday c)\n'\
+            'Command "change email" change "oe" on "e". Example (change email c oe e)\n'\
+            'Command "remove email" delete "e". Example (remove email c e)\n'\
+            'Command "add address" adds "a" for  "c". Example (add address c a)\n'\
+            'Command "change address" change "a". Example (change address c a)\n'\
+            'Command "remove address" delete "a". Example (remove address c)\n'\
+            'Command "add birthday" adds "b" for "c". Example (add birthday c b)\n'\
+            'Command "change birthday" change "b". Example (change birthday c b)\n'\
+            'Command "remove birthday" delete "b". Example (remove birthday c)\n'\
             'Command "find" search information in contactbook and show match. Example (find 99) or (find aa)\n'\
             'Command "show" show all added information in "c". Example (show c)\n'\
-            'Command "show all" show all contactbook. Example (show_all)\n'\
+            'Command "show all" show all contactbook. Example (show all)\n'\
             '                                                                                \n'\
             'Command NoteBook\n'\
             '                                                                                \n'\
-            'Command "add_note" add note. Example (add_note name text)\n'\
-            'Command "change_note" change note. Example (change_note name text)\n'\
-            'Command "remove_note" delete note. Example (remove_note name)\n'\
-            'Command "find_notes" search by text. Example (find_note text)\n'\
-            'Command "sort_note" sort note. Example (sort_note)\n'\
-            'Command "show_note" show note. Example (show_note name)\n'\
-            'Command "show_notes" show all note. Example (show_notes)\n'\
+            'Command "add_note" add note. Example (add note name text)\n'\
+            'Command "change_note" change note. Example (change note name text)\n'\
+            'Command "remove_note" delete note. Example (remove note name)\n'\
+            'Command "find_notes" search by text. Example (find note text)\n'\
+            'Command "sort_note" sort note. Example (sort note)\n'\
+            'Command "show_note" show note. Example (show note name)\n'\
+            'Command "show_notes" show all note. Example (show notes)\n'\
             '                                                                                \n'\
             'Command for sort file in folder\n'\
             '                                                                                \n'\
