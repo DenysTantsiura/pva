@@ -1,6 +1,7 @@
 from difflib import get_close_matches
 from typing import Union
 from sort_files import sort_trash
+
 from class_note import Note
 from address_book import AddressBook
 from classes_address_book import Record
@@ -381,6 +382,7 @@ def handler_sort(user_command: list, __=None, _=None) -> str:
     """The bot sort trash."""
     if user_command[1]:
         return sort_trash(user_command[1])
+
     else:
         return 'Please enter the path to the folder with you want to sort'
 
