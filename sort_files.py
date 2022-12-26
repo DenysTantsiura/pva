@@ -75,4 +75,3 @@ def sort_trash(path_to_folder):
         raise FileNotFoundError(f'I can\'t find this {FOLDERS} folder')
     unpack(FOLDERS)
     return f'I sorted folder {FOLDERS}'
-    

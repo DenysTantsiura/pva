@@ -1,6 +1,7 @@
 from difflib import get_close_matches
 from typing import Union
 from sort_files import sort_trash
+
 from class_note import Note
 from address_book import AddressBook
 from classes_address_book import Record
@@ -381,6 +382,7 @@ def handler_sort(user_command: list, __=None, _=None) -> str:
     """The bot sort trash."""
     if user_command[1]:
         return sort_trash(user_command[1])
+
     else:
         return 'Please enter the path to the folder with you want to sort'
 
@@ -414,11 +416,15 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
 
     if name not in contact_dictionary:
         raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
-
+    
+    if not phones:
+        raise ValueError('Please enter <name> <phone>')
+        
     message_to_user = ''
     for phone in phones:
         if contact_dictionary[name].add_phone(phone):
             message_to_user += f'{name}\'s phones are appdate {phone}.\n'
+
 
         else:
             message_to_user += f'Contact {name} already have this {phone} phone number.\n'
@@ -534,7 +540,11 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
     if contact_dictionary[name].birthday:
         message_to_user += Fore.BLUE + '\nBirthday: ' + Style.RESET_ALL
-        message_to_user += Fore.GREEN + f'{contact_dictionary[name].birthday.value.date()} ({contact_dictionary[name].days_to_birthday()} days left until the birthday)\n' + Style.RESET_ALL
+        
+        if contact_dictionary[name].days_to_birthday() == 365 or contact_dictionary[name].days_to_birthday() == 366:
+            message_to_user += Fore.GREEN + f'{contact_dictionary[name].birthday.value.date()} (Happy Birthday!!!)\n' + Style.RESET_ALL
+        else:
+            message_to_user += Fore.GREEN + f'{contact_dictionary[name].birthday.value.date()} ({contact_dictionary[name].days_to_birthday()} days left until the birthday)\n' + Style.RESET_ALL
 
     else:
         message_to_user += Fore.BLUE + '\nBirthday: ' + Style.RESET_ALL
