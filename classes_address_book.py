@@ -29,6 +29,9 @@ class Address(Field):
         else:
             print('Wrong adress. Enter "Type street. Name street"')
             
+    def __str__(self) -> str:
+        return f'{self.value}' if self.value else ''
+
 
 class Birthday(Field):
     """Class of Birthday data."""
@@ -40,14 +43,13 @@ class Birthday(Field):
             birthday_data = datetime.strptime(new_value, "%Y-%m-%d")
 
         except ValueError:
-            # raise ValueError('Data in not value. Enter numbers in format yyyy-mm-dd.')
-            return print(f'Data in not value. Enter numbers in format yyyy-mm-dd.')
-
+            raise ValueError('Data in not value. Enter numbers in format yyyy-mm-dd.')
+            
         if birthday_data <= datetime.now():
             self._value = birthday_data 
 
     def __str__(self) -> str:
-        return f'{self._value.date()}' if self.__value else 'Data in not value.'
+        return f'{self.value.date()}' if self.value else 'Data in not value.'
 
 
 class Email(Field):
@@ -60,9 +62,9 @@ class Email(Field):
             re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
             self._value = new_value
 
-        else:
-            print('Email incorect. Try again.')
-            
+        # else:  
+        #     raise ValueError('Email incorect. Try again.')
+            # return '? Email incorect. Try again.'  # ??? print
 
 class Name(Field):
     """Class of name contact."""   
@@ -73,8 +75,7 @@ class Name(Field):
             self._value = value.title()
 
         else: 
-            print ('Wrong name. Please input correct name.')
-            # raise ValueError ('Wrong name. Please input correct name')
+            raise ValueError ('Wrong name. Please input correct name')
 
 
 class Phone(Field):
@@ -86,8 +87,7 @@ class Phone(Field):
         if re.search(r'[0-9]{10,12}', new_value):
             self._value = new_value
         else:
-            print('Wrong phone. Please enter correct phone number.')
-            #raise ValueError ('Wrong phone. Please enter correct phone number.')
+            raise ValueError ('Wrong phone. Please enter correct phone number.')
 
     @staticmethod
     def preformatting(value: str) -> str:
@@ -127,39 +127,36 @@ class Record:
         """Adds a new entry for the user's birthday to the address book."""
         if not self.birthday:
             self.birthday = Birthday(birthday)  # or None
-
-            return True,
+            return True
 
         else:
-            return False, f'Birthday already recorded for \"{self.name.value}\"You can change it.'
+            return False
 
     def add_phone(self, phone_new: str) -> bool:
         """Adds a new entry for the user's phone to the address book."""
-        phone_new1 = Phone(phone_new)
+        phone_new = Phone(phone_new)
 
         for phone in self.phones:
-            if phone_new1.value == phone.value:
-                print(f'\"{phone_new1.value}\" already recorded for \"{self.name.value}\"')
-
+            if phone_new.value == phone.value:
                 return False
-        
-        self.phones.append(phone_new1)
+
+        self.phones.append(phone_new)
 
         return True
     
-    def add_email(self, email_new: str) -> bool:
+    def add_email(self, email_new: str) -> tuple:
         """Adds a new entry for the user's email to the address book."""
-        email_new1 = Email(email_new)
+        email_new_ = Email(email_new)
+        if not email_new_.value:
+            return False, f'Email: {email_new} - incorect.\n'
 
         for email in self.emails:
-            if email_new1 == email.value:
-                print(f'\"{email_new1}\" already recorded for \"{self.name.value}\"')
+            if email_new_.value == email.value:
+                return False, f'\"{email_new}\" already recorded for \"{self.name.value}\".\n'
 
-                return False
+        self.emails.append(email_new_)
 
-        self.emails.append(email_new1)
-
-        return True
+        return True, f'Email: {email_new} for contact {self.name.value} added.\n'
 
     def change_address(self, new_address: str) -> tuple:
         """Modify an existing user's address entry in the address book."""
@@ -172,12 +169,8 @@ class Record:
 
     def change_birthday(self, birthday: str) -> tuple:
         """Modify an existing user's birthday entry in the address book."""
-        if not self.birthday:
-            return False, f'Birthday not specified for \"{self.name.value}\". You can add it.'
-
-        else:
-            self.birthday = Birthday(birthday)
-            return True,
+        self.birthday = Birthday(birthday)
+        return True
 
     def change_phone(self, phone_to_change: str, phone_new: str) -> tuple:
         """Modify an existing user's phone entry in the address book."""
@@ -210,7 +203,7 @@ class Record:
 
         for email in self.emails:
             if email.value == email_new:  # new email already in record
-                return False, f'\"{email_new}\" already recorded for \"{self.name.value}\"'
+                return False, f'\"{email_new}\" already recorded for \"{self.name.value}\".'
 
             if email.value == email_to_change:  # old email not exist in record
                 verdict = True
@@ -221,10 +214,13 @@ class Record:
         for index, email in enumerate(self.emails):
             if email.value == email_to_change:
                 email_new_to = Email(email_new)
+                if not email_new_to.value:
+                    return False, f'Invalid email: {email_new}'
+                    
                 self.emails.remove(email)
                 self.emails.insert(index, email_new_to)
 
-                return True,
+                return True, f'Email {email_to_change} for contact {self.name.value} has changed on {email_new}.'
 
     def remove_address(self) -> Union[bool, None]:
         """Deleting an address entry from a user entry in the address book."""
@@ -250,15 +246,15 @@ class Record:
 
         print(f'\"{phone_to_remove}\" not specified in the contact \"{self.name.value}\"')
 
-    def remove_email(self, email_to_remove: str) -> Union[bool, None]:
+    def remove_email(self, email_to_remove: str) -> bool:
         """Deleting an email entry from a user entry in the address book."""
         for email in self.emails:
             if email.value == email_to_remove:
                 self.emails.remove(email)
 
-                return True
+                return True, f'Email {email_to_remove} for  contact {self.name.value} has delete.\n'
 
-        print(f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\".')
+        return False, f'\"{email_to_remove}\" not specified in the contact \"{self.name.value}\".\n'
 
 
     def days_to_birthday(self) -> int:

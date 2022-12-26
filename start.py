@@ -78,7 +78,7 @@ class OutputAnswer:
         return True
 
 
-class PVA():
+class PVA:
     """Main personal virtual assistant class."""
     def __init__(self) -> None:
         try:
@@ -107,7 +107,6 @@ class PVA():
         the commands entered from the keyboard and respond according 
         to the command entered. Enter a command - get an answer.
         """
-
         while True:
 
             user_request = self.parser.listen()
@@ -127,8 +126,7 @@ class PVA():
 
 
 def main() -> NoReturn:
-    pva_start = PVA()
-    pva_start.start()
+    PVA().start()
 
 
 if __name__ == '__main__':
