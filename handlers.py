@@ -371,7 +371,7 @@ def handler_help(*_) -> str:
             '                                                                                \n'\
             'Command for sort file in folder\n'\
             '                                                                                \n'\
-            'Command "sort". Example (sort)\n'\
+            'Command "sort". Example (sort C:\user...)\n'\
 
 
 @input_error
