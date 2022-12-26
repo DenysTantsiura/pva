@@ -59,13 +59,14 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         if element not in tags:
             text_list.append(element)
     text = ' '.join(text_list)
-    if len(text) > 0:
+    if text:
         if name in note_book:
             raise ValueError('This note already exist.')
         record = Note(name, text)
         note_book.add_record(record)
         print (f'You added new note - {name}: {text}.')
-    if len(tags) > 0:
+
+    if tags:
         if name not in note_book:
             raise ValueError('This note not exist. You should add note (<command> <name> <text> <tag>)')
         note_book[name].add_tags(tags)
@@ -204,7 +205,7 @@ def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook,
     
     name = user_command[1].title()
 
-    if contact_dictionary.get(name, None):
+    if name in contact_dictionary:
 
         if contact_dictionary[name].birthday:
             contact_dictionary[name].remove_birthday()
