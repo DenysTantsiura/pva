@@ -134,12 +134,16 @@ class Record:
 
     def add_phone(self, phone_new: str) -> bool:
         """Adds a new entry for the user's phone to the address book."""
-        phone_new = Phone(phone_new)
+        try:
+            phone_new = Phone(phone_new)
+        except ValueError:
+            print(f'{phone_new} - wrong input. Please enter correct phone number.')
+            return False
 
         for phone in self.phones:
             if phone_new.value == phone.value:
                 return False
-
+        print(f'{phone_new.value} add to contact')
         self.phones.append(phone_new)
 
         return True
@@ -162,7 +166,8 @@ class Record:
         """Modify an existing user's address entry in the address book."""
         if new_address:
             self.address = Address(new_address)  # Address() if wrong address : value = None
-            return True,
+            
+            return True
 
         else:
             return False, f'Address is missing!\"{new_address}\"'
@@ -241,6 +246,7 @@ class Record:
         for phone in self.phones:
             if phone.value == phone_to_remove:
                 self.phones.remove(phone)
+                print (f'Phone number {phone.value} was delate.\n')
 
                 return True
 
