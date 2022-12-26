@@ -42,37 +42,37 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
             path_file (str): Path of file record.
         Returns:
             string(str): Information about added note."""
-    try:
-        tags = []
-        text_list = []
-        name = user_command[1].title()
-        commands = user_command[2:]
 
-        for element in commands:
-            if '#' in element:
-                tags.append(element)
+    tags = []
+    text_list = []
+    name = user_command[1].title()
+    commands = user_command[2:]
 
-        for element in commands:
-            if element not in tags:
-                text_list.append(element)
-        text = ' '.join(text_list)
-        if len(text) > 0:
-            if name in note_book:
-                # raise ValueError('This note already exist.')
-                return ('This note already exist.')
-            record = Note(name, text)
-            note_book.add_record(record)
-            print (f'You added new note - {name}: {text}.')
-        if len(tags) > 0:
-            if name not in note_book:
-                # raise ValueError('This note already exist.')
-                return ('This note not exist. You can add it.')
-            note_book[name].add_tags(tags)
+    for element in commands:
+        if '#' in element:
+            tags.append(element)
 
-        return f'What is your next step?'
+    for element in commands:
+        if element not in tags:
+            text_list.append(element)
+    text = ' '.join(text_list)
+    if len(text) > 0:
+        if name in note_book:
+            raise ValueError('This note already exist.')
+        record = Note(name, text)
+        note_book.add_record(record)
+        print (f'You added new note - {name}: {text}.')
+    if len(tags) > 0:
+        if name not in note_book:
+            raise ValueError('This note not exist. You should add note (<command> <name> <text> <tag>)')
+        note_book[name].add_tags(tags)
+    elif name in note_book:
+        raise ValueError ('This note already exist.')
+    elif name not in note_book:
+        raise ValueError ('This note not exist.You should add note (<command> <name> <text> and / or <tag>)')
+    SaveBook().save_book(note_book, path_file)
 
-    except IndexError:
-        return f'Try again! You should add <command> <name> <text>.'
+    return f'What is your next step?'
 
 
 @input_error
@@ -84,15 +84,12 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have removed note."""
-    try:
-        name = user_command[1].title()
-        if name not in note_book:
-            raise ValueError('This note does not exist.')
-            # return ('This note does not exist.')
-        note_book.remove_record(name)
-        return (f'You have removed the note - {name}.')
-    except IndexError:
-        return f'Try again! You should add <command> <name>.'
+    name = user_command[1].title()
+    if name not in note_book:
+        raise ValueError('This note does not exist.')
+    note_book.remove_record(name)
+    SaveBook().save_book(note_book, path_file)
+    return (f'You have removed the note - {name}.')
 
 
 @input_error
@@ -104,18 +101,17 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have changed note."""
-    try:
-        name = user_command[1].title()
-        new_text = ' '.join(user_command[2:])
 
-        if name not in note_book:
-            raise ValueError('This note does not exist.')
-            # return ('This note does not exist.')
-        record = note_book[name]
-        record.change_note(new_text)
-        return f'You have changed note {record}.'
-    except IndexError:
-        return f'Try againe! You should add <command> <name> <new text>.'
+    name = user_command[1].title()
+    new_text = ' '.join(user_command[2:])
+
+    if name not in note_book:
+        raise ValueError('This note does not exist.')
+    record = note_book[name]
+    record.change_note(new_text)
+    SaveBook().save_book(note_book, path_file)
+    return f'You have changed note {record}.'
+
 
 @input_error
 def handler_change_in_note(user_command: list, note_book: NoteBook, path_file: str) -> str:
@@ -126,19 +122,17 @@ def handler_change_in_note(user_command: list, note_book: NoteBook, path_file: s
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have changed note."""
-    try:
-        name = user_command[1].title()
-        ind = user_command.index('--')
-        changed_text = ' '.join(user_command[2:ind])
-        new_text = ' '.join(user_command[(ind+1):])
-        if name not in note_book:
-            # raise ('This note does not exist.')
-            return ('This note does not exist.')
-        record = note_book[name]
-        record.change_in(changed_text, new_text)
-        return f'You have changed note {record}.'
-    except IndexError:
-        return f'Try againe! You should add <command> <name> <changed_text> <--> <new text>.'
+   
+    name = user_command[1].title()
+    ind = user_command.index('--')
+    changed_text = ' '.join(user_command[2:ind])
+    new_text = ' '.join(user_command[(ind+1):]) 
+    if name not in note_book:
+        raise ('This note does not exist.')
+    record = note_book[name]
+    record.change_in(changed_text, new_text)
+    SaveBook().save_book(note_book, path_file)
+    return f'You have changed note {record}.'
 
 
 @input_error
@@ -518,7 +512,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
         message_to_user += Fore.BLUE + 'Phone(s): ' + Style.RESET_ALL
         message_to_user += Fore.GREEN + ' '.join(contact_dictionary[name].get_phones_list()) + Style.RESET_ALL
 
-    if not contact_dictionary[name].phones:
+    else:
         message_to_user += Fore.BLUE + 'Phone(s): ' + Style.RESET_ALL
         message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
 
@@ -526,7 +520,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
         message_to_user += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
         message_to_user += Fore.GREEN + f'{contact_dictionary[name].get_emails_str()}' + Style.RESET_ALL
 
-    if not contact_dictionary[name].emails:
+    else:
         message_to_user += Fore.BLUE + '\nEmail(s): ' + Style.RESET_ALL
         message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
 
@@ -534,7 +528,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
         message_to_user += Fore.BLUE + '\nAddress: ' + Style.RESET_ALL
         message_to_user += Fore.GREEN + f'{contact_dictionary[name].address.value}' + Style.RESET_ALL
 
-    if not contact_dictionary[name].address:
+    else:
         message_to_user += Fore.BLUE + '\nAddress: ' + Style.RESET_ALL
         message_to_user += Fore.YELLOW + 'empty' + Style.RESET_ALL
 
@@ -542,7 +536,7 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
         message_to_user += Fore.BLUE + '\nBirthday: ' + Style.RESET_ALL
         message_to_user += Fore.GREEN + f'{contact_dictionary[name].birthday.value.date()} ({contact_dictionary[name].days_to_birthday()} days left until the birthday)\n' + Style.RESET_ALL
 
-    if not contact_dictionary[name].birthday:
+    else:
         message_to_user += Fore.BLUE + '\nBirthday: ' + Style.RESET_ALL
         message_to_user += Fore.YELLOW + 'empty\n' + Style.RESET_ALL
 
@@ -550,7 +544,8 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
     return message_to_user
 
-# @input_error
+
+@input_error
 def handler_show_notes(user_command, note_book: NoteBook, _=None) -> list:
     """handler_show_notes: The bot shows all notes or some notes by tags.
         Parameters:
@@ -572,6 +567,7 @@ def handler_show_notes(user_command, note_book: NoteBook, _=None) -> list:
                        list_notes += f'{tag} {record}\n'
         return f'NoteBook has - {list_notes}'
 
+
 @input_error
 def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
     """handler_show_note: The bot shows note wich finds by a name.
@@ -582,17 +578,12 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
         Returns:
             string(str): Information about showing the note.
     """
-    try:
-        value = user_command[1].title()
-        if value not in note_book:
-            # raise ValueError ('This note does not exist.')
-            return ('This note does not exist.')
-        for name, record in note_book.items():
-            if value == name:
-                return f'The note {record}.'
-    except IndexError:
-        # return f'Try again! You should add <command> <name>.'
-        raise IndexError('Try again! You should add <command> <name>.')
+    value = user_command[1].title()
+    if value not in note_book:
+        raise ValueError ('This note does not exist.')
+    for name, record in note_book.items():
+        if value == name:
+            return f'The note {record}.'
 
 
 @input_error
@@ -608,8 +599,7 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> list:
 
     look_for_word = user_command[1:]
     if len(look_for_word) == 0:
-        # raise ValueError ('Try again! You should input <command> <tag> ...<tag>.')
-        return ('Try again! You should input <command> <word> ...<word>.')
+        raise ValueError ('Try again! You should input <command> <tag> ...<tag>.')
     for word in look_for_word:
         for record in note_book.data.values():
             if word in record.text:
