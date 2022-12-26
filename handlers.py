@@ -413,8 +413,11 @@ def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
 @input_error
 def handler_sort(user_command: list, __=None, _=None) -> str:
     """The bot sort trash."""
+
     if user_command[1]:
-        return sort_trash(user_command[1])
+        command_list = user_command[1:]
+        command = " ".join(command_list)
+        return sort_trash(command)
 
     else:
         return 'Please enter the path to the folder with you want to sort'
