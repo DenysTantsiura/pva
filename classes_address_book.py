@@ -27,7 +27,7 @@ class Address(Field):
             self._value = new_value
         
         else:
-            print('Wrong adress. Enter "Type street. Name street. Or name city"')
+            raise ValueError ('Wrong adress. Enter "Type street. Name street"')
             
     def __str__(self) -> str:
         return f'{self.value}' if self.value else ''
@@ -71,7 +71,7 @@ class Name(Field):
     
     @Field.value.setter
     def value(self, value):
-        if re.search(r"[\w'-]{2,}", value):
+        if re.search(r"[a-zA-Zа-яА-Я']{2,}[\w-]{1,}", value):
             self._value = value.title()
 
         else: 
