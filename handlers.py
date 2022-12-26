@@ -361,14 +361,15 @@ def handler_help(*_) -> str:
             '                                                                                \n'\
             'Command NoteBook\n'\
             '                                                                                \n'\
-            'Command "add_note" . Example ()\n'\
-            'Command "change_note" . Example ()\n'\
-            'Command "remove_note" . Example ()\n'\
-            'Command "find_notes" . Example ()\n'\
-            'Command "sort_note" . Example ()\n'\
-            'Command "show_notes" . Example ()\n'\
+            'Command "add_note" add note. Example (add_note name text)\n'\
+            'Command "change_note" change note. Example (change_note name text)\n'\
+            'Command "remove_note" delete note. Example (remove_note name)\n'\
+            'Command "find_notes" search by text. Example (find_note text)\n'\
+            'Command "sort_note" sort note. Example (sort_note)\n'\
+            'Command "show_note" show note. Example (show_note name)\n'\
+            'Command "show_notes" show all note. Example (show_notes)\n'\
             '                                                                                \n'\
-            'Command for sort fili in folder\n'\
+            'Command for sort file in folder\n'\
             '                                                                                \n'\
             'Command "sort". Example (sort)\n'\
 
