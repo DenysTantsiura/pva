@@ -335,7 +335,12 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
 def handler_hello(*_) -> str:
     """The bot is welcome."""
-    return 'Hello!'
+    help_list = Fore.BLUE + 'All known commands: \n'
+    help_list += '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_FILESORTER] + ['\n'])
+    help_list += '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_NOTEBOOK] + ['\n']) + Style.RESET_ALL
+    help_list += Fore.YELLOW + '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_ADDRESSBOOK] + ['\n']) + Style.RESET_ALL
+
+    return f'{help_list}'
 
 
 def handler_help(*_) -> str:
