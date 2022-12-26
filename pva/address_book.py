@@ -15,7 +15,7 @@ class AddressBook(UserDict):
         try:
             meantime = int(meantime)
         except ValueError:
-            raise ValueError('Command "happy birthday...." shows users whose birthday is in a given number of days. Please write number of days. Example:\nremove_birthday <username>')
+            raise ValueError('Command \'happy birthday\' shows users whose birthday is in a given range of days. Please enter range of days. Example:\nhappy birthday <days>')
         for contact in self.data.values():
             if contact.birthday and contact.birthday.value and int(meantime) >= contact.days_to_birthday():
                 birthday_people += f'{contact.name.value}\'s birthday: {contact.birthday.value.date()}\n'
