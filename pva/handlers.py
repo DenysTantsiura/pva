@@ -65,7 +65,6 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         record = Note(name, text)
         note_book.add_record(record)
         print (f'You added new note - {name}: {text}.')
-    if text:
 
     if tags:
         if name not in note_book:
