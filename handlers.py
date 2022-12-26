@@ -43,7 +43,9 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
             path_file (str): Path of file record.
         Returns:
             string(str): Information about added note."""
-
+    if len(user_command) == 1:
+        return f'Comand "add note..." add to record note. Example:\nadd_note <name_note> <text>\n'
+    
     tags = []
     text_list = []
     name = user_command[1].title()
@@ -139,9 +141,11 @@ def handler_change_in_note(user_command: list, note_book: NoteBook, path_file: s
 @input_error
 def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot add birthday to contact."""
-    if len(user_command) == 1 or len(user_command) == 2:
-        return f'Comand "add birthday" add to record person birthday. Example:\nadd_birthday <username> <birthday(yyyy-mm-dd)>\n'
-    
+    if len(user_command) == 1:
+        return f'Comand "add birthday" add to record person birthday. Please write contact name. Example:\nadd_birthday <username> <birthday(yyyy-mm-dd)>\n'
+    elif len(user_command) == 2:
+        return f'Comand "add birthday" add to record person birthday. Please write birthday contact. Example:\nadd_birthday <username> <birthday(yyyy-mm-dd)>\n'
+        
     name = user_command[1].title()
     
     if name not in contact_dictionary:
@@ -159,12 +163,19 @@ def handler_add_birthday(user_command: list, contact_dictionary: AddressBook, pa
 @input_error
 def handler_change_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot has changed birthday for contact on new birthday."""
+    if len(user_command) == 1:
+        return f'Comand "change birthday...." changes the contact\'s birthday. Please write name contact. Example:\nchange_birthday <username> <birthday(yyyy-mm-dd)>\n'
+    
     name = user_command[1].title()
+    
     if name not in contact_dictionary:
         raise ValueError ('This contact is not in the phone book. Please enter the correct name.') 
 
     if not contact_dictionary[name].birthday:
         raise ValueError ('Birthday not specified for "{name}". You can add it.')
+    
+    if len(user_command) == 2:
+        return f'Comand "change birthday...." changes the contact\'s birthday. Please write date of contact birthday. Example:\nchange_birthday <username> <birthday(yyyy-mm-dd)>\n'
 
     birthday = user_command[2]
     contact_dictionary[name].change_birthday(birthday)
@@ -177,6 +188,9 @@ def handler_change_birthday(user_command: list, contact_dictionary: AddressBook,
 @input_error
 def handler_happy_birthday(user_command: list, contact_dictionary: AddressBook, _=None) -> list:
     """Bot show birthdey for contacts."""
+    
+    if len(user_command) == 1:
+        return f'Comand "happy birthday...." shows users whose birthday is in a given number of days. Please write number of days. Example:\nremove_birthday <username>\n'
 
     return contact_dictionary.show_happy_birthday(user_command[1])
 
@@ -184,7 +198,10 @@ def handler_happy_birthday(user_command: list, contact_dictionary: AddressBook, 
 @input_error
 def handler_remove_birthday(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot has removed birthday for contact. Birthday changed on 'None'."""
-
+    
+    if len(user_command) == 1:
+        return f'Comand "remove birthday...." remove the contact\'s birthday. Please write name contact. Example:\nremove_birthday <username>\n'
+    
     name = user_command[1].title()
 
     if contact_dictionary.get(name, None):
@@ -234,12 +251,16 @@ def handler_change_email(user_command: list, contact_dictionary: AddressBook, pa
         return f'Comand "change email" change person email. Example:\nchange_email <username> <email for change> <new email>\n'
 
     name = user_command[1].title()
-    old_email = user_command[2]
-    new_email = user_command[3]
-
+    
     if name not in contact_dictionary:
         raise ValueError(f'Contact {name} don\'t found in records!') 
-
+ 
+    if len(user_command) == 2:
+        return f'Comand "change email" change person email. Example:\nchange_email <username> <email for change> <new email>\n'   
+    
+    old_email = user_command[2]
+    new_email = user_command[3]
+    
     result, message_result = contact_dictionary[name].change_email(old_email, new_email)
     if result:
         SaveBook().save_book(contact_dictionary, path_file)
@@ -267,7 +288,7 @@ def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -
 def handler_remove_email(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """Bot removed email for contact."""
     if len(user_command) == 1:
-        return f'Comand "remove email" delete person email(s). Example:\nremove_email <username> <email1>...<emailN>\n'
+        return f'Comand "remove email" delete person email(s). Please write contact name. Example:\nremove_email <username> <email1>...<emailN>\n'
 
     name, emails = user_command[1].title(), user_command[2:]
 
@@ -298,8 +319,12 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
     """Find ...": The bot outputs a list of users whose name or phone number
     matches the entered one or more(with an OR setting) string without space(' ').
     """
+    if len(user_command) == 1:
+        return f'Comand "find ..." information in contact book. Please write some information. Example:\nfind <text> <text1> <textN>\n'
+
 
     found_list = ['Matches:\n']
+    flag = False
 
     for records in contact_dictionary.iterator(10):
         page = ''
@@ -327,10 +352,13 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
                 if part.find(search_string) >= 0:
                     page += part
+                    flag = True
 
         found_list.append(page)
-
-    return found_list
+    if flag:
+        return found_list
+    else:
+        return f'I can\'t find any information.'
 
 
 def handler_hello(*_) -> str:
@@ -444,10 +472,9 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
     if name in contact_dictionary:
         raise ValueError ('This contact is already in the phone book. Please enter the correct name.')
     record = Record(name)
+    contact_dictionary.add_record(record)
     for phone in phones:
         record.add_phone(phone)
-
-    contact_dictionary.add_record(record)
     SaveBook().save_book(contact_dictionary, path_file)
     return f'Records \'{name}\' done.'
 
@@ -464,27 +491,21 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
 
     if name not in contact_dictionary:
         raise ValueError ('This contact is not in the phone book. Please enter the correct name.')
-    
-    if not phones:
-        raise ValueError('Please enter <name> <phone>')
-        
-    message_to_user = ''
+
+    flag = False  
+
     for phone in phones:
-        if contact_dictionary[name].add_phone(phone):
-            message_to_user += f'{name}\'s phones are appdate {phone}.\n'
-            SaveBook().save_book(contact_dictionary, path_file)
-
-
-        else:
-            message_to_user += f'Contact {name} already have this {phone} phone number.\n'
-    SaveBook().save_book(contact_dictionary, path_file)
-    if message_to_user:
-        return message_to_user[:-1]
+        if contact_dictionary[name].remove_phone(phone):
+            flag = True
+        
+    if flag:
+        SaveBook().save_book(contact_dictionary, path_file)
+        return f'{name}\'s contact apdate'
     else:
-        return f'If you want added phone to contact {name} write write as in the example:\nadd_phone <username> <phone>...<phoneN>\n'
+        return f'If you want to removed contact {name} phone, please write as in the example:\nremove_phone <username> <phone>...<phoneN>'
 
 
-#@input_error
+@input_error
 def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """phone ...: The bot show all phones contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary."""
@@ -508,26 +529,35 @@ def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -
 def handler_remove_phone(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """remove phone ...: The bot remove phone(s) from contact in contact dictionary.
     User must write name and one or more phone."""
+    if len(user_command) == 1:
+        return f'Comand "remove phone...." remove the contact\'s phone(s). Please write name contact. Example:\nremove_phone <username> <phone>...<phoneN>\n'
+    
     name, phones = user_command[1].title() , user_command[2:]
-
+    
     if name not in contact_dictionary:
         raise ValueError ('This contact is not in the phone book. Please enter the correct name.')  
 
-    message_to_user = ''  
+    flag = False  
 
     for phone in phones:
-        if contact_dictionary[name].remove_phone(phone) == True:
-            message_to_user += f'Phone number {phone} was delate from {name}\'s contact.\n'
-        else:
-            message_to_user =+ f'Phone number {phone} not specified in the {name}\'s contact.\n'
-    SaveBook().save_book(contact_dictionary, path_file)
-    return message_to_user[:-1]
+        if contact_dictionary[name].remove_phone(phone):
+            flag = True
+        
+    if flag:
+        SaveBook().save_book(contact_dictionary, path_file)
+        return f'{name}\'s contact apdate'
+    else:
+        return f'If you want to removed contact {name} phone, please write as in the example:\nremove_phone <username> <phone>...<phoneN>'
+    
 
 
 @input_error
 def handler_change(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """change ...: The bot changes phone number.
     User must write name and two phones."""
+    if len(user_command) == 1:
+        return f'Comand "change ..." changes the phone number of the contact. Please write contact name. Example:\nchange <username> <phone> <phone>\n'
+    
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
@@ -535,7 +565,7 @@ def handler_change(user_command: list, contact_dictionary: AddressBook, path_fil
 
     if name in contact_dictionary:
         if len(phones) != 2:
-            raise ValueError ('Input Error. Enter correct information')
+            raise ValueError ('Comand "change ..." changes the phone number of the contact. Please write two phones. Example:\nchange <username> <phone> <phone>\n')
         if phones[0] not in contact_dictionary[name].get_phones_list() and phones[1] not in contact_dictionary[name].get_phones_list():
             raise ValueError ('Unknown number. Check the correctness of the input')
         if phones[0] in contact_dictionary[name].get_phones_list():
@@ -740,21 +770,26 @@ def handler_change_address(user_command: list, contact_dictionary: AddressBook, 
        Function parameters: contact_dictionary - instance of AddressBook
                             path_file - path to filename of address book
     """
+    if len(user_command) == 1:
+        return f'Comand "change address" change person address. Example:\nchange_address <username> <contact_address>\n'
+
     contact_name = user_command[1].title()
+    if contact_name not in contact_dictionary:
+        raise KeyError(f'Contact {contact_name} is not in contact book.')
     contact_address = ' '.join(user_command[2:])
+    if not contact_dictionary[contact_name].address:
+        raise ValueError(f'Contact {contact_name} has no address yet. If you want to add address use \'add address <name> <address>\' command.')
     previous_address = contact_dictionary[contact_name].address
     if not contact_address:
         raise ValueError('You should enter contact address with this command: \'change address <name> <address>\'.')
-    if contact_name not in contact_dictionary:
-        raise KeyError(f'Contact {contact_name} is not in contact book.')
     if previous_address is None:
         raise ValueError(f'Contact {contact_name} has no address yet. If you want to add address use \'add address <name> <address>\' command.')
 
-    contact_dictionary[contact_name].change_address(contact_address)
-
-    SaveBook().save_book(contact_dictionary, path_file)
-
-    return f'Address \'{previous_address}\' for contact {contact_name} successfully updated to address \'{contact_address}\'.'
+    if contact_dictionary[contact_name].change_address(contact_address):
+        SaveBook().save_book(contact_dictionary, path_file)
+        return f'Address \'{previous_address}\' for contact {contact_name} successfully updated to address \'{contact_address}\'.'
+    else: 
+        return f'Address is missing!\"{contact_address}\"'
 
 
 @input_error
@@ -765,6 +800,9 @@ def handler_remove_address(user_command: list, contact_dictionary: AddressBook, 
        Function parameters: contact_dictionary - instance of AddressBook
                             path_file - path to filename of address book
     """
+    if len(user_command) == 1:
+        return f'Comand "remove address...." remove the contact\'s address. Please write name contact. Example:\nremove_address <username>\n'
+    
     contact_name = user_command[1].title()
     if contact_name not in contact_dictionary:
         raise KeyError(f'Contact {contact_name} is not in contact book.')
