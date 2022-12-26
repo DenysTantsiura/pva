@@ -1,7 +1,6 @@
 import re
 from pathlib import Path
 import shutil
-import sys
 
 
 def normalize(name): # функція нормалізує рядок

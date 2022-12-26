@@ -1,6 +1,5 @@
-from datetime import datetime, date  # date? where in use? build in datetime obj. not needed import, right?
+from datetime import datetime
 import re
-from typing import Union
 
 
 class Field:
@@ -62,9 +61,8 @@ class Email(Field):
             re.search(r'\b[a-zA-z][\w_.]+@[a-zA-z]+.[a-zA-z]+.[a-zA-z]{2,}$', new_value): 
             self._value = new_value
 
-        # else:  
-        #     raise ValueError('Email incorect. Try again.')
-            # return '? Email incorect. Try again.'  # ??? print
+        else:
+            raise ValueError (f'Email: {new_value} - incorect.\n')
 
 class Name(Field):
     """Class of name contact."""   
@@ -129,8 +127,7 @@ class Record:
             self.birthday = Birthday(birthday)  # or None
             return True
 
-        else:
-            return False
+        return False
 
     def add_phone(self, phone_new: str) -> bool:
         """Adds a new entry for the user's phone to the address book."""
@@ -151,13 +148,16 @@ class Record:
     def add_email(self, email_new: str) -> tuple:
         """Adds a new entry for the user's email to the address book."""
         email_new_ = Email(email_new)
-        if not email_new_.value:
-            return False, f'Email: {email_new} - incorect.\n'
+        # #email_new_ = Email.
+
+        # if not email_new_.value:
+        #     return False, f'Email: {email_new} - incorect.\n'
 
         for email in self.emails:
             if email_new_.value == email.value:
                 return False, f'\"{email_new}\" already recorded for \"{self.name.value}\".\n'
 
+        #email_new_ = Email(email_new)
         self.emails.append(email_new_)
 
         return True, f'Email: {email_new} for contact {self.name.value} added.\n'
@@ -227,19 +227,23 @@ class Record:
 
                 return True, f'Email {email_to_change} for contact {self.name.value} has changed on {email_new}.'
 
-    def remove_address(self) -> Union[bool, None]:
+    def remove_address(self) -> bool:
         """Deleting an address entry from a user entry in the address book."""
         if self.address:
             self.address = None
             return True
 
-    def remove_birthday(self) -> Union[bool, None]:
+        return False
+
+    def remove_birthday(self) -> bool:
         """Deleting a birthday entry from a user entry in the address book."""
         if self.birthday:
             self.birthday = None
             return True
+
+        return False
     
-    def remove_phone(self, phone_to_remove: str) -> Union[bool, None]:
+    def remove_phone(self, phone_to_remove: str) -> bool:
         """Deleting a phone entry from a user entry in the address book."""
         phone_to_remove = Phone.preformatting(phone_to_remove)
 
@@ -251,6 +255,7 @@ class Record:
                 return True
 
         print(f'\"{phone_to_remove}\" not specified in the contact \"{self.name.value}\"')
+        return False
 
     def remove_email(self, email_to_remove: str) -> bool:
         """Deleting an email entry from a user entry in the address book."""
@@ -285,14 +290,9 @@ class Record:
         
     def get_phones_list(self) -> list:
         """Get all phones in list."""
-        phone_list = []
-        for phone in self.phones:
-            phone_list.append(phone.value)
-        return phone_list
+        return [phone.value for phone in self.phones]
     
     def get_emails_str(self) -> str:
         """Get all emails in str."""
-        emails_str = ''
-        for email in self.emails:
-            emails_str += f'{email.value} '
-        return emails_str
+        return ' '.join([email.value for email in self.emails])
+        
