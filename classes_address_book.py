@@ -27,7 +27,7 @@ class Address(Field):
             self._value = new_value
         
         else:
-            print('Wrong adress. Enter "Type street. Name street"')
+            raise ValueError ('Wrong adress. Enter "Type street. Name street"')
             
     def __str__(self) -> str:
         return f'{self.value}' if self.value else ''

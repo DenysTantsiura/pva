@@ -250,7 +250,7 @@ def handler_change_email(user_command: list, contact_dictionary: AddressBook, pa
 def handler_email(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """Bot showed email for contact."""
     if len(user_command) == 1:
-        return f'Comand "email show" all known person emails. Example:\nemail <username>\n'
+        return f'Comand "email..." show all known person emails. Example:\nemail <username>\n'
 
     name = user_command[1].title()
     if name not in contact_dictionary:
@@ -393,6 +393,7 @@ def handler_sort(user_command: list, __=None, _=None) -> str:
 def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """add ...: The bot saves new contact and phone(s) to contact dictionary.
     User must write name of contact and one or more phone."""
+    
     if len(user_command) == 1:
         return f'Comand "add..." add to record person and phone(if you want). Example:\nadd <username> <phone>...<phoneN>\n'
 
@@ -412,6 +413,10 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
 def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_file: str) -> str:
     """add_phone ...: The bot adds the new phone(s) to an already existing contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary and one or more phone."""
+    
+    if len(user_command) == 1:
+        return f'Comand "add_phone..." add to record person phone(s). Example:\nadd_phone <username> <phone>...<phoneN>\n'
+    
     name, phones = user_command[1].title() , user_command[2:]
 
     if name not in contact_dictionary:
@@ -425,13 +430,20 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
         else:
             message_to_user += f'Contact {name} already have this {phone} phone number.\n'
     SaveBook().save_book(contact_dictionary, path_file)
-    return message_to_user[:-1]
+    if message_to_user:
+        return message_to_user[:-1]
+    else:
+        return f'If you want added phone to contact {name} write write as in the example:\nadd_phone <username> <phone>...<phoneN>\n'
 
 
-@input_error
+#@input_error
 def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -> str:
     """phone ...: The bot show all phones contact in contact dictionary.
     User must write name of contact with is alredy in contact dictionary."""
+    
+    if len(user_command) == 1:
+        return f'Comand "phone ..." show known person nphone(s). Example:\nphone <username>\n'
+    
     name = user_command[1].title()
 
     if name not in contact_dictionary:
@@ -440,6 +452,8 @@ def handler_phone(user_command: list, contact_dictionary: AddressBook, _=None) -
     if contact_dictionary[name].phones:
         phones = ' '.join(contact_dictionary[name].get_phones_list())
         return f'{name} phone(s): {phones}'
+    else:
+        return f'{name} does not have a phone number'
 
 
 @input_error
