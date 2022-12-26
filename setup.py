@@ -3,7 +3,7 @@ from setuptools import setup, find_namespace_packages
 
 setup(name='personal_virtual_assistant',
       version='1.0.5.0',
-      description='Personal virtual assistant (pva) for notes, addressbok, junk sorter.',
+      description='Personal virtual assistant (pva) for notes, addressbook, junk sorter.',
       url='https://github.com/DenysTantsiura/pva',
       author='Always on the right track team',
       author_email='ghost0002501@gmail.com',

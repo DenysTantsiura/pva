@@ -8,7 +8,7 @@ class AddressBook(UserDict):
 
         self.data[record.name.value] = record
 
-    def show_happy_birthday(self, meantime: int) -> list:
+    def show_happy_birthday(self, meantime: str) -> str:
         """Shows a list of contacts whose birthday is a specified number of days from the current date."""
 
         birthday_people = ''
