@@ -26,7 +26,7 @@ def handler_command_guesser(user_command: list, *_) -> str:
         commands.extend(get_close_matches(word, ALL_COMMAND))
 
     commands = list(dict.fromkeys(commands))
-    commands = [command.replace('_', ' ') for command in commands]
+    commands = [command.replace('_', ' ') for command in commands] if commands[0] != 'command_guesser' else []
 
     if commands:
         return f'The command has an error? Maybe one of these commands will work:\n{commands}\n'
@@ -415,7 +415,7 @@ def handler_help(*_) -> str:
             'Command "remove birthday" delete "b". Example (remove birthday c)\n'\
             'Command "find" search information in contactbook and show match. Example (find 99) or (find aa)\n'\
             'Command "show" show all added information in "c". Example (show c)\n'\
-            'Command "show all" show all contactbook. Example (show all)]n' +\
+            'Command "show all" show all contactbook. Example (show all)' +\
             Fore.YELLOW + '\nCommand NoteBook:\n' + Style.RESET_ALL + \
             'Command "add note" add note. Example (add note name text)\n'\
             'Command "change note" change note. Example (change note name text)\n'\
