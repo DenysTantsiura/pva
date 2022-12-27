@@ -2,7 +2,7 @@ from importlib.metadata import entry_points
 from setuptools import setup, find_namespace_packages
 
 setup(name='personal_virtual_assistant',
-      version='1.0.5.4',
+      version='1.0.5.5',
       description='Personal virtual assistant (pva) for notes, addressbook, junk sorter.',
       url='https://github.com/DenysTantsiura/pva',
       author='Always on the right track team',
