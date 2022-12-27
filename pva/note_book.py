@@ -4,7 +4,7 @@ from collections import UserDict
 class NoteBook(UserDict):
     """Class of NoteBook."""
 
-    def add_record(self, record: str) -> None:
+    def add_record(self, record: Note) -> None:
         """Add new record in the notebook."""
         self.data[record.name] = record
 

@@ -53,14 +53,14 @@ in user folder and be polite.
 
 ## Always on the Right Track Team:
 
-•Denys Tantsiura(email: ghost0002501@gmail.com)
+•Denys Tantsiura (email: ghost0002501@gmail.com)
 
-•Yaroslava Kalat(email: syaya@ukr.net)
+•Yaroslava Kalat (email: syaya@ukr.net)
 
-•Татьяна Федоришена(email: 514ftg@gmail.com)
+•Татьяна Федоришена (email: 514ftg@gmail.com)
 
-•Andrii Kylymnyk(email: a.kylymnyk@gmail.com)
+•Andrii Kylymnyk (email: a.kylymnyk@gmail.com)
 
-•ILLIA(email: shablovskyiillia@gmail.com)
+•ILLIA (email: shablovskyiillia@gmail.com)
 
 .
