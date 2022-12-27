@@ -72,7 +72,7 @@ class OutputAnswer:
         else:
             print('Something happened. Will you try again?')
 
-        if 'Good bye!' in bot_answer:  #  == 'Good bye! Have some fun and take care!':
+        if 'Good bye! Have some fun and take care!' in bot_answer:
             return False 
 
         return True
