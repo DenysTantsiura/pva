@@ -1,8 +1,5 @@
 from typing import Union
 
-# from address_book import AddressBook
-# from note_book import NoteBook
-
 
 def input_error(handler):
     """User error handler (decorator).

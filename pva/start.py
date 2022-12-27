@@ -2,16 +2,16 @@ import sys
 from typing import NoReturn, Union
 
 
-from address_book import AddressBook
-from handlers import (
+from .address_book import AddressBook
+from .handlers import (
     main_handler,
     ALL_COMMAND,
     ALL_COMMAND_ADDRESSBOOK,
     ALL_COMMAND_NOTEBOOK,
     ALL_COMMAND_FILESORTER,
 )
-from note_book import NoteBook
-from serialization import LoadBook, OpenBook
+from .note_book import NoteBook
+from .serialization import LoadBook, OpenBook
 
 
 class InputToParser:
@@ -72,7 +72,7 @@ class OutputAnswer:
         else:
             print('Something happened. Will you try again?')
 
-        if bot_answer == 'Good bye!':
+        if 'Good bye!' in bot_answer:  #  == 'Good bye! Have some fun and take care!':
             return False 
 
         return True
