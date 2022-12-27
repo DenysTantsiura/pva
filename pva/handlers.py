@@ -26,7 +26,8 @@ def handler_command_guesser(user_command: list, *_) -> str:
         commands.extend(get_close_matches(word, ALL_COMMAND))
 
     commands = list(dict.fromkeys(commands))
-    commands = [command.replace('_', ' ') for command in commands] if commands[0] != 'command_guesser' else []
+    if commands:
+        commands = [command.replace('_', ' ') for command in commands] if commands[0] != 'command_guesser' else []
 
     if commands:
         return f'The command has an error? Maybe one of these commands will work:\n{commands}\n'
