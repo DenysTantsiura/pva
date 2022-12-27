@@ -1,4 +1,4 @@
-## Personal virtual assistant (PVA) is a console application developed by Always on the right track team.
+## Personal virtual assistant (PVA) is a console application developed by **Always on the right track team**.
 
 PVA is a multifunctional bot program that helps to store information about
 people's contacts and has a separate functionality for notating information.
@@ -43,6 +43,20 @@ python setup.py install
 
 administrator rights are required!)
 
+To run:
+
+```
+pva
+```
+
+and be polite.
+
 ## Always on the Right Track Team:
 
-+[Denys Tantsiura](ghost0002501@gmail.com) +[Yaroslava Kalat](syaya@ukr.net) +[Татьяна Федоришена](514ftg@gmail.com) +[Andrii Kylymnyk](a.kylymnyk@gmail.com) +[ILLIA](shablovskyiillia@gmail.com)
+•[Denys Tantsiura](email: ghost0002501@gmail.com)
+•[Yaroslava Kalat](email: syaya@ukr.net)
+•[Татьяна Федоришена](email: 514ftg@gmail.com)
+•[Andrii Kylymnyk](email: a.kylymnyk@gmail.com)
+•[ILLIA](email: shablovskyiillia@gmail.com)
+
+.

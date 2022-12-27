@@ -45,7 +45,8 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
         Returns:
             string(str): Information about added note."""
     if len(user_command) == 1:
-        return f'Command \'add note\' adds note to a record. Example:\nadd note <note title> <text>\n'
+        return f'Command \'add note\' adds note to a record. '\
+               'Example:\nadd note <note title> <text>\nThe <text> may contain tags starting with a grid(#).\n'
 
     tags = []
     text_list = []
@@ -59,27 +60,24 @@ def handler_add_note(user_command: list, note_book: NoteBook, path_file: str) ->
     for element in commands:
         if element not in tags:
             text_list.append(element)
+
     text = ' '.join(text_list)
+    
     if text:
         if name in note_book:
             raise ValueError(f'Note \'{name}\' already exists.')
+
         record = Note(name, text)
+        
+        if tags:
+            record.add_tags(tags)
+
         note_book.add_record(record)
-        print(f'Note \'{name}\' with text \'{text}\' was successfully added.')
+        SaveBook().save_book(note_book, path_file)
 
-    if tags:
-        if name not in note_book:
-            raise ValueError(f'Note \'{name}\' doesn\'t exist. You can add note with command: add '
-                             'note <note_title> <text> <tag>)')
-        note_book[name].add_tags(tags)
-    elif name in note_book:
-        raise ValueError(f'Note \'{name}\' already exists.')
-    elif name not in note_book:
-        raise ValueError(f'Note \'{name}\' doesn\'t exist. You can add note with command: '
-                         'add note <note_title> <text> <tag>)')
-    SaveBook().save_book(note_book, path_file)
+        return f'Note \'{name}\' with text \'{text}\' was successfully added.'
 
-    return f'What is your next step?'
+    raise ValueError('No text entered for note!')
 
 
 @input_error
@@ -91,9 +89,14 @@ def handler_remove_note(user_command: list, note_book: NoteBook, path_file: str)
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have removed note."""
+    if len(user_command) == 1:
+        return f'Command \'remove note\' delete note from NoteBook. '\
+               'Example:\nremove note <note title>\n'
+
     name = user_command[1].title()
     if name not in note_book:
         raise ValueError(f'Note {name} doesn\'t exist.')
+
     note_book.remove_record(name)
     SaveBook().save_book(note_book, path_file)
 
@@ -109,12 +112,16 @@ def handler_change_note(user_command: list, note_book: NoteBook, path_file: str)
             path_file (str): Path of file record.
         Returns:
             string(str): Information about have changed note."""
+    if len(user_command) == 1:
+        return f'Command \'change note\' change text in note. '\
+               'Example:\nchange note <note title> <new text>\n'
 
     name = user_command[1].title()
     new_text = ' '.join(user_command[2:])
 
     if name not in note_book:
         raise ValueError(f'Note \'{name}\' doesn\'t exist.')
+
     record = note_book[name]
     record.change_note(new_text)
     SaveBook().save_book(note_book, path_file)
@@ -321,7 +328,7 @@ def handler_remove_email(user_command: list, contact_dictionary: AddressBook, pa
 
 def handler_exit(*_) -> str:
     """The bot is terminating."""
-    return 'Good bye! Have some fun and take care!'
+    return Fore.YELLOW + 'Good bye! Have some fun and take care!' + Style.RESET_ALL
 
 
 @input_error
@@ -387,10 +394,9 @@ def handler_hello(*_) -> str:
 
 def handler_help(*_) -> str:
     """The bot shows all commands."""
-    return 'c - contact, p - phone, op - old phone, b - birthday, e - email, oe - old email, a - address, n - note\n'\
-            '                                                                                \n'\
-            'Command ContactBook\n'\
-             '                                                                                \n'\
+    return Fore.YELLOW + 'Descriptions:' + Style.RESET_ALL + \
+            '\nc - contact, p - phone, op - old phone, b - birthday, e - email, oe - old email, a - address, n - note\n' +\
+            Fore.YELLOW + '\nCommand ContactBook:\n' + Style.RESET_ALL + \
             'First command to create contact. Command "add" adds "c" and "p". Example (add c p)\n'\
             'Command "remove" delete "c". Example (remove c)\n'\
             'Command "add phone" adds "p" for "c". Example (add phone c p)\n'\
@@ -409,20 +415,16 @@ def handler_help(*_) -> str:
             'Command "remove birthday" delete "b". Example (remove birthday c)\n'\
             'Command "find" search information in contactbook and show match. Example (find 99) or (find aa)\n'\
             'Command "show" show all added information in "c". Example (show c)\n'\
-            'Command "show all" show all contactbook. Example (show all)\n'\
-            '                                                                                \n'\
-            'Command NoteBook\n'\
-            '                                                                                \n'\
+            'Command "show all" show all contactbook. Example (show all)]n' +\
+            Fore.YELLOW + '\nCommand NoteBook:\n' + Style.RESET_ALL + \
             'Command "add note" add note. Example (add note name text)\n'\
             'Command "change note" change note. Example (change note name text)\n'\
             'Command "remove note" delete note. Example (remove note name)\n'\
             'Command "find notes" search by text. Example (find note text)\n'\
             'Command "sort note" sort note. Example (sort note)\n'\
             'Command "show note" show note. Example (show note name)\n'\
-            'Command "show notes" show all note. Example (show notes)\n'\
-            '                                                                                \n'\
-            'Command for sort file in folder\n'\
-            '                                                                                \n'\
+            'Command "show notes" show all note. Example (show notes)' +\
+            Fore.YELLOW + '\nCommand for sort file in folder:\n' + Style.RESET_ALL + \
             'Command "sort". Example (sort path_folder)\n'
 
 
@@ -505,19 +507,21 @@ def handler_add_phone(user_command: list, contact_dictionary: AddressBook, path_
     name, phones = user_command[1].title(), user_command[2:]
 
     if name not in contact_dictionary:
-        raise ValueError('Contact \'{name}\' doesn\'t exist. Please enter name that is in the contact book.')
+        raise ValueError(f'Contact \'{name}\' doesn\'t exist. Please enter name that is in the contact book.')
 
-    flag = False
+    flag = 0
+    message = ''
 
     for phone in phones:
-        if contact_dictionary[name].remove_phone(phone):
-            flag = True
+        if contact_dictionary[name].add_phone(phone):
+            flag += 1
+            message += f'Contact \'{name}\' was successfully updated.\n'
 
     if flag:
         SaveBook().save_book(contact_dictionary, path_file)
-        return f'Contact \'{name}\' was successfully updated.'
+        return message
     else:
-        return 'If you want to remove phone for contact, please use next command:\nremove phone <username> '\
+        return 'If you want to add phone for contact, please use next command:\nadd phone <username> '\
                '<phone 1>...<phone N>'
 
 
@@ -688,14 +692,18 @@ def handler_show_notes(user_command, note_book: NoteBook, _=None) -> str:
     if len(tasks) == 0:
         for record in note_book.values():
             list_notes += f'{record}\n'
-        return f'{list_notes}'
-    else:
-        for tag in tasks:
-            for record in note_book.data.values():
-                for el in record.tags:
-                    if tag == el:
-                        list_notes += f'{tag} {record}\n'
-        return f'NoteBook has next notes:\n{list_notes}'
+        if list_notes:
+            return f'{list_notes}'
+        
+        return f'No records in NoteBook.'
+
+    for tag in tasks:
+        for record in note_book.data.values():
+            for el in record.tags:
+                if tag == el:
+                    list_notes += f'{tag} {record}\n'
+
+    return f'NoteBook has next notes:\n{list_notes}'
 
 
 @input_error
@@ -708,12 +716,15 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
         Returns:
             string(str): Information about showing the note.
     """
+    if len(user_command) == 1:
+        return f'Command \'show note\' show note for user. '\
+               'Example:\nshow note <note title>\n'
+
     value = user_command[1].title()
     if value not in note_book:
         raise ValueError(f'Note \'{value}\' doesn\'t exist.')
-    for name, record in note_book.items():
-        if value == name:
-            return f'Note:\n {record}.'
+
+    return f'Note:\n {note_book.get(value, None)}.'
 
 
 @input_error
@@ -725,20 +736,23 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> str:
             _: (path_file (str): Path of file record.)
         Returns:
             list_notes (list): List of find notes."""
+    if len(user_command) == 1:
+        return f'Command \'find notes\' find note in notes. '\
+               'Example:\nfind notes <tag 1>...<tag N>\n'
+    
     list_notes = ''
 
     look_for_word = user_command[1:]
-    if len(look_for_word) == 0:
-        raise ValueError('Try again! You should enter command: find notes <tag 1>...<tag N>.')
+
     for word in look_for_word:
         for record in note_book.data.values():
             if word in record.text:
                 list_notes += f'{record}\n'
+
         if list_notes:
-            print(word)
-            print(list_notes)
-            list_notes = ''
-    return 'What is your next step?'
+            return f'{word}:\n{list_notes}'
+
+    return f'Nothing found in the notes by requests: {look_for_word}.'
 
 
 @input_error

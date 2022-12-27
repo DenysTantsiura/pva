@@ -52,8 +52,22 @@ class Note:
             new_text (str): The new text the user wants to add.
         Returns:
             self.text: Changed text."""
+        self.tags = []
+        text_list = []
+        # name = user_command[1].title()
+        new_text = user_command[2:]
 
-        self.text = new_text
+        for element in new_text:
+            if '#' in element:
+                self.tags.append(element)
+
+        for element in new_text:
+            if element not in self.tags:
+                text_list.append(element)
+
+        text = ' '.join(text_list)
+
+        self.text = text
         return self.text
 
     def change_in(self, changed_text, new_text) -> str:
