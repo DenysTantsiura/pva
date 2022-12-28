@@ -750,8 +750,8 @@ def handler_find_notes(user_command: list, note_book: NoteBook, _=None) -> str:
             if word in record.text:
                 list_notes += f'{record}\n'
 
-        if list_notes:
-            return f'{word}:\n{list_notes}'
+    if list_notes:
+        return f'{word}:\n{list_notes}'
 
     return f'Nothing found in the notes by requests: {look_for_word}.'
 
