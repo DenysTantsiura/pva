@@ -5,7 +5,7 @@ people's contacts and has a separate functionality for notating information.
 PVA has a simple interface that allows even a beginner to master the program.
 It will be useful to different categories of users.
 
-> #### Program features:
+> #### Program features (version 1.0.5.6):
 
 _•The internal structure of AddressBook does not limit the scope and amount of
 information regarding phone numbers, addresses and e-mails._
@@ -28,6 +28,16 @@ _•Has many additional functions, in particular, sorting "garbage"
 on the desktop._
 
 _•You can work with PVA offline._
+
+> ###### Before starting the installation, you may need to update a few things::
+
+```
+python.exe -m pip install --upgrade pip
+```
+
+```
+python -m pip install --upgrade setuptools
+```
 
 > ###### The package is installed in the system by the command:
 
@@ -53,14 +63,14 @@ in user folder and be polite.
 
 ## Always on the Right Track Team:
 
-•Denys Tantsiura (email: ghost0002501@gmail.com)
+•Denys Tantsiura (ghost0002501@gmail.com)
 
-•Yaroslava Kalat (email: syaya@ukr.net)
+•Yaroslava Kalat (syaya@ukr.net)
 
-•Татьяна Федоришена (email: 514ftg@gmail.com)
+•Tetiana Fedoryshena (514ftg@gmail.com)
 
-•Andrii Kylymnyk (email: a.kylymnyk@gmail.com)
+•Andrii Kylymnyk (a.kylymnyk@gmail.com)
 
-•ILLIA (email: shablovskyiillia@gmail.com)
+•Illia Shablovskyi (shablovskyiillia@gmail.com)
 
-.
+(2022)

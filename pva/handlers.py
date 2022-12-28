@@ -341,7 +341,7 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
         return 'Command \'find\' searches information in the contact book that fits entered query(ies). '\
                'Please enter query(ies). Example:\nfind <text 1>...<text N>\n'
 
-    found_list = ['Search results:\n']
+    found_list = [Fore.MAGENTA + 'Search results:\n' + Style.RESET_ALL]  # Fore.MAGENTA + f'Name: ' + Style.RESET_ALL 
 
     flag = False
 
@@ -370,7 +370,7 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
                     part += f'{record.address.value}.\n'
 
                 if part.find(search_string) >= 0:
-                    page += part
+                    page += part[:part.find(search_string)] + Fore.LIGHTGREEN_EX + part[part.find(search_string):] + Style.RESET_ALL
                     flag = True
 
         found_list.append(page)
@@ -384,10 +384,10 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
 def handler_hello(*_) -> str:
     """The bot is welcome."""
-    help_list = Fore.BLUE + 'All available commands: \n'
+    help_list = Fore.LIGHTCYAN_EX + 'All available commands: \n'
     help_list += '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_FILESORTER] + ['\n'])
     help_list += '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_NOTEBOOK] + ['\n']) + Style.RESET_ALL
-    help_list += Fore.YELLOW + '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_ADDRESSBOOK] + ['\n']) + \
+    help_list += Fore.LIGHTYELLOW_EX + '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_ADDRESSBOOK] + ['\n']) + \
                  Style.RESET_ALL
 
     return f'{help_list}'
@@ -432,12 +432,12 @@ def handler_help(*_) -> str:
 @input_error
 def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
     """The bot shows all contacts."""
-    all_list = [Fore.CYAN + 'All contacts from next page.' + Style.RESET_ALL]
-    limit = 10
+    all_list = [Fore.CYAN + 'Output of all contacts from the next page.' + Style.RESET_ALL]
+    limit = 5
     for records in contact_dictionary.iterator(limit):
         contact_message = ''
         for record in records:
-            contact_message += Fore.MAGENTA + '{:-^10}\n{}\n{:-^10}\n'.format('', f'Name: {record.name.value}', '') + \
+            contact_message += Fore.MAGENTA + '{:-^10}\nName: '.format('') + Fore.LIGHTCYAN_EX + '{}\n{:-^10}\n'.format(f'{record.name.value}', '') + \
                                Style.RESET_ALL
 
             if record.phones:
@@ -634,7 +634,9 @@ def handler_show(user_command: list, contact_dictionary: AddressBook, _=None) ->
     if name not in contact_dictionary:
         raise ValueError(f'Contact \'{name}\' doesn\'t exist. Please enter name that is in the contact book.')
 
-    message_to_user = Fore.MAGENTA + '{:-^10}\n{}\n{:-^10}\n'.format('', f'Name: {name}', '') + Style.RESET_ALL
+    message_to_user = Fore.MAGENTA + '{:-^10}\nName: '.format('') + Fore.LIGHTCYAN_EX + \
+                      '{}\n{:-^10}\n'.format(f'{name}', '') + Style.RESET_ALL
+
     if contact_dictionary[name].phones:
         message_to_user += Fore.WHITE + 'Phone(s): ' + Style.RESET_ALL
         message_to_user += Fore.GREEN + ' '.join(contact_dictionary[name].get_phones_list()) + Style.RESET_ALL
@@ -688,13 +690,13 @@ def handler_show_notes(user_command, note_book: NoteBook, _=None) -> str:
             _: Not important.
         Returns:
             list_notes (list): Return all notes."""
-    list_notes = ''
+    list_notes = Fore.LIGHTCYAN_EX + ''
     tasks = user_command[1:]
     if len(tasks) == 0:
         for record in note_book.values():
             list_notes += f'{record}\n'
         if list_notes:
-            return f'{list_notes}'
+            return f'{list_notes}' + Style.RESET_ALL
         
         return f'No records in NoteBook.'
 
@@ -725,7 +727,7 @@ def handler_show_note(user_command: list, note_book: NoteBook, _=None) -> str:
     if value not in note_book:
         raise ValueError(f'Note \'{value}\' doesn\'t exist.')
 
-    return f'Note:\n {note_book.get(value, None)}.'
+    return Fore.LIGHTYELLOW_EX + f'Note:\n {note_book.get(value, None)}.' + Style.RESET_ALL
 
 
 @input_error
