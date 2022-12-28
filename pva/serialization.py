@@ -21,7 +21,7 @@ class LoadBook:
                 pass
                 # print('SAVED!')
             else:
-                pront('NOTSAVED')
+                pront('NOT SAVED')
             return new_book, self.path_file
 
         try:

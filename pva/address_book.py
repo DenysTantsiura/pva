@@ -20,7 +20,7 @@ class AddressBook(UserDict):
         for contact in self.data.values():
             if contact.birthday and contact.birthday.value and int(meantime) >= contact.days_to_birthday():
                 birthday_people += f'{contact.name.value}\'s birthday: {contact.birthday.value.date()}\n'
-        if birthday_people:         
+        if birthday_people:
             return birthday_people[:-1]
 
         return 'There is no one to wish a happy birthday to during this time frame.'

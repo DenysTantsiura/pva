@@ -384,10 +384,10 @@ def handler_find(user_command: list, contact_dictionary: AddressBook, _=None) ->
 
 def handler_hello(*_) -> str:
     """The bot is welcome."""
-    help_list = Fore.BLUE + 'All available commands: \n'
+    help_list = Fore.LIGHTCYAN_EX + 'All available commands: \n'
     help_list += '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_FILESORTER] + ['\n'])
     help_list += '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_NOTEBOOK] + ['\n']) + Style.RESET_ALL
-    help_list += Fore.YELLOW + '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_ADDRESSBOOK] + ['\n']) + \
+    help_list += Fore.LIGHTYELLOW_EX + '; '.join([key.replace('_', ' ') for key in ALL_COMMAND_ADDRESSBOOK] + ['\n']) + \
                  Style.RESET_ALL
 
     return f'{help_list}'
@@ -432,8 +432,8 @@ def handler_help(*_) -> str:
 @input_error
 def handler_show_all(_, contact_dictionary: AddressBook, __) -> list:
     """The bot shows all contacts."""
-    all_list = [Fore.CYAN + 'All contacts from next page.' + Style.RESET_ALL]
-    limit = 10
+    all_list = [Fore.CYAN + 'Output of all contacts from the next page.' + Style.RESET_ALL]
+    limit = 5
     for records in contact_dictionary.iterator(limit):
         contact_message = ''
         for record in records:

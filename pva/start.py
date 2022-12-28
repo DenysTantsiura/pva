@@ -2,7 +2,7 @@ import sys
 from typing import NoReturn, Union
 
 
-from .address_book import AddressBook
+from .address_book import AddressBook  # .address_book import AddressBook
 from .handlers import (
     main_handler,
     ALL_COMMAND,
