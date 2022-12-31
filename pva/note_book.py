@@ -34,8 +34,9 @@ class NoteBook(UserDict):
         """Return list of note-names sorted by tags."""
         tags = []
 
-        for note in self.data.values():
-            tags.extend(note.tags)
+        # for note in self.data.values():
+        #     tags.extend(note.tags)
+        [tags.extend(note.tags) for note in self.data.values()]
 
         tags = list(set(tags))
         tags.sort()
