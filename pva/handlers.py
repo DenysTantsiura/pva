@@ -489,6 +489,7 @@ def handler_add(user_command: list, contact_dictionary: AddressBook, path_file: 
     name, phones = user_command[1].title(), user_command[2:]
     if name in contact_dictionary:
         raise ValueError(f'Contact \'{name}\' already exists. Please enter new contact name.')
+        
     record = Record(name)
     contact_dictionary.add_record(record)
     for phone in phones:

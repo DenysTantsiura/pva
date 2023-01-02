@@ -22,12 +22,13 @@ class Address(Field):
     @Field.value.setter
     def value(self, new_value: str) -> None:
 
-        if re.search(r'ave', new_value) or re.search(r'str', new_value) or re.search(r'City', new_value) or \
-                re.search(r'city', new_value):
-            self._value = new_value
+        _value = None
+        [_value := new_value for key_word in ('ave', 'str', 'City', 'city') if key_word in new_value]
 
-        else:
+        if not _value:
             raise ValueError('Wrong address. Enter \'City (name city) or (type street. Name street)\'')
+        
+        self._value = _value
             
     def __str__(self) -> str:
         return f'{self.value}' if self.value else ''
@@ -117,15 +118,13 @@ class Record:
         return f'{self.name.value}, \nbirthday{self.birthday}, \nphone(s): {self.phones}, \naddress: {self.address},'\
                ' \nemail(s): {self.emails}\n'
 
-    def add_address(self, address: str) -> tuple:
+    def add_address(self, address: str) -> None:
         """Adds a new entry for the user's name - address."""
         if address:
             self.address = Address(address)
 
-            return True,
-
         else:
-            return False, f'Address is missing!\"{address}\"'
+            raise ValueError(f'Address is missing!\"{address}\"')
 
     def add_birthday(self, birthday: str) -> bool:
         """Adds a new entry for the user's birthday to the address book."""
@@ -141,13 +140,14 @@ class Record:
         try:
             phone_new = Phone(phone_new)
 
-        except ValueError:
+        except ValueError as wrong_input:
             print(f'{phone_new} - wrong input. Please enter correct phone number.')
             return False
+            # raise ValueError(wrong_input)
 
         for phone in self.phones:
             if phone_new.value == phone.value:
-
+                print(f'{phone_new} - wrong input. Еhe phone number was recorded earlier.')
                 return False
 
         print(f'{phone_new.value} was added to contact')
