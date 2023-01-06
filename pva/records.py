@@ -22,12 +22,13 @@ class Address(Field):
     @Field.value.setter
     def value(self, new_value: str) -> None:
 
-        if re.search(r'ave', new_value) or re.search(r'str', new_value) or re.search(r'City', new_value) or \
-                re.search(r'city', new_value):
-            self._value = new_value
+        _value = None
+        [_value := new_value for key_word in ('ave', 'str', 'City', 'city') if key_word in new_value]
 
-        else:
+        if not _value:
             raise ValueError('Wrong address. Enter \'City (name city) or (type street. Name street)\'')
+        
+        self._value = _value
             
     def __str__(self) -> str:
         return f'{self.value}' if self.value else ''
@@ -73,6 +74,7 @@ class Name(Field):
     def value(self, value):
         if re.search(r"[a-zA-Zа-яА-Я']{2,}[\w-]+", value):
             self._value = value.title()
+
         else: 
             raise ValueError('Wrong name. Please enter correct nameю')
 
@@ -85,6 +87,7 @@ class Phone(Field):
         new_value = self.preformatting(value)
         if re.search(r'[0-9]{10,12}', new_value):
             self._value = new_value
+
         else:
             raise ValueError('Wrong phone. Please enter correct phone number.')
 
@@ -97,6 +100,7 @@ class Phone(Field):
             .replace(')', '')
             .replace('-', '')
             )
+
         return new_value
 
 
@@ -114,20 +118,19 @@ class Record:
         return f'{self.name.value}, \nbirthday{self.birthday}, \nphone(s): {self.phones}, \naddress: {self.address},'\
                ' \nemail(s): {self.emails}\n'
 
-    def add_address(self, address: str) -> tuple:
+    def add_address(self, address: str) -> None:
         """Adds a new entry for the user's name - address."""
         if address:
             self.address = Address(address)
 
-            return True,
-
         else:
-            return False, f'Address is missing!\"{address}\"'
+            raise ValueError(f'Address is missing!\"{address}\"')
 
     def add_birthday(self, birthday: str) -> bool:
         """Adds a new entry for the user's birthday to the address book."""
         if not self.birthday:
             self.birthday = Birthday(birthday)  # or None
+
             return True
 
         return False
@@ -136,13 +139,17 @@ class Record:
         """Adds a new entry for the user's phone to the address book."""
         try:
             phone_new = Phone(phone_new)
-        except ValueError:
+
+        except ValueError as wrong_input:
             print(f'{phone_new} - wrong input. Please enter correct phone number.')
             return False
+            # raise ValueError(wrong_input)
 
         for phone in self.phones:
             if phone_new.value == phone.value:
+                print(f'{phone_new} - wrong input. Еhe phone number was recorded earlier.')
                 return False
+
         print(f'{phone_new.value} was added to contact')
         self.phones.append(phone_new)
 
@@ -154,6 +161,7 @@ class Record:
 
         for email in self.emails:
             if email_new_.value == email.value:
+
                 return False, f'\'{email_new}\' already exists for contact \'{self.name.value}\'.\n'
 
         self.emails.append(email_new_)
@@ -164,6 +172,7 @@ class Record:
         """Modify an existing user's address entry in the address book."""
         if new_address:
             self.address = Address(new_address)  # Address() if wrong address : value = None
+
             return True,
 
         else:
@@ -172,6 +181,7 @@ class Record:
     def change_birthday(self, birthday: str) -> bool:
         """Modify an existing user's birthday entry in the address book."""
         self.birthday = Birthday(birthday)
+
         return True
 
     def change_phone(self, phone_to_change: str, phone_new: str) -> tuple:
@@ -228,6 +238,7 @@ class Record:
         """Deleting an address entry from a user entry in the address book."""
         if self.address:
             self.address = None
+
             return True
 
         return False
@@ -236,6 +247,7 @@ class Record:
         """Deleting a birthday entry from a user entry in the address book."""
         if self.birthday:
             self.birthday = None
+
             return True
 
         return False
@@ -252,6 +264,7 @@ class Record:
                 return True
 
         print(f'\"{phone_to_remove}\" not specified in the contact \"{self.name.value}\"')
+        
         return False
 
     def remove_email(self, email_to_remove: str) -> tuple:

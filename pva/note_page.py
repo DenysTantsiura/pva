@@ -38,11 +38,16 @@ class Note:
             for tag in new_tags:
                 if tag in self.tags:
                     print(f'This tag "{tag}" already exists!')
+
                 else:
-                    self.tags.append(tag)
+                    # self.tags.append(tag)
                     add_tags.append(tag)
+
+            self.tags.extend(add_tags)
             print(f'You added tags {add_tags}')
+
             return self.tags
+
         else:
             print(f'You can add only {delta} tags to this note!')
 
@@ -57,13 +62,15 @@ class Note:
         # name = user_command[1].title()
         new_text = user_command[2:]
 
-        for element in new_text:
-            if '#' in element:
-                self.tags.append(element)
+        # for element in new_text:
+        #     if '#' in element:
+        #         self.tags.append(element)
+        [self.tags.append(element) for element in new_text if '#' in element]
 
-        for element in new_text:
-            if element not in self.tags:
-                text_list.append(element)
+        # for element in new_text:
+        #     if element not in self.tags:
+        #         text_list.append(element)
+        [text_list.append(element) for element in new_text if element not in self.tags]
 
         text = ' '.join(text_list)
 
@@ -78,4 +85,5 @@ class Note:
         Returns:
             self.text: Changed text."""
         self.text = self.text.replace(changed_text, new_text)
+
         return self.text

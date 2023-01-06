@@ -20,6 +20,7 @@ class AddressBook(UserDict):
         for contact in self.data.values():
             if contact.birthday and contact.birthday.value and int(meantime) >= contact.days_to_birthday():
                 birthday_people += f'{contact.name.value}\'s birthday: {contact.birthday.value.date()}\n'
+
         if birthday_people:
             return birthday_people[:-1]
 
@@ -32,6 +33,7 @@ class AddressBook(UserDict):
 
         while current_pages < len(self.data):
             page = []
+            
             for i in range(count):
                 try:
                     page.append(self.data[next(dictionary_iterator)])

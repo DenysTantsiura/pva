@@ -1,3 +1,4 @@
+from abc import ABC, abstractmethod
 import sys
 from typing import NoReturn, Union
 
@@ -14,7 +15,21 @@ from .note_book import NoteBook
 from .serialization import LoadBook, OpenBook
 
 
-class InputToParser:
+class InterfaceInput(ABC):
+
+    @abstractmethod
+    def listen(self, *args, **kwargs):
+        ...
+
+
+class InterfaceOutput(ABC):
+
+    @abstractmethod
+    def show_out(self, *args, **kwargs):
+        ...
+
+
+class InputToParser(InterfaceInput):
 
     @staticmethod
     def listen(request='How can I help you?\n'):
@@ -44,7 +59,7 @@ class InputToParser:
         return user_input.strip().split(' ')
 
 
-class OutputAnswer:
+class OutputAnswer(InterfaceOutput):
 
     @staticmethod
     def show_out(user_request: list, book_instance: Union[AddressBook, NoteBook], new_path_file: str) -> bool:
