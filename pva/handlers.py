@@ -1,18 +1,17 @@
 from difflib import get_close_matches
 from typing import Union
 
-
-from .note_page import Note
-from .address_book import AddressBook
-from .records import Record
-from .note_book import NoteBook
-from .serialization import SaveBook
-from .validator import input_error
-from .sort_files import sort_trash
-
 import colorama
 from colorama import Fore, Style
 colorama.init()
+
+from note_page import Note
+from address_book import AddressBook
+from records import Record
+from note_book import NoteBook
+from serialization import SaveBook
+from validator import input_error
+from sort_files import sort_trash
 
 
 def handler_command_guesser(user_command: list, *_) -> str:

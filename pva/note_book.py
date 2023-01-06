@@ -1,5 +1,6 @@
 from collections import UserDict
-from .note_page import Note
+
+from note_page import Note
 
 class NoteBook(UserDict):
     """Class of NoteBook."""
