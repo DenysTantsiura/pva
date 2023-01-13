@@ -3,8 +3,8 @@ import pickle
 import pathlib
 from typing import Union
 
-from .address_book import AddressBook
-from .note_book import NoteBook
+from address_book import AddressBook
+from note_book import NoteBook
 
 
 class CheckingFile(ABC):
