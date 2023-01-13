@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "personal-virtual-assistant"
+version = "1.0.5.6"
+description = "personal virtual assistant"
+authors = ["Always on the Right Track Team: Denys Tantsiura <ghost0002501@gmail.com>, Yaroslava Kalat <syaya@ukr.net>, Tetiana Fedoryshena <514ftg@gmail.com>, Andrii Kylymnyk <a.kylymnyk@gmail.com>, Illia Shablovskyi <shablovskyiillia@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "personal_virtual_assistant"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+colorama = "^0.4.6"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
