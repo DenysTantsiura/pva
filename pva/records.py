@@ -141,7 +141,7 @@ class Record:
             phone_new = Phone(phone_new)
 
         except ValueError as wrong_input:
-            print(f'{phone_new} - wrong input. Please enter correct phone number.')
+            print(f'{phone_new} - wrong input({wrong_input}). Please enter correct phone number.')
             return False
             # raise ValueError(wrong_input)
 

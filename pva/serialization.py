@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import pickle
 import pathlib
-from typing import Union
+from typing import Union, Optional
 
 from address_book import AddressBook
 from note_book import NoteBook
@@ -34,7 +34,9 @@ class LoadBook(LoadFromFile):
     def __init__(self, path_file: pathlib.Path) -> None:
         self.path_file = path_file
 
-    def load_book(self, book=AddressBook) -> tuple[Union[AddressBook, NoteBook], pathlib.Path]:
+    def load_book(self,
+                  book: Optional[AddressBook, NoteBook] = AddressBook
+                  ) -> tuple[Union[AddressBook, NoteBook], pathlib.Path]:
         """Create empty book (AddressBook|NoteBook) if no file on path_file.
         Or, try to load book database (read) from file. 
         Return loaded book (AddressBook|NoteBook) and path for address book file.
@@ -56,8 +58,8 @@ class LoadBook(LoadFromFile):
 
             return new_book, self.path_file
 
+        path_file_a = pathlib.Path(self.path_file).resolve()
         try:
-            path_file_a = pathlib.Path(self.path_file).resolve()
             with open(path_file_a, 'rb') as fh:
                 data_book = pickle.load(fh)
 
@@ -98,12 +100,12 @@ class OpenBook(CheckingFile):
 class SaveBook(FileSaver):
     """Save data in file."""
     
-    def save_book(self, book_instance: Union[AddressBook, NoteBook], path_file: str) -> bool:
+    def save_book(self, book_instance: Union[AddressBook, NoteBook], path_file: Union[str, pathlib.Path]) -> bool:
         """Save a class AddressBook|NoteBook to a file (path_file).
 
             Parameters:
                 book_instance (AddressBook|NoteBook): Instance of AddressBook|NoteBook.
-                path_file (str): Is there path and filename of book.
+                path_file (str|pathlib.Path): Is there path and filename of book.
 
             Returns:
                 File save success marker (bool).
@@ -114,6 +116,6 @@ class SaveBook(FileSaver):
                 pickle.dump(book_instance, fn)
         
         except Exception as error_:
-            print(f'No access to File({path_file_a}) or others fatal error: \n{repr(error_)}') 
+            print(f'No access to File({path_file}) or others fatal error: \n{repr(error_)}')
 
         return True

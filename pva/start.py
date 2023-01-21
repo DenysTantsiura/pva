@@ -1,7 +1,7 @@
+import pathlib
 from abc import ABC, abstractmethod
 import sys
-from typing import NoReturn, Union
-
+from typing import NoReturn, Union, Optional
 
 from address_book import AddressBook  # .address_book import AddressBook
 from handlers import (
@@ -62,7 +62,9 @@ class InputToParser(InterfaceInput):
 class OutputAnswer(InterfaceOutput):
 
     @staticmethod
-    def show_out(user_request: list, book_instance: Union[AddressBook, NoteBook], new_path_file: str) -> bool:
+    def show_out(user_request: list,
+                 book_instance: Optional[AddressBook, NoteBook],
+                 new_path_file: Union[str, pathlib.Path]) -> bool:
         """Show answer for the user.
             
             Parameters:
