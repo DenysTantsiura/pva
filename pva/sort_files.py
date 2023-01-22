@@ -1,12 +1,17 @@
-# from concurrent.futures import ThreadPoolExecutor
 import re
 from pathlib import Path
 import shutil
-# import multiprocessing
 from threading import Thread
+from time import time
 
-# max_relevant_threads = multiprocessing.cpu_count()
 
+TYPES = {
+    'imeges': ['JPEG', 'PNG', 'JPG', 'SVG'],
+    'video': ['AVI', 'MP4', 'MOV', 'MKV'],
+    'documents': ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX'],
+    'audio': ['MP3', 'OGG', 'WAV', 'AMR'],
+    'archives': ['ZIP', 'GZ', 'TAR']
+}
 
 def normalize(name: str) -> str:
     """Normalize string (filename)."""
@@ -31,13 +36,6 @@ def normalize_file(file: Path) -> str:
 
 def moving_files(file: Path, folders: Path) -> None:
     """Move file to certain folder."""
-    TYPES = {
-        'imeges': ['JPEG', 'PNG', 'JPG', 'SVG'],
-        'video': ['AVI', 'MP4', 'MOV', 'MKV'],
-        'documents': ['DOC', 'DOCX', 'TXT', 'PDF', 'XLSX', 'PPTX'], 
-        'audio': ['MP3', 'OGG', 'WAV', 'AMR'],
-        'archives': ['ZIP', 'GZ', 'TAR']
-        }
     cut_out = False
     for key, values in TYPES.items():
         for val in values:
@@ -48,7 +46,13 @@ def moving_files(file: Path, folders: Path) -> None:
     if not cut_out:
         Path(folders / 'other').mkdir(exist_ok=True, parents=True)
         file.replace(folders / 'other' / normalize_file(file))
-           
+
+
+def remove_empty_folder(file_system_object: Path) -> None:
+    try:
+        file_system_object.rmdir()
+    except OSError:
+        print(f'The directory "{file_system_object}" is not empty')
 
 def overrun_folder(folder: Path, folders: Path) -> None:
     """Overrun junk folders."""
@@ -56,13 +60,15 @@ def overrun_folder(folder: Path, folders: Path) -> None:
         if file_system_object.is_dir():
             thread = Thread(target=overrun_folder, args=(file_system_object, folders))
             thread.start()
-            # overrun_folder(file_system_object, folders)
-            try:
-                file_system_object.rmdir()
-            except OSError:
-                print(f'The directory "{file_system_object}" is not empty')
+
+            while thread.is_alive():
+                pass
+            thread_rm = Thread(target=remove_empty_folder, args=(file_system_object,))
+            thread_rm.start()
+
         else:
-            moving_files(file_system_object, folders)
+            thread_moving_file = Thread(target=moving_files, args=(file_system_object, folders))
+            thread_moving_file.start()
 
 
 def unpack_in_thread(archive: Path, folders: Path) -> None:
@@ -88,6 +94,7 @@ def unpack(folders: Path) -> None:
 
 def sort_trash(path_to_folder: str) -> str:
     """Sort all in junk."""
+    start_sorting = time()
     folders = Path(path_to_folder)
 
     try:
@@ -98,4 +105,4 @@ def sort_trash(path_to_folder: str) -> str:
 
     unpack(folders)
 
-    return f'I sorted folder - {folders}'
+    return f'I sorted folder - {folders} in {time() - start_sorting} sec'
