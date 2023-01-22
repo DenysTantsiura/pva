@@ -35,7 +35,7 @@ class LoadBook(LoadFromFile):
         self.path_file = path_file
 
     def load_book(self,
-                  book: Optional[AddressBook, NoteBook] = AddressBook
+                  book: Optional[NoteBook] = AddressBook
                   ) -> tuple[Union[AddressBook, NoteBook], pathlib.Path]:
         """Create empty book (AddressBook|NoteBook) if no file on path_file.
         Or, try to load book database (read) from file. 

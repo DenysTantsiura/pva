@@ -63,7 +63,7 @@ class OutputAnswer(InterfaceOutput):
 
     @staticmethod
     def show_out(user_request: list,
-                 book_instance: Optional[AddressBook, NoteBook],
+                 book_instance: Union[AddressBook, NoteBook, None],
                  new_path_file: Union[str, pathlib.Path]) -> bool:
         """Show answer for the user.
             
