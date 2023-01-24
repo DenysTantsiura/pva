@@ -13,6 +13,7 @@ TYPES = {
     'archives': ['ZIP', 'GZ', 'TAR']
 }
 
+
 def normalize(name: str) -> str:
     """Normalize string (filename)."""
     CYRILLIC_SYMBOLS = 'абвгдеёжзийклмнопрстуфхцчшщъыьэюяєіїґ'
@@ -54,19 +55,24 @@ def remove_empty_folder(file_system_object: Path) -> None:
     except OSError:
         print(f'The directory "{file_system_object}" is not empty')
 
+
 def overrun_folder(folder: Path, folders: Path) -> None:
     """Overrun junk folders."""
     for file_system_object in folder.iterdir():
         if file_system_object.is_dir():
+            # create thread overrun_folder with args - for each folder
             thread = Thread(target=overrun_folder, args=(file_system_object, folders))
             thread.start()
 
-            while thread.is_alive():
+            while thread.is_alive():  # wait during recursion thread
                 pass
+
+            # create thread remove_empty_folder with args - for this folder
             thread_rm = Thread(target=remove_empty_folder, args=(file_system_object,))
             thread_rm.start()
 
         else:
+            # create thread moving_files with args - for each file
             thread_moving_file = Thread(target=moving_files, args=(file_system_object, folders))
             thread_moving_file.start()
 
@@ -85,6 +91,7 @@ def unpack(folders: Path) -> None:
         if folders / 'archives':
             for archive in (folders / 'archives').iterdir():
                 # unpack_in_thread(archive, folders)
+                # create thread unpack_in_thread with args - for each archive
                 thread = Thread(target=unpack_in_thread, args=(archive, folders))
                 thread.start()
 
@@ -98,7 +105,7 @@ def sort_trash(path_to_folder: str) -> str:
     folders = Path(path_to_folder)
 
     try:
-        overrun_folder(folders, folders)
+        overrun_folder(folders, folders)  # Enter the main folder
 
     except FileNotFoundError:
         raise FileNotFoundError(f'I can\'t find folder - {folders}')
